@@ -1,0 +1,33 @@
+* {
+    border-radius: .5em;
+    line-height: 1.6em;
+}
+
+body {
+    background-color: $white;
+}
+ul,
+ol {
+    list-style: none;
+}
+
+
+.input-part {
+    background-color: rgb(250, 250, 250);
+    box-shadow: 0 0 1em .1em rgba(200, 200, 200, .5) inset;
+    padding: .8em 1.6em .8em 1.6em;
+    border-style: none;
+    margin: .8em;
+}
+
+
+input:focus {
+    background-color: rgb(255, 255, 255);
+}
+
+select:focus,
+input:focus,
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 .16em .1em rgba(20, 140, 0, .8);
+}

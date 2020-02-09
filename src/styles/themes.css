@@ -1,0 +1,26 @@
+html[data-theme='dark'] {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #4b4a4a;
+  color: white;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+a:link {
+  color: var(--first-color);
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--first-color);
+}
+/*# sourceMappingURL=themes.css.map */

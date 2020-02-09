@@ -1,0 +1,43 @@
+$themes: (
+    default: (
+
+    ),
+    dark: (
+
+    )
+);
+
+html {
+    // background-color: red;
+}
+html[data-theme='dark'] {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    // overflow: hidden;
+
+
+    background-color: rgb(75, 74, 74);
+    color: white;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+a:link {
+    color: var(--first-color);
+    // background-color: red;
+    text-decoration: none;
+    // color: white;
+}
+
+a:visited {
+    // color: white;
+    color: var(--first-color)
+}
