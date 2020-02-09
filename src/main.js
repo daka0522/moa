@@ -10,7 +10,7 @@ import VueQuillEditor from 'vue-quill-editor'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-import firebase from './firebase'
+import firebase from './firebase_init'
 
 // Components
 import SignIn from './components/auth/SignIn'
