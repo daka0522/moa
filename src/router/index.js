@@ -18,6 +18,11 @@ const routes = [
         path: '*',
         component: () => import('@/views/NotFound.vue')
     },
+    {
+        name: 'about',
+        path: '/about',
+        component: () => import('@/views/About.vue')
+    },
     {   name: 'public-apps',
         path: '/public-apps',
         component: () => import( '@/views/publicApp/PublicApps'),

@@ -2,23 +2,25 @@
   <div id="blog-editor">
     <h2 style="color: orange">Require: Authenticaed!</h2>
     <div>
-      <p>Write new blog</p>
-        <button class="btn">Create New</button>
-      <transition name="button-effect">
-        <button class="btn" v-show="newBlogTitle && newBlogContent" @click="saveDoc()">Save</button>
-      </transition>
-      <transition name="button-effect">
-        <button class="btn" v-show="newBlogTitle && newBlogContent">Delete</button>
-      </transition>
-      <div>
-        <label for="publishing">Publishing</label>
-        <input type="checkbox" name="publishing" id="publishing" v-model="isPublished">
+      <div id="mainState-blog">
+        <div class="noticeMsg">
+          <p id="mainStateMsg">{{mainStateMsg}}</p>
+        </div>
       </div>
-
+      <transition name="button-effect">
+        <div id="newDocTools" v-show="newBlogTitle && newBlogContent">
+          <div>
+            <label for="publishing">Publishing</label>
+            <input type="checkbox" name="publishing" id="publishing" v-model="isPublished" >
+          </div>
+          <button class="btn" @click="saveDoc()">Save</button>
+          <button class="btn" @click="createNewDoc()">Create New</button>
+        </div>
+      </transition>
     </div>
 
-    <div >
-      <input id="blog-title" v-model="newBlogTitle"  placeholder="Title">
+    <div id="editor">
+      <input id="blog-title" v-model="newBlogTitle" placeholder="Title">
       <quill-editor v-model="newBlogContent" ref="myQuillEditor" />
     </div>
 
@@ -38,9 +40,10 @@ export default {
       newBlogTitle: '',
       newBlogContent: '',
 
-      docDate: this.$root.firebase.firestore.Timestamp.fromDate(new Date),
+      // docDate: this.$root.firebase.firestore.Timestamp.fromDate(new Date),
       isPublished: false,
       
+      mainStateMsg: ''
     }
   },
   methods: {
@@ -50,15 +53,27 @@ export default {
         content: this.newBlogContent,
         date: this.docDate,
         isPublished: this.isPublished
+      }).then( ()=> {
+        let end = this.isPublished ? 'and published.' : '.'
+        this.mainStateMsg = "The document succefully saved " + end 
+      }).catch(error => {
+        this.mainStateMsg = `Error! ${error}`
       })
     },
-    
+    createNewDoc() {
+      this.newBlogTitle = ''
+      this.newBlogContent = ''
+    }
   },
   computed: {
     userRef() {
       return this.$root.db.collection('users').doc(this.getUserID)
     },
-    getUserID
+    getUserID,
+
+    docDate() {
+      return this.$root.firebase.firestore.Timestamp.fromDate(new Date)
+    }
   }
   
 }
@@ -73,8 +88,9 @@ export default {
     border-style: none;
     border: 1px solid rgba(0, 0, 0, .2);
     padding: 12px 15px 12px 15px;
-    width: 100%;
+    // width: 100%;
   }
+
 }
 
 .btn {
@@ -86,5 +102,10 @@ export default {
 }
 .button-effect-enter-active, .button-effect-leave-active {
   transition: opacity 1s;
+}
+
+#newDocTools {
+  display: flex;
+  align-items: center;
 }
 </style>

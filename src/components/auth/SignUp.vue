@@ -1,10 +1,8 @@
 <template>
   <div>
-    <!-- <div id="signUp" class="board" v-show="isSignUp"> -->
-      <div id="signUp" class="board">
+      <div id="signUp" class="panel">
         <h4>Sign Up with Email and Password</h4>
         <div>
-          <!-- action="https://vuejs.org/" methods="post" -->
           <div v-if="signUp.errors.length" class="board" methods="signUpWithEmail(signUp.email, signUp.password)">
             <b>Please correct the following erros(s):</b>
             <ul>
@@ -13,7 +11,7 @@
           </div>
 
           <!-- Sign up form -->
-          <form class="grid-col" @submit.prevent="checkForm" novalidate="true" >
+          <form class="grid-col board" @submit.prevent="checkForm" novalidate="true" >
             <div>
               <label for="signUpName">Name</label>
               <input type="name" id="signUpName" class="input-part" v-model="signUp.name[0]" placeholder="Name" required>
@@ -21,7 +19,7 @@
             </div>
 
             <div>
-              <label for="signUpEmail">Email</label>
+              <label for="signUpEmail">Email (ID)</label>
               <input type="email" id="signUpEmail" class="input-part" v-model="signUp.email[0]" placeholder="Type email please" required>
             </div>
 
@@ -35,7 +33,7 @@
               <input type="file" id="signUpPhoto" class="input-part">
             </div>
 
-            <input id="signUpSubmit" type="submit" value="Submit" class="btn">
+            <input id="signUpSubmit" type="submit" value="Submit" class="btn" @click="signUpWithEmail()">
           </form>
 
           <div>
@@ -43,17 +41,17 @@
           </div>
 
         </div>
-        <!-- <div v-if="!this.$root.account.currentUser.emailVerified"> -->
+
         <h4>Email verification required.</h4>
         <button class="btn" @click="emailVerification()">Send Email</button>
-        <!-- </div> -->
       </div>
-        <button @click="isSignUp = !isSignUp" class="btn">Sign Up</button>
 
   </div>
 </template>
 
 <script>
+import {getUserID} from '@/utils/firestoreUtils.js'
+
 export default {
   data() {
     return {
@@ -69,7 +67,7 @@ export default {
   },
   methods: {
     // * Sign up functions
-    signUpWithEmail(email, password) {
+    signUpWithEmail(email=this.signUp.email[0], password=this.signUp.password) {
       let auth = this.$root.firebase.auth()
       auth.createUserWithEmailAndPassword(email, password).then( () => {
         console.log("Successfully Signed up!");
@@ -89,6 +87,23 @@ export default {
           console.log("Error occurs from sign up with email", error);
   
         })
+    },
+    // Store the user data in DB 
+    saveUserData() {
+      let data = {
+        name: this.signUp.name,
+        author: getUserID,
+        created: this.$root.account.currentUser.metadata.creationTime,
+        class: 'normal',
+        photoUrl: ''
+      }
+      this.$root.db.collection('users').doc(getUserID).set(data).then(()=>{
+        console.log('New user data is successfully stored in DB.')
+      }).catch(error => {
+        console.error(error)
+      })
+      console.log(this.$root.db.collection('users').doc(getUserID));
+      
     },
     
     /* check: {
@@ -112,8 +127,8 @@ export default {
   
     checkForm(e) {
       
-      console.log(e);
-      
+      // console.log(e);
+      e
       let form = this.signUp      
       form.errors = []
       if (!form.name[0]) {

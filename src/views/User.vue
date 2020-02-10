@@ -5,8 +5,12 @@
       <section id="profile" class="panel">
         <div>
           <span>Name:</span>
+          <input v-if="isEditable">
+
           <h3>{{currentUser.displayName}}</h3>
           <img :src="this.$root.account.currentUser.photoURL" width="64px" :alt="this.$root.account.currentUser.displayName + '\'s profile photo'">
+          
+          <input v-if="isEditable" type="file" class="input-part">
         </div>
         <p>{{currentUser.email}}</p>
         <p>Creation Time: {{currentUser.metadata.creationTime}}</p>
@@ -20,6 +24,13 @@
         </div>
         <div>
           <p>Using Apps</p>
+        </div>
+        <div id="user-tools">
+          <button id="user-edit" class="btn" @click="isEditable = !isEditable">Edit</button>
+          <div id="user-edit-btns" v-if="isEditable">
+            <button class="btn">Save</button>
+            <button class="btn">Delete</button>
+          </div>
         </div>
       </section>
 
@@ -51,12 +62,9 @@
         </tr>
       </table>
 
-      <div id="profile-tools">
-        <button class="btn">Edit</button>
-        <button class="btn">Delete</button>
-      </div>
 
-      
+
+
 
 
     </div>
@@ -71,6 +79,7 @@ export default {
         color: 'green'
       },
       fields: '',
+      isEditable: false, 
     }
   },
   computed:{

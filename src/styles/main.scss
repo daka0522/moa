@@ -4,7 +4,7 @@
 }
 
 body {
-    background-color: $white;
+    // background-color: $white;
 }
 ul,
 ol {
@@ -21,8 +21,16 @@ ol {
 }
 
 
-input:focus {
-    background-color: rgb(255, 255, 255);
+input {
+
+    &:focus {
+        background-color: rgb(255, 255, 255);
+    }
+
+    &[type="checkbox"] {
+        width: 1.6em;
+        height: 1.6em;
+    }
 }
 
 select:focus,

@@ -2,6 +2,7 @@
   <nav>
     <div id="nav-public">
       <router-link to="/">Home</router-link>
+      <router-link to="/about">About</router-link>
       <router-link to="/public-apps" class="nav-dropdowner">
         Public Apps
         <div class="nav-dropdown-list">

@@ -102,6 +102,7 @@ select {
   }
 }
 
+// Panel > Board
 // @ Panel 
 .panel {
   display: flex;
@@ -131,10 +132,30 @@ select {
   // background-color: ;;
   padding: $box-primary;
   margin: $box-small;
-  border: .1em solid rgba(0, 0, 0, 0.1);
+  border-radius: .25rem;
+  border-top: .25em solid rgba(0, 0, 0, 0.1);
+  border-bottom: .25em solid rgba(0, 0, 0, 0.1);
+
 
   &-sub {
 
   }
 }
 
+.ql-editor {
+  // background-color: red;
+  // height: ;
+
+}
+.ql-container {
+}
+
+.quill-editor {
+  // background-color: transparent;;
+  // height: 20vh;
+  font-size: 1.6rem;
+}
+
+#editor {
+  // background-color: brown;
+}
