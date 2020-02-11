@@ -13,12 +13,6 @@
           <!-- Sign up form -->
           <form class="grid-col board" @submit.prevent="checkForm" novalidate="true" >
             <div>
-              <label for="signUpName">Name</label>
-              <input type="name" id="signUpName" class="input-part" v-model="signUp.name[0]" placeholder="Name" required>
-              <div class="order-signs" v-if="signUp.name[1]">Name is validated.</div>
-            </div>
-
-            <div>
               <label for="signUpEmail">Email (ID)</label>
               <input type="email" id="signUpEmail" class="input-part" v-model="signUp.email[0]" placeholder="Type email please" required>
             </div>
@@ -26,6 +20,12 @@
             <div>
               <label for="signUpPassword">Password</label>
               <input type="password" id="signUpPassword" class="input-part" v-model="signUp.password" placeholder="Type password please" required min="8" max="12">
+            </div>
+
+            <div>
+              <label for="signUpName">Name</label>
+              <input type="name" id="signUpName" class="input-part" v-model="signUp.name[0]" placeholder="Name" required>
+              <div class="order-signs" v-if="signUp.name[1]">Name is validated.</div>
             </div>
 
             <div>

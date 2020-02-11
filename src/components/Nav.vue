@@ -4,13 +4,19 @@
       <router-link to="/">Home</router-link>
       <router-link to="/about">About</router-link>
       <router-link to="/public-apps" class="nav-dropdowner">
-        Public Apps
+        Public App
         <div class="nav-dropdown-list">
           <router-link :to="{name: 'todo'}">Todo</router-link>
           <router-link :to="{name: 'style'}">Style</router-link>
+        </div>
+      </router-link>
+      <router-link to="/private-apps" class="nav-dropdowner">
+      Private App
+      <div class="nav-dropdown-list">
           <router-link :to="{name: 'blog'}">Blog</router-link>
         </div>
       </router-link>
+
 
       <router-link to="/docs">Docs</router-link>
       <router-link to="/community">Community</router-link>

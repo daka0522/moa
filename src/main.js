@@ -38,6 +38,7 @@ firebase.auth().onAuthStateChanged( user => {
   if (user) {
       store.commit("currentUserSet", user)
       store.commit("signStateMsger", `'${user.displayName}' signed in.`)
+
       if (!user.emailVerified) {
         store.commit("signStateMsger", 'Email verification required. Warning!')
         

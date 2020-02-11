@@ -38,11 +38,25 @@ const routes = [
                 component: () => import('@/views/publicApp/Style.vue')
             },
             {
+                name: 'canvas',
+                path: 'canvas',
+                component: () => import('@/views/publicApp/Canvas.vue')
+            },
+            
+        ]
+    },
+    {
+        name: 'private-apps',
+        path: '/private-apps',
+        component: () => import('@/views/privateApp/privateApp.vue'),
+        children: [
+            {
                 name: 'blog',
                 path: 'blog',
-                component: () => import('@/views/publicApp/Blog.vue')
+                component: () => import('@/views/privateApp/Blog.vue')
             },
         ]
+
     },
     {
         name: 'community',

@@ -36,10 +36,8 @@ export default {
     listPublished() {
       let indexRef = this.$root.db.collectionGroup('blog').where('isPublished', '==', true)
       indexRef.get().then(querySnapshot => {
-        console.log(querySnapshot);
 
         querySnapshot.forEach(doc => {
-          console.log(doc);
           let cont = {}
           cont.id = doc.id
           cont.data = doc.data()

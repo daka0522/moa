@@ -3,6 +3,10 @@
   line-height: 1.6em;
 }
 
+p {
+  margin: 0;
+}
+
 ul,
 ol {
   list-style: none;

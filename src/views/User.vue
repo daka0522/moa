@@ -1,71 +1,62 @@
 <template>
   <div>
-    <h2>User Profile</h2>
-    <div>
+    <h2>Profile</h2>
+    <div  v-if="this.currentUser">
       <section id="profile" class="panel">
         <div>
-          <span>Name:</span>
-          <input v-if="isEditable">
 
-          <h3>{{currentUser.displayName}}</h3>
-          <img :src="this.$root.account.currentUser.photoURL" width="64px" :alt="this.$root.account.currentUser.displayName + '\'s profile photo'">
-          
-          <input v-if="isEditable" type="file" class="input-part">
-        </div>
-        <p>{{currentUser.email}}</p>
-        <p>Creation Time: {{currentUser.metadata.creationTime}}</p>
-        <p>Last Sign In Time: {{currentUser.metadata.lastSignInTime}}</p>
-        <div>
-          <span>Verified:</span>
-          <div v-if="currentUser.emailVerified">
-            <i style="color: green; font-size: 1.6em" class="fas fa-check-circle "></i>
+          <div id="user-email">
+            <h4>ID</h4>
+            <p>{{this.currentUser.email}}</p>
           </div>
-          <span v-else>None</span>
+          
+          <div id="user-name">
+            <h4>Name</h4>
+            <p>{{currentUser.displayName}}</p>
+            <input v-if="isEditable" v-model="userEdit.name">
+          </div>
+
+          <div id="user-photo">
+            <h4>Photo</h4>
+            <img :src="this.$root.account.currentUser.photoURL" width="64px" :alt="currentUser.displayName + '\'s profile photo'">
+            <div v-if="isEditable">
+              <input v-if="isEditable" type="file" id="photoFile" value="upload" class="input-part">
+              <input type="submit" class="btn" @click="uploadPhoto()">
+            </div>
+          </div>
+
+          
+
+          <div id="user-history">
+            <p>Creation Time: {{currentUser.metadata.creationTime}}</p>
+            <p>Last Sign In Time: {{currentUser.metadata.lastSignInTime}}</p>
+          </div>
+
+          <div id="user-state">
+            <span>Verified:</span>
+            <div v-if="currentUser.emailVerified">
+              <span>True</span>
+              <i style="color: green; font-size: 1.6em" class="fas fa-check-circle "></i>
+            </div>
+            <span v-else>None</span>
+          </div>
+
+          <div id="user-etc">
+            <p>Using Apps</p>
+          </div>
+
+
         </div>
-        <div>
-          <p>Using Apps</p>
-        </div>
-        <div id="user-tools">
-          <button id="user-edit" class="btn" @click="isEditable = !isEditable">Edit</button>
-          <div id="user-edit-btns" v-if="isEditable">
-            <button class="btn">Save</button>
+
+
+        <div id="user-eidt">
+          <button id="user-edit-btn" class="btn" @click="isEditable = !isEditable">Edit</button>
+          <div id="user-edit-tools" v-if="isEditable">
+            <button class="btn" @click="saveUserEdit()">Save</button>
             <button class="btn">Delete</button>
           </div>
         </div>
       </section>
-
-      <!-- Table version -->
-      <table>
-        <caption>User Profile</caption>
-        <tr>
-          <th>Name</th>
-          <td>
-            <h3>{{currentUser.displayName}}</h3>
-            <img :src="this.$root.account.currentUser.photoURL" width="64px" :alt="this.$root.account.currentUser.displayName + '\'s profile photo'">
-
-          </td>
-        </tr>
-        <tr>
-          <th>Email</th>
-          <td>
-            <p>{{currentUser.email}}</p>
-          </td>
-        </tr>
-        <tr>
-          <th>Verified</th>
-          <td>
-            <div v-if="currentUser.emailVerified">
-              <i style="color: green; font-size: 1.6em" class="fas fa-check-circle "></i>
-            </div>
-            <span v-else>None</span>
-          </td>
-        </tr>
-      </table>
-
-
-
-
-
 
     </div>
   </div>
@@ -80,6 +71,11 @@ export default {
       },
       fields: '',
       isEditable: false, 
+      userEdit: {
+        name: '',
+        photoURL: null,
+      },
+      
     }
   },
   computed:{
@@ -87,10 +83,66 @@ export default {
       return this.$root.account.currentUser
     },
 
+
   },
   methods: {
+    saveUserEdit(){
+      this.userInfo.name = this.userEdit.name 
+      this.userInfo.photoURL = this.userEdit.photoURL
+
+      let data = {
+            userInfo :{
+              name: this.userEdit.name, 
+              photoURL: this.userEdit.photoURL
+            }
+          }
+      this.$root.db.collection('user').doc(this.currentUser.uid).update(
+        
+          data
+        
+      ).then( ()=> {
+        console.log('Successfully updated in DB');
+        
+      }).catch(error => {
+        console.error('Error from saveUserEdit', error)
+      })
+      console.log('Successfully cheanged', this.userInfo);
+      
+    },
+
+    uploadPhoto(){
+      // Get elements
+      let fileButton = document.getElementById('photoFile')
+
+      // Listen for file selection
+      fileButton.addEventListener('change', function(e) {
+        // Get file 
+        let file = e.target.files[0]
+        file
+        // Create storage ref 
+        this.$root.firebase.storage().ref('user')
+
+
+      })
+
+
+      // console.log(photoFile)
+
+      // Create Storage ref 
+
+      // Upload file 
+
+      // After effect
+    },
+
+
     
-  }
+  },
+  beforeCreate() {
+
+    this.currentUser
+  },
+  
 }
 </script>
 
