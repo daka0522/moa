@@ -6,17 +6,24 @@
     <button class="btn" @click="listPublished()">List</button>
     <div class="content">
       <section v-for="doc in docs" :key="doc.id" class="panel">
+
+        <!-- Document date and sub info  -->
         <div class="noticeMsg" style="display: flex; justify-content: space-between;">
           <span>{{doc.data.date.toDate().toLocaleString()}}</span>
           <span style="color: green">{{doc.data.isPublished ? "Published" : "Not published"}}</span>
         </div>
+
+        <!-- Document main contents -->
         <h4>{{doc.data.title}}</h4>
         <article v-html="doc.data.content"></article>
-        <div v-if="doc.data.author" id="author" @click="showUserProfile(doc.data.author)">
-          <p>{{doc.data.author}}</p>
-          <div id="author-profile" :style="{thinProfile: false}" class="thin-profile">
-            <p>Profile</p>
-            
+
+        <!-- userdata -->
+        <div  id="userdata" @click="showUserProfile(doc.data.userdata)">
+          <!-- <p>{{userData(doc) ? doc.data.userdata.name : "NONENAME"}}</p> -->
+          <!-- <image src="doc.data.userdata.photoURL" /> -->
+
+          <div id="userdata-profile" :style="{thinProfile: false}" class="thin-profile">
+
           </div>
         </div>
       </section>
@@ -38,9 +45,26 @@ export default {
       indexRef.get().then(querySnapshot => {
 
         querySnapshot.forEach(doc => {
+
           let cont = {}
           cont.id = doc.id
           cont.data = doc.data()
+
+          let userid = doc.ref.parent.parent.id
+
+          this.$root.db.collection('user').doc(userid).get().then( (result) => {
+            let userdata = result.data().userdata
+            cont.data.userdata = userdata
+            console.log('userdata');
+            
+          }).catch(error => {
+            console.error(error);
+            
+          })
+
+
+          console.log(cont);
+          
 
           // Guard if there's already the doc existed 
           if (this.docIds.includes(doc.id)) {
@@ -60,6 +84,9 @@ export default {
 
     }
   },
+  computed: {
+    
+  }
 
 
 }
@@ -68,6 +95,7 @@ export default {
 <style lang="scss" scoped>
 .panel {
   flex-direction: column;
+  // align-content: space-between;
 }
 .content {
   display: grid;
@@ -93,5 +121,12 @@ export default {
 
     display: none;
   }
+}
+
+#userdata{
+  background-color: red;
+  // align-self: flex-end;
+  // justify-self: flex-end;
+  // bottom: 0;
 }
 </style>

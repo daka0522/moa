@@ -1,11 +1,11 @@
-function docRef() {
+function colRef() {
   if (this.$root.account.currentUser) {
-    return this.$root.db.collection(this.collectionName).doc(this.docID)
+    return this.$root.db.collection('user').doc(this.getUserID).collection(this.appName)
   } else {
-    console.error("Need login! from utils")
     return null
   }
 }
+
 function getUserID() {
   if (this.$root.account.currentUser) {
     return this.$root.account.currentUser.uid
@@ -15,4 +15,4 @@ function getUserID() {
   }
 }
 
-export  {docRef, getUserID}
+export  {colRef, getUserID}

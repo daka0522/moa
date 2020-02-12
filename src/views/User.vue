@@ -22,10 +22,13 @@
             <div v-if="isEditable">
               <input v-if="isEditable" type="file" id="photoFile" value="upload" class="input-part">
               <input type="submit" class="btn" @click="uploadPhoto()">
+
+              <button class="btn" @click="isRP = !isRP">Random Painter</button>
+
+              <random-painter v-if="isRP" class="panel"></random-painter>
+
             </div>
           </div>
-
-          
 
           <div id="user-history">
             <p>Creation Time: {{currentUser.metadata.creationTime}}</p>
@@ -56,6 +59,8 @@
             <button class="btn">Delete</button>
           </div>
         </div>
+
+        <button class="btn" @click="createUserData(currentUser)">Create User Data</button>
       </section>
 
     </div>
@@ -64,6 +69,9 @@
 
 <script>
 export default {
+  components: {
+    'random-painter': () => import('@/components/painter/RandomPainter.vue')
+  },
   data() {
     return {
       confirmed: {
@@ -76,6 +84,8 @@ export default {
         photoURL: null,
       },
       
+      // Show random painter
+      isRP: false,
     }
   },
   computed:{
@@ -87,26 +97,15 @@ export default {
   },
   methods: {
     saveUserEdit(){
-      this.userInfo.name = this.userEdit.name 
-      this.userInfo.photoURL = this.userEdit.photoURL
-
-      let data = {
-            userInfo :{
-              name: this.userEdit.name, 
-              photoURL: this.userEdit.photoURL
-            }
-          }
-      this.$root.db.collection('user').doc(this.currentUser.uid).update(
-        
-          data
-        
-      ).then( ()=> {
-        console.log('Successfully updated in DB');
-        
-      }).catch(error => {
-        console.error('Error from saveUserEdit', error)
-      })
-      console.log('Successfully cheanged', this.userInfo);
+      if (this.userEdit.name) {
+        this.currentUser.updateProfile({
+          displayName: this.userEdit.name 
+        })
+      }
+      /* if (this.userEdit.photoURL) {
+        this.currentUser.photoURL = this.userEdit.photoURL
+      } */
+      
       
     },
 
@@ -124,19 +123,27 @@ export default {
 
 
       })
-
-
-      // console.log(photoFile)
-
-      // Create Storage ref 
-
-      // Upload file 
-
-      // After effect
     },
+    createUserData(user) {
+      let data = {
+        userdata: {
+          name: user.displayName,
+          email: user.email,
+          uid: user.uid,
+          photoURL: user.photoURL,
+          emailVerified: user.emailVerified,
+          class: null, 
+          created: user.metadata.creationTime 
+        }
+      }
 
+      this.$root.db.collection('user').doc(user.uid).set(data).then(
+        () => {
+          console.log('create User data! success.')
+        }
+      )
+    }
 
-    
   },
   beforeCreate() {
 

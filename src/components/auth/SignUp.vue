@@ -1,8 +1,8 @@
 <template>
   <div>
-      <div id="signUp" class="panel">
-        <h4>Sign Up with Email and Password</h4>
-        <div>
+      <div id="signUp" >
+        <h3 style="text-align:center">Sign Up with Email and Password</h3>
+        <div >
           <div v-if="signUp.errors.length" class="board" methods="signUpWithEmail(signUp.email, signUp.password)">
             <b>Please correct the following erros(s):</b>
             <ul>
@@ -11,7 +11,7 @@
           </div>
 
           <!-- Sign up form -->
-          <form class="grid-col board" @submit.prevent="checkForm" novalidate="true" >
+          <form class="panel-col" @submit.prevent="checkForm" novalidate="true" >
             <div>
               <label for="signUpEmail">Email (ID)</label>
               <input type="email" id="signUpEmail" class="input-part" v-model="signUp.email[0]" placeholder="Type email please" required>
@@ -169,3 +169,10 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+.panel-col {
+  display: grid;
+
+}
+</style>

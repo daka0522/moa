@@ -8,6 +8,7 @@
         <div class="nav-dropdown-list">
           <router-link :to="{name: 'todo'}">Todo</router-link>
           <router-link :to="{name: 'style'}">Style</router-link>
+          <router-link :to="{name: 'canvas'}">Canvas</router-link>
         </div>
       </router-link>
       <router-link to="/private-apps" class="nav-dropdowner">
@@ -24,7 +25,7 @@
 
 
     <div class="nav-flex-right">
-      <router-link to="/signin">Sign In</router-link>
+      <router-link to="/signin" v-show="!this.$root.account.currentUser">Sign In</router-link>
       
       <!-- <router-link to="/dev">Dev</router-link> -->
       <!-- <router-link to="/signin" v-show="!this.$root.account.currentUser">Sign In</router-link> -->
@@ -37,8 +38,7 @@
         <div id="nav-private-sign">
 
           <router-link to='/user' id="link-user">
-            User
-            <img :src="this.$root.account.currentUser.photoURL" width="32px"
+            <img :src="this.$root.account.currentUser.photoURL" width="30"
               :alt="this.$root.account.currentUser.displayName + '\'s profile photo'">
           </router-link>
           <button class="btn-small" @click="this.$root.signOut">Sign Out</button>

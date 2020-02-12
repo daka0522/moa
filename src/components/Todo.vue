@@ -49,12 +49,14 @@
 </template>
 
 <script>
+import {colRef, getUserID} from '@/utils/firestoreUtils'
+
 export default {
   data() {
     return {
       // Database Refrence of this app
-      collectionName: 'public-apps',
-      docID: 'todo',
+      appName: 'todo',
+      // docID: 'todo',
 
       mainStateMsg: '',
 
@@ -88,7 +90,7 @@ export default {
 
         // Check if the user is signed in and save in web DB.
         if (this.$root.account.currentUser) {
-          this.docRef.collection(this.getUserID).doc(doc.id).set(doc.fields)
+          this.colRef.doc(doc.id).set(doc.fields)
             .then(() => {
               this.mainStateMsg = "Document successfully written!"
               this.pushDoc(doc)
@@ -111,7 +113,7 @@ export default {
     // Initial function when the instance is mounted call lists from firestore.
     // Require: Authenticated
     listAllDoc() {
-      this.docRef.collection(this.getUserID).get().then(
+      this.colRef.get().then(
           snapshot => {
             let subject = ''
             snapshot.size > 1 ? subject = "Document's are" : subject = "Document is"
@@ -129,7 +131,7 @@ export default {
     // Request list an individual existing doc.
     // Require: Authenticated
     listDoc(docID) {
-      this.docRef.collection(this.getUserID).doc(docID).get().then(
+      this.colRef.doc(docID).get().then(
         doc => {
           if (doc.exists) {
             this.stateMsg = "Listed document successfully!"
@@ -155,7 +157,7 @@ export default {
       // Post update doc to firestore
       // If the user is logined.
       if (this.$root.account.currentUser) {
-        this.docRef.collection(this.getUserID).doc(doc.id).update(data).then(() => {
+        this.colRef.doc(doc.id).update(data).then(() => {
             this.docStateMsg(doc, "This is successfully updated.")
           }).catch(error => {
             this.docStateMsg(doc, `Error while updating the doc. ${error.message}`)
@@ -172,7 +174,7 @@ export default {
       const docIndex = this.docs.findIndex(item => item.id === doc.id)
       // If the user is logined.
       if (this.$root.account.currentUser) {
-        this.docRef.collection(this.getUserID).doc(doc.id).delete().then(() => {
+        this.colRef.doc(doc.id).delete().then(() => {
           this.docStateMsg(doc, "This document is successfully deleted!")
           this.docs.splice(docIndex, 1)
         }).catch(error => {
@@ -187,7 +189,7 @@ export default {
     deleteAll() {
       if (this.$root.account.currentUser) {
         this.docs.forEach( doc => {
-          this.docRef.collection(this.getUserID).doc(doc.id).delete().then( () => {
+          this.colRef.doc(doc.id).delete().then( () => {
             this.docs = []
           })
         })   
@@ -229,20 +231,9 @@ export default {
 
   },
   computed: {
-    docRef() {
-      if (this.$root.account.currentUser) {
-        return this.$root.db.collection(this.collectionName).doc(this.docID)
-      } else {
-        return null
-      }
-    },
-    getUserID() {
-      if (this.$root.account.currentUser) {
-        return this.$root.account.currentUser.uid
-      } else {
-        return null
-      }
-    }
+    // # Imported utils
+    colRef,
+    getUserID,
   },
   mounted() {
     if (this.$root.account.currentUser) {

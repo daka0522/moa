@@ -28,19 +28,17 @@
 </template>
 
 <script>
-import {docRef, getUserID} from '@/utils/firestoreUtils'
-docRef
-
+import {colRef, getUserID} from '@/utils/firestoreUtils'
+colRef
 export default {
   data() {
     return {
-      collectionName: 'apps',
+      appName: 'blog',
       docID: 'blog',
 
       newBlogTitle: '',
       newBlogContent: '',
 
-      // docDate: this.$root.firebase.firestore.Timestamp.fromDate(new Date),
       isPublished: false,
       
       mainStateMsg: ''
@@ -48,7 +46,7 @@ export default {
   },
   methods: {
     saveDoc() {
-      this.userRef.collection(this.docID).doc(this.docDate.toMillis().toString()).set({
+      this.colRef.doc(this.docDate.toMillis().toString()).set({
         title: this.newBlogTitle,
         content: this.newBlogContent,
         date: this.docDate,
@@ -66,9 +64,7 @@ export default {
     }
   },
   computed: {
-    userRef() {
-      return this.$root.db.collection('users').doc(this.getUserID)
-    },
+    colRef,
     getUserID,
 
     docDate() {
