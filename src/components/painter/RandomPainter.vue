@@ -4,8 +4,8 @@
 
       <div id="canvas-tools-width" class="canvas-tools-item">
         <label for="canvasWidthcontroler">Width</label>
-        <input type="number" name="canvasWidthNumber" id="canvasWidthNumber" v-model.number="canvasWidth" min="100" max="1000">
-        <input type="range" name="canvasWidthControler" id="canvasWidthControler" v-model.number="canvasWidth" min="100" max="1000">
+        <input type="number" name="canvasWidthNumber" id="canvasWidthNumber" v-model.number="canvasWidth" min="100" :max="canvasMaxWidth">
+        <input type="range" name="canvasWidthControler" id="canvasWidthControler" v-model.number="canvasWidth" min="100" :max="canvasMaxWidth">
       </div>
 
       <div id="canvas-tools-height" class="canvas-tools-item">
@@ -13,8 +13,6 @@
         <input type="number" name="canvasHeigthNumber" id="canvasHeigthNumber" v-model.number="canvasHeight" min="100" max="1000">
         <input type="range" name="canvasHeightcontroler" id="canvasHeightcontroler" v-model.number="canvasHeight" min="100" max="1000">
       </div>
-
-
 
       <div id="canvasGuideLine" class="canvas-tools-item">
         <label>Guide line</label>
@@ -67,8 +65,11 @@ hsl2hex, hsl2rgb
 export default {
   data() {
     return {
-      canvasWidth: 450,
-      canvasHeight: 450,
+      canvasWidth: 150,
+      canvasHeight: 150,
+
+      canvasMaxWidth: 800,
+
       showGuidLine: false,
       guideLineNumber: 4,
 
@@ -274,23 +275,42 @@ export default {
 
           })
         })
-
       })
+    },
+    
 
-    }
-/* 
-https://firebasestorage.googleapis.com/v0/b/rsch-artworks.appspot.com/o/user%2FiybkkYm9MEdjC1LneZvq0oP9jpe2%2Fprofile-photo.png?alt=media&token=1e79a642-6d3c-4dc2-85cd-37660c3a6acc
-https://firebasestorage.googleapis.com/v0/b/rsch-artworks.appspot.com/o/user%2FiybkkYm9MEdjC1LneZvq0oP9jpe2%2Fprofile-photo.png?alt=media&token=357b9c4d-6c10-4974-a8ff-dc7bb999c715
- */
 
   },
   computed: {
+    initialWidth() {
+      console.log(window.screen.availWidth <= 450 ? window.screen.availWidth / 2 : 450)
+      return window.screen.availWidth > 450 ? window.screen.availWidth / 2 : 450
+    },
+    /* canvasMaxWidth() {
+      // let windowWidth = window.screen.availWidth
+      // return windowWidth - (windowWidth / 10)
+      return window.screen.availWidth
+    }, */
+    windowResize() {
+      let availWidth
+      window.addEventListener('resize', function(event){
+        // console.log(event.currentTarget.screen.availWidth);
+        // this.canvasMaxWidth = event.currentTarget.screen.availWidth
+        availWidth = event.currentTarget.screen.availWidth
+        
+      })
+      console.log(availWidth);
+      
+      return true
+    }
     
   },
   mounted() {
     this.randomProfileGenerator()
     this.drawGuideLine()
     this.drawText()
+
+    this.initialWidth
   },
   watch: {
     showGuidLine(nv) {
@@ -306,6 +326,11 @@ https://firebasestorage.googleapis.com/v0/b/rsch-artworks.appspot.com/o/user%2Fi
     curveValue() {
       this.draw()
     },
+    windowResize() {
+      // console.log(nv)
+    }
+    
+
    
 
   }
@@ -313,10 +338,9 @@ https://firebasestorage.googleapis.com/v0/b/rsch-artworks.appspot.com/o/user%2Fi
 </script>
 
 <style lang="scss" scoped>
-
-
 .canvas-tools-cont{
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 

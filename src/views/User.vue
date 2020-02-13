@@ -3,7 +3,7 @@
     <h2>Profile</h2>
     <div  v-if="this.currentUser">
       <section id="profile" class="panel">
-        <div>
+        <div id="user-profile">
 
           <div id="user-email">
             <h4>ID</h4>
@@ -38,8 +38,7 @@
           <div id="user-state">
             <span>Verified:</span>
             <div v-if="currentUser.emailVerified">
-              <span>True</span>
-              <i style="color: green; font-size: 1.6em" class="fas fa-check-circle "></i>
+              <span style="color: green">True</span>
             </div>
             <span v-else>None</span>
           </div>
@@ -47,10 +46,7 @@
           <div id="user-etc">
             <p>Using Apps</p>
           </div>
-
-
         </div>
-
 
         <div id="user-eidt">
           <button id="user-edit-btn" class="btn" @click="isEditable = !isEditable">Edit</button>
@@ -162,26 +158,11 @@ export default {
   display: grid;
 }
 
-table {
-  padding: 1.6em;
-  margin: 1.6em;
-  width:50%;
+#user-profile {
+  display: grid;
+  grid-template-rows: repeat(auto-fit, minmax(5em, 1fr));
+  grid-gap: 1.6em;
 
-  border-collapse: collapse;
-
-  box-shadow: 0 0 .5em .1em rgba(224, 224, 224, 0.664);
-
-  tr {
-    // border-bottom: 1px solid rgba(128, 128, 128, 0.192);
-    
-  }
-  th, td {
-    padding: $box-primary;
-    
-  }
-  td {
-    // display: inline-block;
-    
-  }
 }
+
 </style>

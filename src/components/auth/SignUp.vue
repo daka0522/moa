@@ -1,56 +1,44 @@
 <template>
-  <div>
-      <div id="signUp" >
-        <h3 style="text-align:center">Sign Up with Email and Password</h3>
-        <div >
-          <div v-if="signUp.errors.length" class="board" methods="signUpWithEmail(signUp.email, signUp.password)">
-            <b>Please correct the following erros(s):</b>
-            <ul>
-              <li v-for="error in signUp.errors" :key="error">{{ error }}</li>
-            </ul>
-          </div>
-
-          <!-- Sign up form -->
-          <form class="panel-col" @submit.prevent="checkForm" novalidate="true" >
-            <div>
-              <label for="signUpEmail">Email (ID)</label>
-              <input type="email" id="signUpEmail" class="input-part" v-model="signUp.email[0]" placeholder="Type email please" required>
-            </div>
-
-            <div>
-              <label for="signUpPassword">Password</label>
-              <input type="password" id="signUpPassword" class="input-part" v-model="signUp.password" placeholder="Type password please" required min="8" max="12">
-            </div>
-
-            <div>
-              <label for="signUpName">Name</label>
-              <input type="name" id="signUpName" class="input-part" v-model="signUp.name[0]" placeholder="Name" required>
-              <div class="order-signs" v-if="signUp.name[1]">Name is validated.</div>
-            </div>
-
-            <div>
-              <label for="signUpPhoto">Photo (optional)</label>
-              <input type="file" id="signUpPhoto" class="input-part">
-            </div>
-
-            <input id="signUpSubmit" type="submit" value="Submit" class="btn" @click="signUpWithEmail()">
-          </form>
-
-          <div>
-            <!-- <button class="btn" @click="signUpWithEmail(signUp.email, signUp.password)">Sign Up</button> -->
-          </div>
-
-        </div>
-
-        <h4>Email verification required.</h4>
-        <button class="btn" @click="emailVerification()">Send Email</button>
+  <div id="signUp">
+    <h3 style="text-align:center">Sign Up with Email and Password</h3>
+    <div>
+      <div v-if="signUp.errors.length" class="msg-error" methods="signUpWithEmail(signUp.email, signUp.password)">
+        <b>Please correct the following erros(s):</b>
+        <ul>
+          <li v-for="error in signUp.errors" :key="error">{{ error }}</li>
+        </ul>
       </div>
 
+      <!-- Sign up form -->
+      <form class="panel-col" @submit.prevent="checkForm" novalidate="true">
+        <label for="signUpEmail">Email (ID)</label>
+        <input type="email" id="signUpEmail" class="input-part" v-model="signUp.email[0]" placeholder="Type email please" required>
+
+        <label for="signUpPassword">Password</label>
+        <input type="password" id="signUpPassword" class="input-part" v-model="signUp.password" placeholder="Type password please" required min="8" max="12">
+
+        <label for="signUpName">Name</label>
+        <input type="name" id="signUpName" class="input-part" v-model="signUp.name[0]" placeholder="Name" required>
+        <div class="order-signs" v-if="signUp.name[1]">Name is validated.</div>
+
+        <label for="signUpPhoto">Photo (optional)</label>
+        <input type="file" id="signUpPhoto" class="input-part">
+
+        <input id="signUpSubmit" type="submit" value="Submit" class="btn" @click="signUpWithEmail()">
+      </form>
+    </div>
+
+    <div id="emailVerification" class="panel-col">
+      <h3 style="text-align:center">Email verification required.</h3>
+      <button class="btn" @click="emailVerification()">Send Email</button>
+    </div>
   </div>
+
 </template>
 
 <script>
 import {getUserID} from '@/utils/firestoreUtils.js'
+getUserID
 
 export default {
   data() {
@@ -71,11 +59,11 @@ export default {
       let auth = this.$root.firebase.auth()
       auth.createUserWithEmailAndPassword(email, password).then( () => {
         console.log("Successfully Signed up!");
+
       })
       .catch(error => {
         console.error(error.code)
         console.log(error.message);
-
       })
     },
     emailVerification() {
@@ -89,21 +77,22 @@ export default {
         })
     },
     // Store the user data in DB 
-    saveUserData() {
+     createUserData(user) {
       let data = {
-        name: this.signUp.name,
-        author: getUserID,
-        created: this.$root.account.currentUser.metadata.creationTime,
-        class: 'normal',
-        photoUrl: ''
+        userdata: {
+          name: user.displayName,
+          email: user.email,
+          uid: user.uid,
+          photoURL: user.photoURL,
+          emailVerified: user.emailVerified,
+          class: null, 
+          created: user.metadata.creationTime 
+        }
       }
-      this.$root.db.collection('users').doc(getUserID).set(data).then(()=>{
-        console.log('New user data is successfully stored in DB.')
-      }).catch(error => {
-        console.error(error)
-      })
-      console.log(this.$root.db.collection('users').doc(getUserID));
-      
+      this.$root.db.collection('user').doc(user.uid).set(data).then( () => {
+          console.log('create User data! success.')
+        }
+      )
     },
     
     /* check: {
@@ -173,6 +162,7 @@ export default {
 <style lang="scss" scoped>
 .panel-col {
   display: grid;
+  // grid-template-rows: repeat(auto-fit, minmax(1rem, 1fr))
 
 }
 </style>

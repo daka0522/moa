@@ -3,7 +3,7 @@ html[data-theme='dark'] {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #4b4a4a;
+  background-color: red;
   color: white;
 }
 
@@ -16,11 +16,9 @@ body {
 }
 
 a:link {
-  color: var(--first-color);
   text-decoration: none;
 }
 
 a:visited {
-  color: var(--first-color);
+  color: black;
 }
-/*# sourceMappingURL=themes.css.map */

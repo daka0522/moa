@@ -22,7 +22,7 @@
           <!-- <p>{{userData(doc) ? doc.data.userdata.name : "NONENAME"}}</p> -->
           <!-- <image src="doc.data.userdata.photoURL" /> -->
 
-          <div id="userdata-profile" :style="{thinProfile: false}" class="thin-profile">
+          <div id="userdata-profile" :style="{thinProfile: false}" class="thin-profile" >
 
           </div>
         </div>
@@ -99,8 +99,8 @@ export default {
 }
 .content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  grid-gap: 1.6em;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-gap: 1rem;
 }
 
 #author {

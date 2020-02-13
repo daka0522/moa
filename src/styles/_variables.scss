@@ -24,7 +24,7 @@ $forth: hsl(hueControl($degree, 6, 3) , $s, $l);
 $fifth: hsl(hueControl($degree, 6, 4) , $s, $l);
 $six: hsl(hueControl($degree, 6, 5) , $s, $l);
 
-
+$shadow-primary: 0 0 .64em .1em rgba(0, 0, 0, .1);
 
 // Test
 :root {
@@ -48,3 +48,13 @@ $test-size: var(--my-font-size);
 .order-signs::before {
 
 }
+
+
+// # Size 
+/* $w-main: 1.62rem;
+$h-main: 1.62rem;
+
+$w-sub: w-main / 2;
+$h-sub: h-main / 2; */
+
+$border-main: .14rem solid rgba(128, 128, 128, .1);

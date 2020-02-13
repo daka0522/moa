@@ -1,6 +1,6 @@
 <template>
   <div id="blog-editor">
-    <h2 style="color: orange">Require: Authenticaed!</h2>
+    <h2 class="msg-warning">Require: Authenticaed!</h2>
     <div>
       <div id="mainState-blog">
         <div class="noticeMsg">

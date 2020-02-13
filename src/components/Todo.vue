@@ -1,7 +1,7 @@
 <template>
   <div id="todo">
     <transition name="fade">
-      <span id="mainStatePanel" class="noticeMsg">{{mainStateMsg}}</span>
+      <span id="mainStatePanel" class="msg">{{mainStateMsg}}</span>
     </transition>
 
     <transition name="fade">
@@ -13,7 +13,7 @@
       </form>
     </transition>
 
-    <div id="todo-main-options" class="sub-panel" v-show="docs.length">
+    <div id="todo-main-options" class="panel-sub" v-show="docs.length">
       <span>Options</span>
       <button id="btn-deleteAll" class="btn" @click="deleteAll()">Delete All!</button>
     </div>

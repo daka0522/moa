@@ -1,6 +1,6 @@
 <template>
 <div>
-  <p style="text-align: center">This is to experiment color spaces and implement to web app.</p>
+  <p class="title-sub">This is to experiment color spaces and implement to web app.</p>
   <div class="contents">
     <section id="colorControlers">
       <div>

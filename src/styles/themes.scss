@@ -18,7 +18,8 @@ html[data-theme='dark'] {
     // overflow: hidden;
 
 
-    background-color: rgb(75, 74, 74);
+    // background-color: rgb(75, 74, 74);
+    background-color: red;
     color: white;
 }
 
@@ -31,13 +32,12 @@ body {
 }
 
 a:link {
-    color: var(--first-color);
-    // background-color: red;
+    // color: var(--first-color);
     text-decoration: none;
     // color: white;
 }
 
 a:visited {
-    // color: white;
-    color: var(--first-color)
+    // color: var(--first-color)
+    color: black;
 }
