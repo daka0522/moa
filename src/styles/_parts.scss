@@ -32,8 +32,9 @@ $box-small: box-maker($primary-em / 2);
 
   &-warning {
     @extend .msg;
-    background-color: rgba(255, 166, 0, 0.75);
-    color: white;
+    background-color: rgba(255, 166, 0, 0.05);
+    border: .14rem solid rgba(255, 166, 0, 0.1);
+    color: rgba(255, 166, 0, 0.95);
 
     &::before {
       content: '\26A0';
@@ -54,6 +55,7 @@ $box-small: box-maker($primary-em / 2);
     }
   }
 }
+
 
 // @ Button class 
 .btn {

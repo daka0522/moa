@@ -17,6 +17,7 @@ $l: 40;
     @return $result % 360;
 }
 
+
 $first: hsl(hueControl($degree, 6, 0), $s, $l);
 $second: hsl(hueControl($degree, 6, 1), $s, $l);
 $third: hsl(hueControl($degree, 6, 2) , $s, $l);
@@ -34,7 +35,6 @@ $shadow-primary: 0 0 .64em .1em rgba(0, 0, 0, .1);
 
 $test-color: var(--my-test-color);
 $test-size: var(--my-font-size);
-
 
 
 // Order signs 

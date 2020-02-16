@@ -19,9 +19,8 @@ $h-sub: h-main / 2; */
 }
 
 .msg-warning {
-  background-color: rgba(255, 166, 0, 0.05);
-  border: 0.14rem solid rgba(255, 166, 0, 0.1);
-  color: rgba(255, 166, 0, 0.95);
+  background-color: rgba(255, 166, 0, 0.75);
+  color: white;
 }
 
 .msg-warning::before {

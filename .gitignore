@@ -88,6 +88,6 @@ node_modules/
 .env
 
 # rules 
-_firebase
-
-firebase.js
+**.rules
+**.rules.json
+**indexes.json

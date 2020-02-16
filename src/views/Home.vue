@@ -10,8 +10,8 @@
         </div>
         <div id="update-panel" class="box-shadow-two">
           <h2>Update</h2>
-          <div></div>
         </div>
+
       </div>
     </div>
 </template>

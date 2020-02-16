@@ -1,27 +1,52 @@
 <template>
   <div id="blog-editor">
-    <h2 class="msg-warning">Require: Authenticaed!</h2>
+    <p class="msg-warning">Require: Authenticaed!</p>
     <div>
-      <div id="mainState-blog">
-        <div class="noticeMsg">
-          <p id="mainStateMsg">{{mainStateMsg}}</p>
-        </div>
-      </div>
-      <transition name="button-effect">
-        <div id="newDocTools" v-show="newBlogTitle && newBlogContent">
-          <div>
-            <label for="publishing">Publishing</label>
-            <input type="checkbox" name="publishing" id="publishing" v-model="isPublished" >
-          </div>
-          <button class="btn" @click="saveDoc()">Save</button>
-          <button class="btn" @click="createNewDoc()">Create New</button>
-        </div>
-      </transition>
+      <button class="btn" @click="createNewDoc()">Create New</button>
+      <!-- <button class="btn" @click="readDoc()">Read</button> -->
     </div>
 
-    <div id="editor">
-      <input id="blog-title" v-model="newBlogTitle" placeholder="Title">
-      <quill-editor v-model="newBlogContent" ref="myQuillEditor" />
+
+    <!-- Create new document -->
+    <div id="writeDoc" v-if="mode.write">
+      <button class="btn" @click="mode.write = false">Back</button>
+
+      <div>
+        <div id="mainState-blog">
+          <div class="noticeMsg">
+            <p id="mainStateMsg">{{mainStateMsg}}</p>
+          </div>
+        </div>
+        <transition name="button-effect">
+          <div id="newDocTools" v-show="newBlogTitle && newBlogContent">
+            <div>
+              <label for="publishing">Publishing</label>
+              <input type="checkbox" name="publishing" id="publishing" v-model="isPublished" >
+            </div>
+            <button class="btn" @click="saveDoc()">Save</button>
+          </div>
+        </transition>
+      </div>
+
+      <div id="editor">
+        <input id="blog-title" v-model="newBlogTitle" placeholder="Title">
+        <quill-editor v-model="newBlogContent" ref="myQuillEditor" />
+      </div>
+    </div>
+
+    <!-- Read and list my documents -->
+    <div id="readDoc" v-else>
+      <div v-for="doc in myDoc" :key="doc.date.seconds" id="docList">
+        <article class="panel">
+          <div id="docInfo">
+            <span id="docDate">{{doc.date.toDate()}}</span>
+            <span id="docPublish" :class="{published: doc.isPublished}">{{doc.isPublished ? 'Published' : "Privated"}}</span>
+          </div>
+          <h4>{{doc.title}}</h4>
+          <div v-html="doc.content"></div>
+        </article>
+      </div>
+
     </div>
 
   </div>
@@ -41,7 +66,14 @@ export default {
 
       isPublished: false,
       
-      mainStateMsg: ''
+      mainStateMsg: '',
+
+      mode: {
+        write: false,
+        read: true 
+      },
+
+      myDoc: []
     }
   },
   methods: {
@@ -50,7 +82,8 @@ export default {
         title: this.newBlogTitle,
         content: this.newBlogContent,
         date: this.docDate,
-        isPublished: this.isPublished
+        isPublished: this.isPublished,
+        author: this.$root.account.currentUser.email
       }).then( ()=> {
         let end = this.isPublished ? 'and published.' : '.'
         this.mainStateMsg = "The document succefully saved " + end 
@@ -59,8 +92,19 @@ export default {
       })
     },
     createNewDoc() {
+      this.mode.write = true
+
       this.newBlogTitle = ''
       this.newBlogContent = ''
+    },
+    readDoc() {
+      let docRef = this.$root.firebase.firestore().collection('user').doc(this.$root.account.currentUser.uid)
+      docRef.collection('blog').get()
+      .then( docs => {
+        docs.empty ? false : docs.forEach( doc => {
+          this.myDoc.push(doc.data())
+        })
+      })
     }
   },
   computed: {
@@ -70,6 +114,9 @@ export default {
     docDate() {
       return this.$root.firebase.firestore.Timestamp.fromDate(new Date)
     }
+  },
+  mounted() {
+    this.readDoc()
   }
   
 }
@@ -103,5 +150,25 @@ export default {
 #newDocTools {
   display: flex;
   align-items: center;
+}
+
+#docInfo {
+  color: gray;
+  text-align: right;
+  & * {
+    margin-left: 1.6rem;
+  }
+
+  #docPublish {
+    color:indianred;
+
+    &.published {
+      color: green;
+    }
+  }
+}
+
+#docList {
+  margin: 1.6em 0;
 }
 </style>

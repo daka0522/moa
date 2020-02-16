@@ -1,6 +1,5 @@
 <template>
-  <nav>
-    <div id="nav-public">
+  <nav  id="nav-public">
       <router-link to="/">Home</router-link>
       <router-link to="/about">About</router-link>
 
@@ -23,22 +22,22 @@
       <router-link to="/docs">Docs</router-link>
       <router-link to="/community">Community</router-link>
       <router-link to="/dev/edit-quill">Quill</router-link>
-    </div>
 
-    <!-- <router-link to="/dev">Dev</router-link> -->
-    <!-- <router-link to="/signin" v-show="!this.$root.account.currentUser">Sign In</router-link> -->
-
-    <div >
       <router-link to="/signin" v-show="!this.$root.account.currentUser">Sign In</router-link>
-
       <div id="nav-user"  v-if="this.$root.account.currentUser">
         <router-link to='/user' id="link-user">
           <img :src="this.$root.account.currentUser.photoURL" width="30" :alt="this.$root.account.currentUser.displayName + '\'s profile photo'">
         </router-link>
         <button class="btn-small" @click="this.$root.signOut">Sign Out</button>
       </div>
-    </div>
     <options-part id="nav-options"></options-part>
+
+
+    <!-- <router-link to="/dev">Dev</router-link> -->
+    <!-- <router-link to="/signin" v-show="!this.$root.account.currentUser">Sign In</router-link> -->
+
+
+      
   </nav>
 </template>
 
@@ -46,25 +45,31 @@
 /* Navigation */
 nav {
 
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
 
   // Links
   a {
     padding: .62rem;
     min-width: 5rem;
     text-align: center;
+    color: inherit;
 
     &:hover {
-      border-bottom: $border-main;
+      // border-bottom: $border-main;
+      font-weight: 700;
     }
     &:focus{
-      border-bottom: .14rem solid  $purple;
+      // border-bottom: .14rem solid  $purple;
+      font-weight: 700;
+
     }
     &:active {
       color: $purple;
+      font-weight: 700;
+
     }
   }
 

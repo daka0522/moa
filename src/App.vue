@@ -11,8 +11,8 @@
     </main>
 
     <footer>
-      <div>Footer section</div>
       <p>Moa, 2020</p>
+
     </footer>
 
   </div>
@@ -43,13 +43,12 @@ html {
   background-color: rgba(128, 128, 128, .025);
 }
 #app {
-  display: grid;
-  grid-template-rows: 1fr 9fr 1fr;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 nav {
-  height: 100%;
+  // height: 100%;
   // background-color: $white;
   border-bottom: $border-main;
 
@@ -58,9 +57,10 @@ main {
   width: 90vw;
   max-width: 80em;
   // min-width: 23rem;
-  height: 100%;
-
-  // margin: 6.85vh 0 6.85vh 0;
+  margin: auto;
+  padding-top: 6.85vh;
+  padding-bottom: 6.85vh;
+  // height: 100%;
 }
 
 footer {
@@ -69,7 +69,7 @@ footer {
 
 
   width: 100%;
-  height: 100%;
+  // height: 100%;
   text-align: center;
   color: rgba(128, 128, 128, 0.897);
   // box-shadow: 0 -2em 1em .1em rgba(128, 128, 128, 0.15) inset;

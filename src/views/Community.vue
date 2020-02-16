@@ -17,6 +17,10 @@
         <h4>{{doc.data.title}}</h4>
         <article v-html="doc.data.content"></article>
 
+        <div id="author">
+          <span>{{doc.data.author}}</span>
+        </div>
+
         <!-- userdata -->
         <div  id="userdata" @click="showUserProfile(doc.data.userdata)">
           <!-- <p>{{userData(doc) ? doc.data.userdata.name : "NONENAME"}}</p> -->
@@ -42,29 +46,28 @@ export default {
   methods: {
     listPublished() {
       let indexRef = this.$root.db.collectionGroup('blog').where('isPublished', '==', true)
-      indexRef.get().then(querySnapshot => {
-
+      indexRef.get()
+      .then(querySnapshot => {
         querySnapshot.forEach(doc => {
 
           let cont = {}
           cont.id = doc.id
           cont.data = doc.data()
 
+/* 
+          // User data
           let userid = doc.ref.parent.parent.id
 
-          this.$root.db.collection('user').doc(userid).get().then( (result) => {
+          this.$root.db.collection('user').doc(userid).get()
+          .then( (result) => {
             let userdata = result.data().userdata
             cont.data.userdata = userdata
             console.log('userdata');
-            
-          }).catch(error => {
-            console.error(error);
-            
           })
-
-
-          console.log(cont);
-          
+          .catch(error => {
+            console.error(error);
+          })
+ */
 
           // Guard if there's already the doc existed 
           if (this.docIds.includes(doc.id)) {
@@ -105,7 +108,9 @@ export default {
 
 #author {
   cursor: pointer;
-  background-color: antiquewhite;
+  // background-color: antiquewhite;
+  text-align: right;
+  color: gray;
 
   &:hover {
     .thin-profile {
