@@ -2,18 +2,19 @@
   <div id="app">
     <nav-part></nav-part>
 
-    <main>
-      <!-- Temporary  -->
-       <!-- <span class="msg">{{ this.$root.account.signStateMsg}}</span> -->
 
+    <main>
       <h1 style="text-align: center">{{this.routeName().toUpperCase()}}</h1>
       <router-view></router-view>
     </main>
 
-    <footer>
+    <footer title="Footer section. Contains some additional information of this site.">
       <p>Moa, 2020</p>
-
+      <p>Github</p>
+      <p>Contact</p>
     </footer>
+
+  
 
   </div>
 </template>
@@ -39,39 +40,39 @@ export default {
 </script>
 
 <style lang="scss">
+
+
 html {
   background-color: rgba(128, 128, 128, .025);
 }
 #app {
-  display: flex;
-  flex-direction: column;
+  // display: grid;
+  // grid-template-rows: 3rem auto 3rem;  
+  
   height: 100%;
+
 }
 nav {
-  // height: 100%;
-  // background-color: $white;
   border-bottom: $border-main;
-
 }
 main {
   width: 90vw;
   max-width: 80em;
-  // min-width: 23rem;
-  margin: auto;
-  padding-top: 6.85vh;
+  
+  margin: 0 auto;
   padding-bottom: 6.85vh;
-  // height: 100%;
+
+
+
 }
 
 footer {
+  
   background-color: rgba(128, 128, 128, 0.025);
   border-top: $border-main;
-
-
   width: 100%;
-  // height: 100%;
   text-align: center;
-  color: rgba(128, 128, 128, 0.897);
-  // box-shadow: 0 -2em 1em .1em rgba(128, 128, 128, 0.15) inset;
+  color: rgba(100, 100, 100, 1);
 }
+
 </style>

@@ -10,7 +10,6 @@ function getUserID() {
   if (this.$root.account.currentUser) {
     return this.$root.account.currentUser.uid
   } else {
-    console.error("Need login! from utils");
     return null
   }
 }

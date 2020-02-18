@@ -1,36 +1,38 @@
 <template>
   <div id="blog-editor">
-    <p class="msg-warning">Require: Authenticaed!</p>
-    <div>
-      <button class="btn" @click="createNewDoc()">Create New</button>
-      <!-- <button class="btn" @click="readDoc()">Read</button> -->
+    <div class="msg-warning">
+      <p>Require: Authenticaed!</p>
+      <router-link :to="{name: 'signin'}">Sign In</router-link>
     </div>
+    <transition name="button-effect">
+    <div id="tool-btns">
+      <button class="btn" @click="createNewDoc">Create New</button>
+      <div v-show="mode.write" id="tool-write">
+        <button class="btn" @click="mode.write = false">Back</button>
+        
+        <div id="newDocTools" v-show="newBlogTitle && newBlogContent">
+          <div >
+            <label for="publishing">Publishing</label>
+            <input type="checkbox" name="publishing" id="publishing" v-model="isPublished">
+          </div>
+          <button class="btn" @click="saveDoc">Save</button>
+        </div>
+      </div>
+    </div>
+    </transition>
 
 
     <!-- Create new document -->
     <div id="writeDoc" v-if="mode.write">
-      <button class="btn" @click="mode.write = false">Back</button>
-
       <div>
-        <div id="mainState-blog">
-          <div class="noticeMsg">
-            <p id="mainStateMsg">{{mainStateMsg}}</p>
-          </div>
-        </div>
-        <transition name="button-effect">
-          <div id="newDocTools" v-show="newBlogTitle && newBlogContent">
-            <div>
-              <label for="publishing">Publishing</label>
-              <input type="checkbox" name="publishing" id="publishing" v-model="isPublished" >
-            </div>
-            <button class="btn" @click="saveDoc()">Save</button>
-          </div>
-        </transition>
+        <p id="mainStateMsg" :class="mainState.class">{{mainState.msg}}</p>
+
+
       </div>
 
-      <div id="editor">
-        <input id="blog-title" v-model="newBlogTitle" placeholder="Title">
-        <quill-editor v-model="newBlogContent" ref="myQuillEditor" />
+      <div>
+        <input id="editor-title" v-model="newBlogTitle" placeholder="Title">
+        <quill-editor id="editor" v-model="newBlogContent" :content="content" ref="myQuillEditor" />
       </div>
     </div>
 
@@ -39,8 +41,8 @@
       <div v-for="doc in myDoc" :key="doc.date.seconds" id="docList">
         <article class="panel">
           <div id="docInfo">
-            <span id="docDate">{{doc.date.toDate()}}</span>
             <span id="docPublish" :class="{published: doc.isPublished}">{{doc.isPublished ? 'Published' : "Privated"}}</span>
+            <span id="docDate">{{doc.date.toDate()}}</span>
           </div>
           <h4>{{doc.title}}</h4>
           <div v-html="doc.content"></div>
@@ -54,8 +56,13 @@
 
 <script>
 import {colRef, getUserID} from '@/utils/firestoreUtils'
-colRef
+import 'quill/dist/quill.snow.css'
+import {quillEditor} from "vue-quill-editor"
+
 export default {
+  components: {
+    quillEditor
+  },
   data() {
     return {
       appName: 'blog',
@@ -66,18 +73,26 @@ export default {
 
       isPublished: false,
       
-      mainStateMsg: '',
+      mainState: {
+        msg: '',
+        class: null
+      },
 
       mode: {
         write: false,
         read: true 
       },
 
-      myDoc: []
+      myDoc: [],
+
+      content: ''
     }
   },
   methods: {
     saveDoc() {
+      if (!this.$root.account.currentUser) {
+        this.stateMsger("The document will not saved. Please sign in firstly." , 'error')
+      } else {      
       this.colRef.doc(this.docDate.toMillis().toString()).set({
         title: this.newBlogTitle,
         content: this.newBlogContent,
@@ -86,10 +101,11 @@ export default {
         author: this.$root.account.currentUser.email
       }).then( ()=> {
         let end = this.isPublished ? 'and published.' : '.'
-        this.mainStateMsg = "The document succefully saved " + end 
+        this.stateMsger("The document succefully saved " + end , 'success')
       }).catch(error => {
-        this.mainStateMsg = `Error! ${error}`
-      })
+        this.stateMsger(`Error! ${error.message}` , 'error')
+      }) 
+      }
     },
     createNewDoc() {
       this.mode.write = true
@@ -105,6 +121,14 @@ export default {
           this.myDoc.push(doc.data())
         })
       })
+    },
+    stateMsger(msg, state) {
+      this.mainState.msg = msg 
+      this.mainState.class = 'msg-' + state
+      setTimeout(() => {
+        this.mainState.msg = ''
+        this.mainState.class= null
+      }, 10000)
     }
   },
   computed: {
@@ -113,26 +137,40 @@ export default {
 
     docDate() {
       return this.$root.firebase.firestore.Timestamp.fromDate(new Date)
-    }
+    },
+    editor() {
+      return this.$refs.myQuillEditor.quill
+    },
+
   },
   mounted() {
-    this.readDoc()
+    if (this.$root.account.currentUser) {
+      this.readDoc()
+    } 
   }
   
 }
 </script>
 
 <style lang="scss" scoped>
+
 #blog-editor {
   display: flex;
   flex-direction: column;
 
-  #blog-title {
+  #editor-title {
     border-style: none;
     border: 1px solid rgba(0, 0, 0, .2);
     padding: 12px 15px 12px 15px;
-    // width: 100%;
+
+    font-size: 1rem;
+    width: 100%;
   }
+
+  #editor {
+    font-size: 1rem;
+  }
+
 
 }
 
@@ -147,10 +185,7 @@ export default {
   transition: opacity 1s;
 }
 
-#newDocTools {
-  display: flex;
-  align-items: center;
-}
+
 
 #docInfo {
   color: gray;
@@ -170,5 +205,29 @@ export default {
 
 #docList {
   margin: 1.6em 0;
+}
+
+.msg {
+
+  &-success {
+    color: green;
+  }
+
+  &-error {
+    color: red;
+  }
+}
+
+#tool-btns {
+  display:inline-flex;
+
+  #tool-write {
+    display:inline-flex;
+
+    #newDocTools {
+      display: flex;
+      align-items: center;
+    }
+  }
 }
 </style>

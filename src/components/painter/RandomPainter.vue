@@ -74,7 +74,7 @@ export default {
       guideLineNumber: 4,
 
       curveValue: 0,
-      canvasText: 'Ryu Sung Chul',
+      canvasText: 'Hello World',
       saveName: 'random-image',
 
       canvasObj: {
@@ -302,6 +302,13 @@ export default {
       console.log(availWidth);
       
       return true
+    },
+    canvasInnerText() {
+      if (this.$root.account.currentUser) {
+        return this.$root.account.currentUser.displayName
+      } else {
+        return 'Hello!'
+      }
     }
     
   },

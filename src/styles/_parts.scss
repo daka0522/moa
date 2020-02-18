@@ -15,19 +15,18 @@ $primary-em: .8em;
 $box-primary: box-maker($primary-em);
 $box-small: box-maker($primary-em / 2);
 
+
 // @ Message
 .msg {
   color: rgba(0, 0, 0, .5);
-  // font-size: .9em;
   font-weight: lighter;
   
   background-color: rgba(128, 128, 128, .05);
 
-  // border-bottom: $border-main;
   border-radius: .5rem;
   text-align: center;
 
-  padding: 1.6vh 1.6vw 1.6vh 1.6vw;
+  padding: 1.6vh 1.6vw;
   display: block;
 
   &-warning {
@@ -36,23 +35,24 @@ $box-small: box-maker($primary-em / 2);
     border: .14rem solid rgba(255, 166, 0, 0.1);
     color: rgba(255, 166, 0, 0.95);
 
-    &::before {
-      content: '\26A0';
-      // color: red;
-      font-size: 1.6em;
-    }
   }
 
   &-error {
     @extend .msg;
-    background-color: rgba(255, 0, 0, 0.705);
-    color: white;
+    background-color: rgba(255, 0, 0, 0.05);
+    border: .14rem solid rgba(255, 0, 0,  0.1);
+    color: rgba(255, 0, 0, 0.95);
 
     &::before {
-      content: '\26A0';
-      // color: red;
-      font-size: 1.6em;
+
     }
+  }
+
+  &-success {
+    @extend .msg;
+    background-color: rgba(0, 128, 0, 0.05);
+    border: .14rem solid rgba(0, 128, 0, 0.1);
+    color: rgba(0, 128, 0, 0.95);
   }
 }
 
@@ -77,6 +77,8 @@ $box-small: box-maker($primary-em / 2);
   }
 
   &:active {
+    background-color: rgb(20, 140, 0);
+    color: white;
     transform: scale(.9);
   }
 
@@ -84,7 +86,13 @@ $box-small: box-maker($primary-em / 2);
   &-small {
     @extend .btn;
     padding: $box-small;
-    margin: $box-small;
+    // margin: $box-small;
+  }
+
+  &-delete {
+    @extend .btn;
+    background-color: red;
+    color: white;
   }
 }
 

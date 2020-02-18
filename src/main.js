@@ -1,12 +1,13 @@
 // Applications
 import Vue from 'vue'
 import App from './App.vue'
-import { mapState } from 'vuex'
+import {
+  mapState
+} from 'vuex'
 
 Vue.config.productionTip = false
 
 // Utils
-import VueQuillEditor from 'vue-quill-editor'
 import router from './router'
 import store from './store'
 import axios from 'axios'
@@ -14,40 +15,53 @@ import firebase from './firebase_init'
 
 // Components
 import SignIn from './components/auth/SignIn'
-import SignUp from './components/auth/SignUp'
-import Todo from './components/Todo'
 import Options from './components/Options.vue'
 import Nav from './components/Nav.vue'
+import StateMsger from '@/components/StateMsger.vue'
 
 Vue.component("sign-in", SignIn)
-Vue.component("sign-up", SignUp)
+Vue.component("state-msger", StateMsger)
 
-Vue.component("todo-form", Todo)
 Vue.component("options-part", Options)
 Vue.component("nav-part", Nav)
 
 
-// Quill Editor Utils
+// Font Awesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {faCheck, faPencilAlt, faUndo, faSave, faTrash, faExclamation, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add({
+  faCheck, faPencilAlt,  faUndo, faSave, faTrash, faExclamation, faExclamationTriangle
+})
+Vue.component('fa-i', FontAwesomeIcon)
+
+
+
+
+/* // Quill Editor Utils
+import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
-Vue.use(VueQuillEditor,)
+Vue.use(VueQuillEditor,) */
 
-firebase.auth().onAuthStateChanged( user => {
+firebase.auth().onAuthStateChanged(user => {
   if (user) {
-      store.commit("currentUserSet", user)
-      store.commit("signStateMsger", `'${user.displayName}' signed in.`)
+    store.commit("currentUserSet", user)
+    store.commit("signStateMsger", `'${user.displayName}' signed in.`)
 
-      if (!user.emailVerified) {
-        store.commit("signStateMsger", 'Email verification required. Warning!')
-        
-      }
+    if (!user.emailVerified) {
+      store.commit("signStateMsger", 'Email verification required. Warning!')
+
+    }
   } else {
-      store.commit("currentUserSet", null)
-      store.commit("signStateMsger", "Please sign in.")
+    store.commit("currentUserSet", null)
+    store.commit("signStateMsger", "Please sign in.")
   }
 })
+
 
 
 const vm = new Vue({
@@ -63,20 +77,19 @@ const vm = new Vue({
   methods: {
     signOut() {
       if (this.account.currentUser) {
-          this.$root.firebase.auth().signOut().then(() => {
-              this.$store.commit("signStateMsger", `'${this.acoount.currentUser.displayName}' sign out.`)
-              if (this.$route.path != "/signin"){
-                router.push('/signin')
-              }
-          }).catch(error => {
-              this.$store.commit("signStateMsger", error.message)
-          })
+        this.$root.firebase.auth().signOut().then(() => {
+          // Reload the page.
+          this.$router.go(0)
+          this.$store.commit("signStateMsger", `'${this.acoount.currentUser.displayName}' sign out.`)
+        }).catch(error => {
+          this.$store.commit("signStateMsger", error.message)
+        })
       } else {
-          this.$store.commit("signStateMsger", "Nobody signed in yet.")
+        this.$store.commit("signStateMsger", "Nobody signed in yet.")
       }
     },
   },
-  
+
   beforeCreate() {
     /* firebase.auth().onAuthStateChanged( user => {
       if (user) {
@@ -98,4 +111,3 @@ const vm = new Vue({
 })
 
 vm.$mount('#app')
-

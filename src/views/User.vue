@@ -1,66 +1,62 @@
 <template>
-  <div>
-    <h2>Profile</h2>
-    <div  v-if="this.currentUser">
-      <section id="profile" class="panel">
-        <div id="user-profile">
+  <section id="profile" class="panel" v-if="this.currentUser">
+    <h1>Profile</h1>
 
-          <div id="user-email">
-            <h4>ID</h4>
-            <p>{{this.currentUser.email}}</p>
-          </div>
-          
-          <div id="user-name">
-            <h4>Name</h4>
-            <p>{{currentUser.displayName}}</p>
-            <input v-if="isEditable" v-model="userEdit.name">
-          </div>
+    <div id="user-profile">
 
-          <div id="user-photo">
-            <h4>Photo</h4>
-            <img :src="this.$root.account.currentUser.photoURL" width="64px" :alt="currentUser.displayName + '\'s profile photo'">
-            <div v-if="isEditable">
-              <input v-if="isEditable" type="file" id="photoFile" value="upload" class="input-part">
-              <input type="submit" class="btn" @click="uploadPhoto()">
+      <div id="user-email">
+        <h2>ID</h2>
+        <p>{{this.currentUser.email}}</p>
+      </div>
+      
+      <div id="user-name">
+        <h2>Name</h2>
+        <p>{{currentUser.displayName}}</p>
+        <input v-if="isEditable" v-model="userEdit.name">
+      </div>
 
-              <button class="btn" @click="isRP = !isRP">Random Painter</button>
+      <div id="user-photo">
+        <h2>Photo</h2>
+        <img :src="this.$root.account.currentUser.photoURL" width="64px" :alt="currentUser.displayName + '\'s profile photo'">
+        <div v-if="isEditable">
+          <input v-if="isEditable" type="file" id="photoFile" value="upload" class="input-part">
+          <input type="submit" class="btn" @click="uploadPhoto()">
 
-              <random-painter v-if="isRP" class="panel"></random-painter>
+          <button class="btn" @click="isRP = !isRP">Random Painter</button>
 
-            </div>
-          </div>
+          <random-painter v-if="isRP" class="panel"></random-painter>
 
-          <div id="user-history">
-            <p>Creation Time: {{currentUser.metadata.creationTime}}</p>
-            <p>Last Sign In Time: {{currentUser.metadata.lastSignInTime}}</p>
-          </div>
-
-          <div id="user-state">
-            <span>Verified:</span>
-            <div v-if="currentUser.emailVerified">
-              <span style="color: green">True</span>
-            </div>
-            <span v-else>None</span>
-          </div>
-
-          <div id="user-etc">
-            <p>Using Apps</p>
-          </div>
         </div>
+      </div>
 
-        <div id="user-eidt">
-          <button id="user-edit-btn" class="btn" @click="isEditable = !isEditable">Edit</button>
-          <div id="user-edit-tools" v-if="isEditable">
-            <button class="btn" @click="saveUserEdit()">Save</button>
-            <button class="btn">Delete</button>
-          </div>
+      <div id="user-history">
+        <p>Creation Time: {{currentUser.metadata.creationTime}}</p>
+        <p>Last Sign In Time: {{currentUser.metadata.lastSignInTime}}</p>
+      </div>
+
+      <div id="user-state">
+        <span>Verified:</span>
+        <div v-if="currentUser.emailVerified">
+          <span style="color: green">True</span>
         </div>
+        <span v-else>None</span>
+      </div>
 
-        <button class="btn" @click="createUserData(currentUser)">Create User Data</button>
-      </section>
-
+      <div id="user-etc">
+        <!-- <p>Using Apps</p> -->
+      </div>
     </div>
-  </div>
+
+    <div id="user-eidt">
+      <button id="user-edit-btn" class="btn" @click="isEditable = !isEditable">Edit</button>
+      <div id="user-edit-tools" v-if="isEditable">
+        <button class="btn" @click="saveUserEdit()">Save</button>
+        <button class="btn">Delete</button>
+      </div>
+    </div>
+
+    <button class="btn" @click="createUserData(currentUser)">Create User Data</button>
+  </section>
 </template>
 
 <script>
@@ -101,8 +97,6 @@ export default {
       /* if (this.userEdit.photoURL) {
         this.currentUser.photoURL = this.userEdit.photoURL
       } */
-      
-      
     },
 
     uploadPhoto(){
@@ -165,4 +159,10 @@ export default {
 
 }
 
+section {
+  h1 {
+    text-align: center;
+  }
+  
+}
 </style>

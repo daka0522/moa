@@ -1,47 +1,65 @@
 <template>
   <div id="todo">
+
     <transition name="fade">
       <span id="mainStatePanel" class="msg">{{mainStateMsg}}</span>
     </transition>
 
     <transition name="fade">
       <form class="todo-input panel">
-        <input class="content-area input-part" type="text" v-model="newDoc.content"
-          placeholder="Please write down things to do here!" v-on:keyup.enter="saveNewDoc(); newDoc.content=''">
-        <button class="btn" v-show="newDoc.content" type="submit" @click.prevent="saveNewDoc(); newDoc.content=''"><i
-            class="fas fa-save"></i><span>Save</span></button>
+        <input class="content-area input-part" type="text" v-model="newDoc.content" placeholder="Please write down things to do here!" v-on:keyup.enter="saveNewDoc(); newDoc.content=''">
+        <button class="btn" v-show="newDoc.content" type="submit" @click.prevent="saveNewDoc(); newDoc.content=''">
+          <fa-i icon="save" /><span>Save</span>
+        </button>
       </form>
     </transition>
 
     <div id="todo-main-options" class="panel-sub" v-show="docs.length">
       <span>Options</span>
-      <button id="btn-deleteAll" class="btn" @click="deleteAll()">Delete All!</button>
+      <button class="btn-delete" @click="deleteAll()">
+        <fa-i icon="trash" />
+        Delete All!
+      </button>
     </div>
 
     <transition-group name="list" class="todo-list">
+      <!-- Main todo list  -->
       <ol class="panel todo-card" v-for="doc in docs" :key="doc.id">
+        <!-- 1. Date -->
         <span class="subInfo">{{doc.fields.date.toDate().toLocaleString()}}</span>
+
+        <!-- 2. Content -->
         <div class="content-area">
           <li v-if="!doc.fields.editable" :class="{isDone: doc.fields.isDone, todoContent: true}">{{doc.fields.content}}
           </li>
           <textarea v-else v-model="doc.fields.content" autofocus></textarea>
         </div>
+
+        <!-- 3. State  -->
         <span id="statePanel" class="noticeMsg" v-show="doc.stateMsg">{{doc.stateMsg}}</span>
+
+        <!-- 4. Buttons  -->
         <div class="btns">
-          <button class="btn" :class="{toggle: doc.fields.isDone}" v-show="!doc.fields.editable"
-            @click="doneButton(doc)"><i class="fas fa-check"></i><span>Done</span></button>
-          <button class="btn edit-btns" v-show="!doc.fields.editable"
-            @click="doc.fields.editable = !doc.fields.editable"><i
-              class="fas fa-pencil-alt"></i><span>Edit</span></button>
+          <button class="btn" :class="{toggle: doc.fields.isDone}" v-show="!doc.fields.editable" @click="doneButton(doc)">
+            <fa-i icon="check" /><span>Done</span>
+          </button>
+
+          <button class="btn edit-btns" v-show="!doc.fields.editable" @click="doc.fields.editable = !doc.fields.editable">
+            <fa-i icon="pencil-alt" /><span>Edit</span>
+          </button>
+
           <div class="edit-btns" v-show="doc.fields.editable" style=": right;">
-            <button class="btn" @click="doc.fields.editable = !doc.fields.editable"><i
-                class="fas fa-undo "></i></button>
-            <button class="btn deleteBtn" @click="deleteDoc(doc)">
-              <i class="fas fa-trash "></i><span>Delete</span></button>
-            <button class="btn" @click.prevent="editSaveButton(doc)"><i
-                class="fas fa-save"></i><span>Save</span></button>
+            <button class="btn" @click="doc.fields.editable = !doc.fields.editable">
+              <fa-i icon="undo" /></button>
+            <button class="btn-delete" @click="deleteDoc(doc)">
+              <fa-i icon="trash" /><span>Delete</span>
+            </button>
+            <button class="btn" @click.prevent="editSaveButton(doc)">
+              <fa-i icon="save" /><span>Save</span>
+            </button>
           </div>
         </div>
+
       </ol>
     </transition-group>
 
@@ -252,7 +270,7 @@ export default {
 <style scoped lang="scss">
 /* Common css */
 input {
-    width: 100%;
+    // width: 100%;
 }
 .subInfo {
     color:   rgba(0, 0, 0, .5);
@@ -282,58 +300,48 @@ input {
 }
 
 .content-area {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
 
-}
-.content-area textarea {
+  textarea {
     width: 100%;
-    /* height: auto; */
     font-size: 1.6em;
     resize: none;
-}
+  }
 
-.content-area li {
+  li {
+    list-style: none;
     font-weight: bold;
     font-size: 1.6em;
-}
+  }
 
-/* Action & events  */
-.content-area .isDone {
+  /* Action & events  */
+  .isDone {
     color:   rgba(0, 0, 0, .75);
     text-decoration: line-through;
     font-weight: lighter;
-}
-.isDone::before {
-    content: "\2713";
-    display:inline-block;
-    color: rgb(20, 140, 0);
-    font-size: 1.6em;
-    margin-right: .2em;
+
+    &::before {
+      content: "\2713";
+      display:inline-block;
+      color: rgb(20, 140, 0);
+      font-size: 1.6em;
+      margin-right: .2em;
+    }
+  }
 }
 
 /* Buttons */
-
 .btns {
     display: flex;
     flex-wrap: wrap;
     align-self: flex-end;
 }
 
-.btn:active {
-    background-color: rgb(20, 140, 0);
-    color: white;
-}
-
 .toggle {
     background:rgba(100, 100, 100, .1);
     color: rgba(0, 0, 0, .5);
-}
-
-#btn-deleteAll, .deleteBtn {
-    background-color: red;
-    color: white;
 }
 
 .btn span::before {

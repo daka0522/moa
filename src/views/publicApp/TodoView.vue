@@ -12,3 +12,10 @@
     <todo-form></todo-form>
   </div>
 </template>
+<script>
+export default {
+  components: {
+    todoForm: () => import('@/components/Todo')
+  }
+}
+</script>
