@@ -5,6 +5,7 @@ import 'firebase/firestore';
 import 'firebase/firebase-storage'
 import 'firebase/firebase-functions'
 import 'firebase/auth'
+import 'firebase/firebase-database'
 // import * as firebaseui from 'firebaseui' 
 
 // Config

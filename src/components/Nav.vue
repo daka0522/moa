@@ -22,6 +22,9 @@
         <router-link to="/community">
           Community
         </router-link>
+        <router-link :to="{name: 'chatroom'}">
+          Chat Room
+        </router-link>
       </div>
     </router-link>
 
