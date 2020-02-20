@@ -4,36 +4,100 @@
       <!-- Collection -->
       <div>
         <label for="collection">Collection Name</label>
-        <select v-model="collectionName" id="collection">
-          <option disabled value=''>Please select one</option>
-          <option v-for="item in this.$root.collections.list" :key="item">{{item}}</option>
-          <option value="createNew">+ Create New Collection</option>
+        <select
+          id="collection"
+          v-model="collectionName"
+        >
+          <option
+            disabled
+            value=""
+          >
+            Please select one
+          </option>
+          <option
+            v-for="item in this.$root.collections.list"
+            :key="item"
+          >
+            {{ item }}
+          </option>
+          <option value="createNew">
+            + Create New Collection
+          </option>
         </select>
-        <input placeholder="Collection Name" v-if="collectionName === 'createNew'">
+        <input
+          v-if="collectionName === 'createNew'"
+          placeholder="Collection Name"
+        >
       </div>
       <!-- Document ID  -->
       <div>
         <label for="docID">Document ID</label>
-        <select v-model="docID" id="docID">
-          <option disabled value="">Please select one</option>
-          <option v-for="item in docs" :key="item" :value="item">{{item}}</option>
-          <option value="createNew">+ Create New</option>
+        <select
+          id="docID"
+          v-model="docID"
+        >
+          <option
+            disabled
+            value=""
+          >
+            Please select one
+          </option>
+          <option
+            v-for="item in docs"
+            :key="item"
+            :value="item"
+          >
+            {{ item }}
+          </option>
+          <option value="createNew">
+            + Create New
+          </option>
         </select>
-        <input v-model="docID" placeholder="Doument ID" v-if="docID === 'createNew' | !''">
+        <input
+          v-if="docID === 'createNew' | !''"
+          v-model="docID"
+          placeholder="Doument ID"
+        >
       </div>
       <!-- Doc data fields -->
       <div>
         <label for="docField">Document Fields</label>
-        <select v-model="docField" id="docField">
-          <option disabled value="">Please select one</option>
-          <option v-for="item in Object.keys(docData)" :key="item">{{item}}</option>
+        <select
+          id="docField"
+          v-model="docField"
+        >
+          <option
+            disabled
+            value=""
+          >
+            Please select one
+          </option>
+          <option
+            v-for="item in Object.keys(docData)"
+            :key="item"
+          >
+            {{ item }}
+          </option>
         </select>
       </div>
       <div v-if="docField.length > 0">
         <label for="docTitle">Document Title</label>
-        <select v-model="docTitle" id="docTitle">
-          <option disabled value="">Please select one</option>
-          <option v-for="item in docData[docField]" :key="item.title">{{item.title}}</option>
+        <select
+          id="docTitle"
+          v-model="docTitle"
+        >
+          <option
+            disabled
+            value=""
+          >
+            Please select one
+          </option>
+          <option
+            v-for="item in docData[docField]"
+            :key="item.title"
+          >
+            {{ item.title }}
+          </option>
         </select>
       </div>
       <!-- <input v-model="docData.additional" placeholder="Additional"> -->
@@ -43,38 +107,77 @@
     <div class="doc-panel-title">
       <div class="doc-title">
         <!-- <label>Document Title</label> -->
-        <input v-model="docTitle" placeholder="Document Title">
+        <input
+          v-model="docTitle"
+          placeholder="Document Title"
+        >
       </div>
       <div class="btns">
-        <button class="btn" type="submit" @click.prevent="saveDoc()"><i class="fas fa-save"></i>Save</button>
-        <button class="btn" v-if="!isDeletable" @click.prevent="isDeletable = true"><i class="fas fa-trash"></i>Delete</button>
+        <button
+          class="btn"
+          type="submit"
+          @click.prevent="saveDoc()"
+        >
+          <i class="fas fa-save" />Save
+        </button>
+        <button
+          v-if="!isDeletable"
+          class="btn"
+          @click.prevent="isDeletable = true"
+        >
+          <i class="fas fa-trash" />Delete
+        </button>
         <div v-else>
-          <button class="btn" :class="{deleteBtn: isDeletable}" type="submit" @click.prevent="deleteDoc()">Yes</button>
-          <button class="btn" @click.prevent="isDeletable = false">No</button>
+          <button
+            class="btn"
+            :class="{deleteBtn: isDeletable}"
+            type="submit"
+            @click.prevent="deleteDoc()"
+          >
+            Yes
+          </button>
+          <button
+            class="btn"
+            @click.prevent="isDeletable = false"
+          >
+            No
+          </button>
         </div>
       </div>
     </div>
-    <span class="noticeMsg">{{stateMsg}}</span>
+    <span class="noticeMsg">{{ stateMsg }}</span>
     <div id="docViewer">
-
-      <div class="panel" id="docRender" :class="{themeDark: isDarkTheme}">
+      <div
+        id="docRender"
+        class="panel"
+        :class="{themeDark: isDarkTheme}"
+      >
         <div>
           <span>Document HTML Render</span>
-          <button class="btn"  @click="isDarkTheme = !isDarkTheme" style="float: right;">Theme</button>
+          <button
+            class="btn"
+            style="float: right;"
+            @click="isDarkTheme = !isDarkTheme"
+          >
+            Theme
+          </button>
         </div>
-        <h1>{{docTitle}}</h1>
-        <article v-html="docContent"></article>
+        <h1>{{ docTitle }}</h1>
+        <article v-html="docContent" />
       </div>
 
-      <quill-editor v-model="docContent" ref="myQuillEditor" :options="editorOption" />
+      <quill-editor
+        ref="myQuillEditor"
+        v-model="docContent"
+        :options="editorOption"
+      />
       
       
       <div class="panel">
         <span>Doc content</span>
-        <textarea v-model="docContent"></textarea>
+        <textarea v-model="docContent" />
       </div>
     </div>
-
   </div>
 </template>
 
@@ -105,6 +208,40 @@ export default {
 
       isDarkTheme: false
     }
+  },
+  computed: {
+    editor() {
+      return this.$refs.myQuillEditor.quill
+    },
+
+    
+  },
+  
+  watch: {
+    docID(newValue) {
+      newValue
+      if (this.docs.includes(newValue)) {
+        this.getDoc(this.collectionName, newValue)
+      }
+      
+    },
+
+    docTitle(newValue) {
+      this.currentDoc = this.docData[this.docField].find(elem => elem.title === newValue)
+      this.docContent = this.currentDoc.content
+    },
+    collectionName(newValue) {
+      this.listAllDoc(newValue)
+
+    },
+
+    $event(nv, ov) {
+      console.log(ov);
+      console.log(nv);
+      
+    }
+  },
+  mounted() {
   },
   methods: {
     saveDoc() {
@@ -232,40 +369,6 @@ export default {
     } */
 
 
-  },
-  computed: {
-    editor() {
-      return this.$refs.myQuillEditor.quill
-    },
-
-    
-  },
-  mounted() {
-  },
-  
-  watch: {
-    docID(newValue) {
-      newValue
-      if (this.docs.includes(newValue)) {
-        this.getDoc(this.collectionName, newValue)
-      }
-      
-    },
-
-    docTitle(newValue) {
-      this.currentDoc = this.docData[this.docField].find(elem => elem.title === newValue)
-      this.docContent = this.currentDoc.content
-    },
-    collectionName(newValue) {
-      this.listAllDoc(newValue)
-
-    },
-
-    $event(nv, ov) {
-      console.log(ov);
-      console.log(nv);
-      
-    }
   },
 
 

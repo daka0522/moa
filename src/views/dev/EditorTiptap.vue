@@ -1,8 +1,10 @@
 <template>
   <div class="editor">
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+    <editor-menu-bar
+      v-slot="{ commands, isActive }"
+      :editor="editor"
+    >
       <div class="menubar">
-
         <button
           class="menubar__button"
           :class="{ 'is-active': isActive.bold() }"
@@ -127,11 +129,13 @@
         >
           <icon name="redo" />
         </button>
-
       </div>
     </editor-menu-bar>
 
-    <editor-content class="editor__content" :editor="editor" />
+    <editor-content
+      class="editor__content"
+      :editor="editor"
+    />
   </div>
 </template>
 

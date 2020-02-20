@@ -1,69 +1,74 @@
 <template>
   <section id="signUp" class="panel">
-    <h1 style="text-align:center">Sign Up with Email and Password</h1>
+    <h1 style="text-align:center">
+      Sign Up with Email and Password
+    </h1>
 
     <div>
       <div>
         <!-- Main state message -->
-        <state-msger :state="this.mainState.state">{{this.mainState.msg}}</state-msger>
-        
+        <state-msger :state="this.mainState.state">
+          {{ this.mainState.msg }}
+        </state-msger>
+
         <!-- Check Form errors -->
-        <div id="checkFormError" v-if="errors.length" >
-          <state-msger state="error" v-for="error in errors" :key="error" >{{error}}</state-msger>
+        <div v-if="errors.length" id="checkFormError">
+          <state-msger v-for="error in errors" :key="error" state="error">
+            {{ error }}
+          </state-msger>
         </div>
       </div>
 
       <!-- 1. Sign up form: Email & Password -->
-      <form v-if="!isSignedUp" class="panel-col" @submit.prevent="checkForm()" novalidate="true" >
+      <form v-if="!isSignedUp" class="panel-col" novalidate="true" @submit.prevent="checkForm()">
         <!-- A. Email  -->
         <label for="signUpEmail">Email (ID)</label>
-        <input type="email" id="signUpEmail" class="input-part" 
-                v-model="signUp.email[0]" placeholder="Type your email please. Required." required >
+        <input id="signUpEmail" v-model="signUp.email[0]" type="email" class="input-part" placeholder="Type your email please. Required." required>
 
         <!-- B. Password -->
         <label for="signUpPassword">Password (8~20 characters)</label>
-        <input type="password" id="signUpPassword" class="input-part" 
-                v-model="signUp.password.value1" placeholder="Type your password please. Required." required 
-                minlength="8" maxlength="20">
-        <input type="password" id="signUpPassword2" class="input-part" 
-                v-model="signUp.password.value2" placeholder="Type your password again please. Required." required 
-                minlength="8" maxlength="20">
+        <input id="signUpPassword" v-model="signUp.password.value1" type="password" class="input-part" placeholder="Type your password please. Required." required minlength="8" maxlength="20">
+        <input id="signUpPassword2" v-model="signUp.password.value2" type="password" class="input-part" placeholder="Type your password again please. Required." required minlength="8" maxlength="20">
 
         <!-- C. Submit button -->
-        <input id="signUpSubmit" type="submit" value="Sign Up" class="btn" ref="signUpSubmit" disabled>
+        <input id="signUpSubmit" ref="signUpSubmit" type="submit" value="Sign Up" class="btn" disabled>
       </form>
 
-    <!-- 2. Name & Phto: optional  -->
-    <form  v-else class="panel-col" @submit.prevent="saveUserData" novalidate="true" >
-        <!-- A. Name  -->
-        <label for="signUpName">Name (3~15 characters)</label>
-        <input type="name" id="signUpName" class="input-part" 
-                v-model="setUser.name[0]" placeholder="Type your name or nickname please" 
-                minlength="3" maxlength="15" >
-        <!-- <div class="order-signs" v-if="signUp.name[1]">Name is validated.</div> -->
+      <!-- 2. Email verification  -->
+      <div v-if="isSignedUp && !emailSent" id="emailVerification" class="panel-col">
+        <h3 style="text-align:center">
+          Email verification required.
+        </h3>
+        <input class="btn" type="submit" value="Send Email" @click="emailVerification()">
+      </div>
 
-        <!-- B. Photo -->
-        <label for="signUpPhoto">Photo (optional)</label>
-        <input type="file" id="signUpPhoto" class="input-part" @change="previewImage" accept="image/*">
-        <div class="image-preview" v-if="setUser.photo.data">
+      <!-- 3. Name & Phto: optional  -->
+      <div v-if="isSignedUp && emailSent" id="signUp-opt">
+        <form class="panel-col" novalidate="true" @submit.prevent="saveUserData">
+          <h3 style="text-align:center">
+            Optional part. You can set your name and profile photo.
+          </h3>
+          <!-- A. Name  -->
+          <label for="signUpName">Name (3~15 characters)</label>
+          <input id="signUpName" v-model="setUser.name[0]" type="name" class="input-part" placeholder="Type your name or nickname please" minlength="3" maxlength="15">
+          <!-- <div class="order-signs" v-if="signUp.name[1]">Name is validated.</div> -->
+
+          <!-- B. Photo -->
+          <label for="signUpPhoto">Photo (optional)</label>
+          <input id="signUpPhoto" type="file" class="input-part" accept="image/*" @change="previewImage">
+          <div v-if="setUser.photo.data" class="image-preview">
             <img class="preview" :src="setUser.photo.data" width="450">
-        </div>
+          </div>
 
-        <!-- Submit button -->
-        <input id="userDataSubmit" ref="userDataSubmit" type="submit" 
-        value="Save" class="btn" disabled>
+          <!-- Submit button -->
+          <input id="userDataSubmit" ref="userDataSubmit" type="submit" value="Save" class="btn" disabled>
+        </form>
 
-      </form>
-        <!-- <button @click="uploadPhoto">Up</button> -->
-
-        <!-- <button class="btn">Pass</button> -->
+        <button id="btn-pass" class="btn" @click="$router.push('/')">
+          Pass
+        </button>
+      </div>
     </div>
-
-    <div id="emailVerification" class="panel-col" v-if="!this.$root.account.currentUser.emailVerified">
-      <h3 style="text-align:center">Email verification required.</h3>
-      <button class="btn" @click="emailVerification()">Send Email</button>
-    </div>
-
   </section>
 </template>
 
@@ -76,8 +81,10 @@
   export default {
     data() {
       return {
-        isSignedUp: true,
-        requireEmailVerified: true, 
+        isSignedUp: false,
+        emailSent: false,
+
+        requireEmailVerified: true,
         mainState: {
           msg: '',
           state: ''
@@ -88,7 +95,7 @@
           password: {
             value1: '',
             value2: '',
-            valid: false 
+            valid: false
           },
         },
         setUser: {
@@ -103,14 +110,63 @@
         // imageData: '',
       }
     },
+    computed: {
+
+    },
+    watch: {
+      setUser: {
+        handler(nv) {
+          // Name checker if it's valid than available to click save
+          if (3 <= nv.name[0].length && nv.name[0].length <= 15) {
+            nv.name[1] = true
+          } else {
+            nv.name[1] = false
+          }
+
+          // Submit control
+          if (nv.name[1]) {
+            this.$refs.userDataSubmit.disabled = false
+          } else {
+            this.$refs.userDataSubmit.disabled = true
+          }
+        },
+        deep: true
+      },
+      signUp: {
+        handler(nv) {
+          // E mail validation
+          if (this.validateEmail(nv.email[0])) {
+            nv.email[1] = true
+          } else {
+            nv.email[1] = false
+          }
+
+          // Password
+          if (8 <= nv.password.value1.length && nv.password.value1.length <= 20 && nv.password.value1 === nv.password.value2) {
+            nv.password.valid = true
+          } else {
+            nv.password.valid = false
+          }
+
+          // Submit control
+          if (nv.email[1] && nv.password.valid) {
+            this.$refs.signUpSubmit.disabled = false
+          } else {
+            this.$refs.signUpSubmit.disabled = true
+          }
+        },
+        deep: true
+      }
+
+    },
     methods: {
       // 1.
       // * Sign up functions
-      signUpWithEmail(email=this.signUp.email[0], password=this.signUp.password.value1) {
+      signUpWithEmail(email = this.signUp.email[0], password = this.signUp.password.value1) {
         let auth = this.$root.firebase.auth()
         return auth.createUserWithEmailAndPassword(email, password).then(() => {
-            this.stateMsger("Successfully Signed up!", "success")
-            this.isSignedUp = true 
+            this.stateMsger("Successfully Signed up! Now your email need to be verified. Please click the button 'Send Email'.", "success")
+            this.isSignedUp = true
           })
           .catch(error => {
             this.stateMsger(error.message, "error")
@@ -121,6 +177,7 @@
           let user = this.$root.account.currentUser
           user.sendEmailVerification().then(() => {
             this.stateMsger("Email sent. Please confirm the email to verify.", "success")
+            this.emailSent = true
           }).catch(error => {
             this.stateMsger(error.message, "error")
           })
@@ -172,12 +229,12 @@
         // 2. Password
         if (!form.password.value1 && !form.password.value2) {
           this.errors.push("Password required.")
-          form.password.valid = false 
+          form.password.valid = false
         } else if (form.password.value1 !== form.password.value2) {
           this.errors.push("Your second password is not matched the first one. Please check it again.")
-          form.password.valid = false 
+          form.password.valid = false
         } else {
-          form.password.valid = true 
+          form.password.valid = true
         }
 
         // After email and password is valid then sign up
@@ -192,13 +249,18 @@
           // If photo is uploaded then save it to DB and get photoURL
 
           // Name update
-          this.$root.account.currentUser.updateProfile({displayName: this.setUser.name[0] })
+          this.$root.account.currentUser.updateProfile({
+            displayName: this.setUser.name[0]
+          })
 
           if (this.setUser.photo.data) {
             this.uploadPhoto().then(snapshot => {
-              snapshot.ref.getDownloadURL().then( res => {
-                this.$root.account.currentUser.updateProfile({photoURL: res })
-                this.stateMsger('Your photo is successfully updated.', 'success')
+              snapshot.ref.getDownloadURL().then(res => {
+                this.$root.account.currentUser.updateProfile({
+                  photoURL: res
+                })
+                this.stateMsger('Your name and photo is successfully updated.', 'success')
+                this.$router.push('/')
               })
             })
           }
@@ -231,7 +293,7 @@
         let childRef = storageRef.child(fileRef)
 
         return childRef.putString(this.setUser.photo.data, 'data_url')
-        
+
         /* .then(snapshot => {
           console.log('successfully, uploaded.', snapshot)
           this.stateMsger('successfully, uploaded.', 'success')
@@ -270,65 +332,21 @@
         this.mainState.state = state
       },
 
-    },
-    computed: {
-
-    },
-    watch: {
-      setUser: {
-        handler(nv) {
-          // Name checker if it's valid than available to click save
-          if (3 <= nv.name[0].length && nv.name[0].length <= 15) {
-            nv.name[1] = true
-          } else {
-            nv.name[1] = false
-          }
-
-          // Submit control
-          if (nv.name[1]) {
-            this.$refs.userDataSubmit.disabled = false
-          } else {
-            this.$refs.userDataSubmit.disabled = true
-          }
-        },
-        deep: true
-      },
-      signUp: {
-        handler(nv) {
-          // E mail validation
-          if (this.validateEmail(nv.email[0])) {
-            nv.email[1] = true 
-          } else {
-            nv.email[1] = false 
-          }
-
-          // Password
-          if (8 <= nv.password.value1.length && nv.password.value1.length <= 20 && nv.password.value1 === nv.password.value2) {
-            nv.password.valid = true
-          } else {
-            nv.password.valid = false 
-          }
-
-          // Submit control
-          if (nv.email[1] && nv.password.valid) {
-            this.$refs.signUpSubmit.disabled = false 
-          } else {
-            this.$refs.signUpSubmit.disabled = true
-          }
-        },
-        deep: true 
-      }
-      
     }
   }
 </script>
 
 <style lang="scss" scoped>
+  #signUp {
+    max-width: 40rem;
+    margin: auto;
+  }
+
   @mixin invalid {
     // background-color: rgba(255, 0, 0, 0.025);
     box-shadow: 0 0 .16em .1em red;
 
-/*     &::placeholder {
+    /*     &::placeholder {
       color: red;
     } */
   }
@@ -373,17 +391,26 @@
     } */
 
     input[type=submit] {
-      
+
       &:disabled {
-         background-color: rgba(128, 128, 128, 0.25);
-         box-shadow:  $shadow-primary inset;
+        background-color: rgba(128, 128, 128, 0.25);
+        box-shadow: $shadow-primary inset;
       }
     }
   }
-#checkFormError {
-  ul {
-    list-style: none;
+
+  #checkFormError {
+    ul {
+      list-style: none;
+    }
   }
-}
-  
+
+  #signUp-opt {
+    display: flex;
+    flex-direction: column;
+
+    #btn-pass {
+      display: block;
+    }
+  }
 </style>

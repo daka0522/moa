@@ -4,23 +4,26 @@
     <!-- <button class="btn" @click="listPublished">List</button> -->
     <div class="content-wrapper">
       <!-- Documents -->
-      <article class="content" v-for="doc in docs" :key="doc.id" >
-
+      <article
+        v-for="doc in docs"
+        :key="doc.id"
+        class="content"
+      >
         <!-- 1. Document date and sub info  -->
         <aside class="content-top">
-          <span class="date">{{doc.data.date.toDate().toLocaleString()}}</span>
-          <span class="published">{{doc.data.isPublished ? "Published" : "Not published"}}</span>
+          <span class="date">{{ doc.data.date.toDate().toLocaleString() }}</span>
+          <span class="published">{{ doc.data.isPublished ? "Published" : "Not published" }}</span>
         </aside>
 
         <!-- 2. Document main contents, Article-->
-        <section class="content-main"  >
-          <h1>{{doc.data.title}}</h1>
-          <div v-html="doc.data.content" ></div>
+        <section class="content-main">
+          <h1>{{ doc.data.title }}</h1>
+          <div v-html="doc.data.content" />
         </section>
 
         <!-- 3. userdata -->
-        <aside class="content-bottom" >
-          <span id="author">{{doc.data.author}}</span>
+        <aside class="content-bottom">
+          <span id="author">{{ doc.data.author }}</span>
         </aside>
       </article>
     </div>
@@ -34,6 +37,12 @@
         docIds: [],
         docs: []
       }
+    },
+    computed: {
+
+    },
+    mounted() {
+      this.listPublished()
     },
     methods: {
       listPublished() {
@@ -58,12 +67,6 @@
         })
       },
       
-    },
-    computed: {
-
-    },
-    mounted() {
-      this.listPublished()
     }
 
 

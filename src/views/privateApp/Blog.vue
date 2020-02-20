@@ -2,55 +2,106 @@
   <div id="blog-editor">
     <div class="msg-warning">
       <p>Require: Authenticaed!</p>
-      <router-link :to="{name: 'signin'}">Sign In</router-link>
+      <router-link :to="{name: 'signin'}">
+        Sign In
+      </router-link>
     </div>
     <transition name="button-effect">
-    <div id="tool-btns">
-      <button class="btn" @click="createNewDoc">Create New</button>
-      <div v-show="mode.write" id="tool-write">
-        <button class="btn" @click="mode.write = false">Back</button>
+      <div id="tool-btns">
+        <button
+          class="btn"
+          @click="createNewDoc"
+        >
+          Create New
+        </button>
+        <div
+          v-show="mode.write"
+          id="tool-write"
+        >
+          <button
+            class="btn"
+            @click="mode.write = false"
+          >
+            Back
+          </button>
         
-        <div id="newDocTools" v-show="newBlogTitle && newBlogContent">
-          <div >
-            <label for="publishing">Publishing</label>
-            <input type="checkbox" name="publishing" id="publishing" v-model="isPublished">
+          <div
+            v-show="newBlogTitle && newBlogContent"
+            id="newDocTools"
+          >
+            <div>
+              <label for="publishing">Publishing</label>
+              <input
+                id="publishing"
+                v-model="isPublished"
+                type="checkbox"
+                name="publishing"
+              >
+            </div>
+            <button
+              class="btn"
+              @click="saveDoc"
+            >
+              Save
+            </button>
           </div>
-          <button class="btn" @click="saveDoc">Save</button>
         </div>
       </div>
-    </div>
     </transition>
 
 
     <!-- Create new document -->
-    <div id="writeDoc" v-if="mode.write">
+    <div
+      v-if="mode.write"
+      id="writeDoc"
+    >
       <div>
-        <p id="mainStateMsg" :class="mainState.class">{{mainState.msg}}</p>
-
-
+        <p
+          id="mainStateMsg"
+          :class="mainState.class"
+        >
+          {{ mainState.msg }}
+        </p>
       </div>
 
       <div>
-        <input id="editor-title" v-model="newBlogTitle" placeholder="Title">
-        <quill-editor id="editor" v-model="newBlogContent" :content="content" ref="myQuillEditor" />
+        <input
+          id="editor-title"
+          v-model="newBlogTitle"
+          placeholder="Title"
+        >
+        <quill-editor
+          id="editor"
+          ref="myQuillEditor"
+          v-model="newBlogContent"
+          :content="content"
+        />
       </div>
     </div>
 
     <!-- Read and list my documents -->
-    <div id="readDoc" v-else>
-      <div v-for="doc in myDoc" :key="doc.date.seconds" id="docList">
+    <div
+      v-else
+      id="readDoc"
+    >
+      <div
+        v-for="doc in myDoc"
+        id="docList"
+        :key="doc.date.seconds"
+      >
         <article class="panel">
           <div id="docInfo">
-            <span id="docPublish" :class="{published: doc.isPublished}">{{doc.isPublished ? 'Published' : "Privated"}}</span>
-            <span id="docDate">{{doc.date.toDate()}}</span>
+            <span
+              id="docPublish"
+              :class="{published: doc.isPublished}"
+            >{{ doc.isPublished ? 'Published' : "Privated" }}</span>
+            <span id="docDate">{{ doc.date.toDate() }}</span>
           </div>
-          <h4>{{doc.title}}</h4>
-          <div v-html="doc.content"></div>
+          <h4>{{ doc.title }}</h4>
+          <div v-html="doc.content" />
         </article>
       </div>
-
     </div>
-
   </div>
 </template>
 
@@ -87,6 +138,23 @@ export default {
 
       content: ''
     }
+  },
+  computed: {
+    colRef,
+    getUserID,
+
+    docDate() {
+      return this.$root.firebase.firestore.Timestamp.fromDate(new Date)
+    },
+    editor() {
+      return this.$refs.myQuillEditor.quill
+    },
+
+  },
+  mounted() {
+    if (this.$root.account.currentUser) {
+      this.readDoc()
+    } 
   },
   methods: {
     saveDoc() {
@@ -130,23 +198,6 @@ export default {
         this.mainState.class= null
       }, 10000)
     }
-  },
-  computed: {
-    colRef,
-    getUserID,
-
-    docDate() {
-      return this.$root.firebase.firestore.Timestamp.fromDate(new Date)
-    },
-    editor() {
-      return this.$refs.myQuillEditor.quill
-    },
-
-  },
-  mounted() {
-    if (this.$root.account.currentUser) {
-      this.readDoc()
-    } 
   }
   
 }

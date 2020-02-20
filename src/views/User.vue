@@ -1,75 +1,125 @@
 <template>
-  <section id="profile" class="panel" v-if="this.currentUser">
+  <section
+    v-if="this.currentUser"
+    id="user"
+    class="panel"
+  >
     <h1>Profile</h1>
 
     <div id="user-profile">
-
-      <div id="user-email">
-        <h2>ID</h2>
-        <p>{{this.currentUser.email}}</p>
+      <div id="user-email" class="profile-item">
+        <h3>ID</h3>
+        <p>{{ this.currentUser.email }}</p>
       </div>
       
-      <div id="user-name">
-        <h2>Name</h2>
-        <p>{{currentUser.displayName}}</p>
-        <input v-if="isEditable" v-model="userEdit.name">
+      <div id="user-name" class="profile-item">
+        <h3>Name</h3>
+        <p v-if="!isEditable">{{ currentUser.displayName }}</p>
+        <input
+          v-else
+          v-model="userEdit.name"
+          class="input-part-basic"
+          placeholder="Edit your name here"
+        >
       </div>
 
-      <div id="user-photo">
-        <h2>Photo</h2>
-        <img :src="this.$root.account.currentUser.photoURL" width="64px" :alt="currentUser.displayName + '\'s profile photo'">
+      <div id="user-photo" class="profile-item">
+        <h3>Photo</h3>
+        <img
+          :src="this.$root.account.currentUser.photoURL"
+          width="150px" height="150px"
+          :alt="currentUser.displayName + '\'s profile photo'"
+        >
         <div v-if="isEditable">
-          <input v-if="isEditable" type="file" id="photoFile" value="upload" class="input-part">
-          <input type="submit" class="btn" @click="uploadPhoto()">
-
-          <button class="btn" @click="isRP = !isRP">Random Painter</button>
-
-          <random-painter v-if="isRP" class="panel"></random-painter>
-
+          <input
+            v-if="isEditable"
+            id="photoFile"
+            type="file"
+            value="upload"
+            class="input-part"
+          >
+          <button
+            class="btn"
+            @click="isRP = !isRP"
+          >
+            Random Painter
+          </button>
+          <input
+            type="submit"
+            class="btn"
+            value="Update Photo"
+            @click="uploadPhoto()"
+            ref="uploadPhoto"
+          >
+          <random-painter
+            v-if="isRP"
+            ref="randomPainter"
+            class="panel"
+          />
         </div>
       </div>
 
-      <div id="user-history">
-        <p>Creation Time: {{currentUser.metadata.creationTime}}</p>
-        <p>Last Sign In Time: {{currentUser.metadata.lastSignInTime}}</p>
+      <div id="user-history" class="profile-item">
+        <h3>History</h3>
+        <div>
+          <p>Creation Time: {{ currentUser.metadata.creationTime }}</p>
+          <p>Last Sign In Time: {{ currentUser.metadata.lastSignInTime }}</p>
+        </div>
       </div>
 
-      <div id="user-state">
-        <span>Verified:</span>
+      <div id="user-state" class="profile-item">
+        <h3>Verified</h3>
         <div v-if="currentUser.emailVerified">
-          <span style="color: green">True</span>
+          <fa-i icon="certificate" style="color: green" title="Email verifed"></fa-i>
         </div>
-        <span v-else>None</span>
+        <div v-else> 
+          <fa-i icon="certificate" style="color: gray; margin: 0 .62rem;" title="Require email verifed"></fa-i>      
+          <span>Email verification require. Send email.</span>
+        </div>
       </div>
 
-      <div id="user-etc">
+      <div id="user-etc" class="profile-item">
         <!-- <p>Using Apps</p> -->
       </div>
     </div>
 
-    <div id="user-eidt">
-      <button id="user-edit-btn" class="btn" @click="isEditable = !isEditable">Edit</button>
-      <div id="user-edit-tools" v-if="isEditable">
-        <button class="btn" @click="saveUserEdit()">Save</button>
-        <button class="btn">Delete</button>
+    <div id="user-edit">
+      <button
+        id="user-edit-btn"
+        class="btn"
+        @click="isEditable = !isEditable"
+      >
+        {{ isEditable ? 'Back' : 'Edit' }}
+      </button>
+      <div
+        v-if="isEditable"
+        id="user-edit-tools"
+      >
+        <button
+          class="btn-save"
+          @click="saveUserEdit()"
+          
+        >
+          Save
+        </button>
+        <!-- <button class="btn">
+          Delete
+        </button> -->
       </div>
     </div>
 
-    <button class="btn" @click="createUserData(currentUser)">Create User Data</button>
+    <!-- <button class="btn" @click="createUserData(currentUser)">Create User Data</button> -->
   </section>
 </template>
 
 <script>
 export default {
+  name: 'User',
   components: {
     'random-painter': () => import('@/components/painter/RandomPainter.vue')
   },
   data() {
     return {
-      confirmed: {
-        color: 'green'
-      },
-      fields: '',
       isEditable: false, 
       userEdit: {
         name: '',
@@ -87,6 +137,10 @@ export default {
 
 
   },
+  beforeCreate() {
+
+    this.currentUser
+  },
   methods: {
     saveUserEdit(){
       if (this.userEdit.name) {
@@ -94,6 +148,8 @@ export default {
           displayName: this.userEdit.name 
         })
       }
+
+      this.isEditable = false
       /* if (this.userEdit.photoURL) {
         this.currentUser.photoURL = this.userEdit.photoURL
       } */
@@ -101,7 +157,7 @@ export default {
 
     uploadPhoto(){
       // Get elements
-      let fileButton = document.getElementById('photoFile')
+      let fileButton = this.$refs.uploadPhoto
 
       // Listen for file selection
       fileButton.addEventListener('change', function(e) {
@@ -135,34 +191,46 @@ export default {
     }
 
   },
-  beforeCreate() {
-
-    this.currentUser
-  },
+  mounted() {
+    this.userEdit.name = this.$root.account.currentUser.displayName
+  }
   
 }
 </script>
 
 <style lang="scss" scoped>
-.confirm {
-  font-size: 1.6em;
-}
+#user {
+  max-width: 50em;
+  margin: auto;
 
-#profile {
-  display: grid;
-}
 
-#user-profile {
   display: grid;
-  grid-template-rows: repeat(auto-fit, minmax(5em, 1fr));
+
+  &-profile {
+  display: grid;
+  // grid-template-rows: repeat(auto-fit, minmax(1em, 1fr));
   grid-gap: 1.6em;
 
+    .profile-item {
+      // background-color: antiquewhite;
+
+      display: flex;
+      flex-wrap: wrap;
+      // justify-content: space-between;
+
+      h3 {
+        margin: 0;
+        font-weight: unset;
+        color: darkgray;
+        min-width: 5em;
+      }
+    }
+
+  }
+
+  &-edit {
+    display: flex;
+  }
 }
 
-section {
-  h1 {
-    text-align: center;
-  }
-  
-}
 </style>

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <random-painter></random-painter>
+    <section>
+      <h1>Random Painter</h1>
+      <p>This random painter can generate random curve image with a given text.</p>
+      <p>Click the draw and type what you want.</p>
+      <random-painter />
+    </section>
   </div>
 </template>
 <script>

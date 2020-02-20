@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <nav-part></nav-part>
+    <nav-part />
 
 
     <main>
-      <h1 style="text-align: center">{{this.routeName().toUpperCase()}}</h1>
-      <router-view></router-view>
+      <h1 style="text-align: center">
+        {{ this.routeName().toUpperCase() }}
+      </h1>
+      <router-view />
     </main>
 
     <footer title="Footer section. Contains some additional information of this site.">
@@ -13,9 +15,6 @@
       <p>Github</p>
       <p>Contact</p>
     </footer>
-
-  
-
   </div>
 </template>
 

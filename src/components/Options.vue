@@ -1,6 +1,5 @@
 <template>
   <div class="options">
-
     <!-- <div id="theme-controler">
       <button id="theme-controler-btn" class="btn-small" @click="showMe()">Theme</button>
       <div id="theme-controler-panel" class="panel drop-down-panel" v-show="isDropDown">
@@ -12,10 +11,22 @@
     </div> -->
     
     <div>
-      <select class="select-small" v-model="lang">
-        <option disabled value="">Language</option>
-        <option value="en">English</option>
-        <option value="kor">Korea</option>
+      <select
+        v-model="lang"
+        class="select-small"
+      >
+        <option
+          disabled
+          value=""
+        >
+          Language
+        </option>
+        <option value="en">
+          English
+        </option>
+        <option value="kor">
+          Korea
+        </option>
       </select>
     </div>
   </div>
@@ -28,11 +39,6 @@ export default {
       theme: false,
       lang: '',
       isDropDown: false,
-    }
-  },
-  methods: {
-    showMe() {
-      this.isDropDown = !this.isDropDown
     }
   },
   watch: {
@@ -53,6 +59,11 @@ export default {
           break;
 
       }
+    }
+  },
+  methods: {
+    showMe() {
+      this.isDropDown = !this.isDropDown
     }
   }
 }

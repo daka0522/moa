@@ -14,12 +14,10 @@ import axios from 'axios'
 import firebase from './firebase_init'
 
 // Components
-import SignIn from './components/auth/SignIn'
 import Options from './components/Options.vue'
 import Nav from './components/Nav.vue'
 import StateMsger from '@/components/StateMsger.vue'
 
-Vue.component("sign-in", SignIn)
 Vue.component("state-msger", StateMsger)
 
 Vue.component("options-part", Options)
@@ -28,11 +26,15 @@ Vue.component("nav-part", Nav)
 
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import {faCheck, faPencilAlt, faUndo, faSave, faTrash, faExclamation, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons'
+import {
+  faCheck, faPencilAlt, faUndo, faSave, faTrash, faExclamation, 
+  faExclamationTriangle, faTools, faPalette, faCertificate
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add({
-  faCheck, faPencilAlt,  faUndo, faSave, faTrash, faExclamation, faExclamationTriangle
+  faCheck, faPencilAlt,  faUndo, faSave, faTrash, faExclamation, 
+  faExclamationTriangle, faTools, faPalette, faCertificate
 })
 Vue.component('fa-i', FontAwesomeIcon)
 
@@ -89,7 +91,13 @@ const vm = new Vue({
       }
     },
   },
-
+  computed: {
+    ...mapState([
+      'account',
+      'collections',
+      'googleDocsUrl'
+    ])
+  },
   beforeCreate() {
     /* firebase.auth().onAuthStateChanged( user => {
       if (user) {
@@ -101,13 +109,6 @@ const vm = new Vue({
       }
     }) */
   },
-  computed: {
-    ...mapState([
-      'account',
-      'collections',
-      'googleDocsUrl'
-    ])
-  }
 })
 
 vm.$mount('#app')

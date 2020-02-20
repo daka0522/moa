@@ -1,20 +1,21 @@
 <template>
   <div id="todo">
-
     <transition name="fade">
-      <span id="mainStatePanel" class="msg">{{mainStateMsg}}</span>
+      <span id="mainStatePanel" class="msg">{{ mainStateMsg }}</span>
     </transition>
 
+    <!-- Todo input  -->
     <transition name="fade">
       <form class="todo-input panel">
-        <input class="content-area input-part" type="text" v-model="newDoc.content" placeholder="Please write down things to do here!" v-on:keyup.enter="saveNewDoc(); newDoc.content=''">
-        <button class="btn" v-show="newDoc.content" type="submit" @click.prevent="saveNewDoc(); newDoc.content=''">
+        <input v-model="newDoc.content" class="content-area input-part" type="text" placeholder="Please write down things to do here!" @keyup.enter="saveNewDoc(); newDoc.content=''">
+        <button v-show="newDoc.content" class="btn" type="submit" @click.prevent="saveNewDoc(); newDoc.content=''">
           <fa-i icon="save" /><span>Save</span>
         </button>
       </form>
     </transition>
 
-    <div id="todo-main-options" class="panel-sub" v-show="docs.length">
+    <!-- Todo list options -->
+    <div v-show="docs.length" id="todo-options" class="panel-sub">
       <span>Options</span>
       <button class="btn-delete" @click="deleteAll()">
         <fa-i icon="trash" />
@@ -22,47 +23,72 @@
       </button>
     </div>
 
-    <transition-group name="list" class="todo-list">
-      <!-- Main todo list  -->
-      <ol class="panel todo-card" v-for="doc in docs" :key="doc.id">
+    <!-- Main todo list  -->
+    <transition-group tag="ol" name="list" class="todo-list">
+      <li class="todo-card panel" v-for="doc in docs" :key="doc.id">
         <!-- 1. Date -->
-        <span class="subInfo">{{doc.fields.date.toDate().toLocaleString()}}</span>
+        <span class="todo-card-date">{{ doc.fields.date.toDate().toLocaleString() }}</span>
 
         <!-- 2. Content -->
-        <div class="content-area">
-          <li v-if="!doc.fields.editable" :class="{isDone: doc.fields.isDone, todoContent: true}">{{doc.fields.content}}
-          </li>
-          <textarea v-else v-model="doc.fields.content" autofocus></textarea>
-        </div>
-
-        <!-- 3. State  -->
-        <span id="statePanel" class="noticeMsg" v-show="doc.stateMsg">{{doc.stateMsg}}</span>
-
-        <!-- 4. Buttons  -->
-        <div class="btns">
-          <button class="btn" :class="{toggle: doc.fields.isDone}" v-show="!doc.fields.editable" @click="doneButton(doc)">
-            <fa-i icon="check" /><span>Done</span>
-          </button>
-
-          <button class="btn edit-btns" v-show="!doc.fields.editable" @click="doc.fields.editable = !doc.fields.editable">
-            <fa-i icon="pencil-alt" /><span>Edit</span>
-          </button>
-
-          <div class="edit-btns" v-show="doc.fields.editable" style=": right;">
-            <button class="btn" @click="doc.fields.editable = !doc.fields.editable">
-              <fa-i icon="undo" /></button>
-            <button class="btn-delete" @click="deleteDoc(doc)">
-              <fa-i icon="trash" /><span>Delete</span>
-            </button>
-            <button class="btn" @click.prevent="editSaveButton(doc)">
-              <fa-i icon="save" /><span>Save</span>
-            </button>
+        <div class="todo-card-content">
+          <p v-if="!doc.fields.editable" :class="{isDone: doc.fields.isDone, contentText: true}">
+            {{ doc.fields.content }}
+          </p>
+          <textarea v-else v-model="doc.fields.content" class="input-part" />
           </div>
-        </div>
 
-      </ol>
-    </transition-group>
+          <!-- 3. State  -->
+          <!-- <span
+            v-show="doc.stateMsg"
+            class="todo-card-msg noticeMsg statePanel"
+          >{{ doc.stateMsg }}</span> -->
 
+          <!-- 4. Buttons  -->
+          <div class="todo-card-btns">
+            <button
+              v-show="!doc.fields.editable"
+              class="btn"
+              :class="{toggle: doc.fields.isDone}"
+              @click="doneButton(doc)"
+            >
+              <fa-i icon="check" /><span>Done</span>
+            </button>
+
+            <button
+              v-show="!doc.fields.editable"
+              class="btn edit-btns"
+              @click="doc.fields.editable = !doc.fields.editable"
+            >
+              <fa-i icon="pencil-alt" /><span>Edit</span>
+            </button>
+
+            <div
+              v-show="doc.fields.editable"
+              class="edit-btns"
+              style=": right;"
+            >
+              <button
+                class="btn"
+                @click="doc.fields.editable = !doc.fields.editable"
+              >
+                <fa-i icon="undo" />
+              </button>
+              <button
+                class="btn-delete"
+                @click="deleteDoc(doc)"
+              >
+                <fa-i icon="trash" /><span>Delete</span>
+              </button>
+              <button
+                class="btn"
+                @click.prevent="editSaveButton(doc)"
+              >
+                <fa-i icon="save" /><span>Save</span>
+              </button>
+            </div>
+          </div>
+        </li>
+      </transition-group>
   </div>
 </template>
 
@@ -84,6 +110,22 @@ export default {
         content: '',
         isDone: false
       }
+    }
+  },
+  computed: {
+    // # Imported utils
+    colRef,
+    getUserID,
+  },
+
+  watch: {
+    mainStateMsg() {
+      setTimeout( () => {this.mainStateMsg = ''}, 5000)
+    },
+  },
+  mounted() {
+    if (this.$root.account.currentUser) {
+      this.listAllDoc()
     }
   },
   methods: {
@@ -216,7 +258,6 @@ export default {
       }
     },
   
-
     // Helper function to store docs in an object.
     pushDoc(doc) {
       let cont = new Object
@@ -247,121 +288,133 @@ export default {
       }, 5000)
     }
 
-  },
-  computed: {
-    // # Imported utils
-    colRef,
-    getUserID,
-  },
-  mounted() {
-    if (this.$root.account.currentUser) {
-      this.listAllDoc()
-    }
-  },
-
-  watch: {
-    mainStateMsg() {
-      setTimeout( () => {this.mainStateMsg = ''}, 5000)
-    },
   }
 }
 </script>
 
 <style scoped lang="scss">
-/* Common css */
-input {
-    // width: 100%;
-}
-.subInfo {
-    color:   rgba(0, 0, 0, .5);
-    font-size: .9em;
-    font-weight: lighter;
-    text-align: right;
-}
-
-
-
-/* Panels design */
+/* A. Todo input */
 .todo-input {
-    margin: 4.8em 0 4.8em 0;
-}
-
-.todo-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(25em, 1fr));
-    grid-gap: 1.6em;
-}
-
-/* Todo list */
-.todo-list .todo-card {
-    display: grid;
-    grid-template-rows: .25fr 2fr .5fr;
-    grid-row-gap: 1.6em;
-}
-
-.content-area {
+  margin: 4.8em 0 4.8em 0;
   display: flex;
-  flex-wrap: wrap;
-  width: 100%;
 
-  textarea {
+  input {
     width: 100%;
-    font-size: 1.6em;
-    resize: none;
+    font-size: 1rem;
   }
+}
 
-  li {
-    list-style: none;
-    font-weight: bold;
-    font-size: 1.6em;
-  }
+/* B. Todo Options */
+#todo-options {
+  text-align: right;
+  font-size: small;
+  border-radius: .5em;
+}
 
-  /* Action & events  */
-  .isDone {
-    color:   rgba(0, 0, 0, .75);
-    text-decoration: line-through;
-    font-weight: lighter;
+/* C. Todo list */
+.todo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25em, 1fr));
+  grid-gap: 1.6em;
+  list-style: none;
+  padding: 0;
 
-    &::before {
-      content: "\2713";
-      display:inline-block;
-      color: rgb(20, 140, 0);
-      font-size: 1.6em;
-      margin-right: .2em;
+  .todo-card {
+    display: grid;
+    grid-template-rows: .25fr 1.5fr .5fr;
+    grid-row-gap: 1rem;
+
+    // 1. Date
+    &-date {
+      color: rgba(0, 0, 0, .5);
+      font-size: .9em;
+      font-weight: lighter;
+      text-align: right;
+    }
+
+    // 2. Content 
+    &-content {
+
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      // margin: 6.85vh 0;
+      // height: 100%;
+
+      textarea {
+        width: 100%;
+        font-size: 1rem;
+        resize: none;
+      }
+      .contentText {
+        font-weight: bold;
+        font-size: 1.6em;
+      }
+      /* Action & events  */
+      .isDone {
+        color: rgba(0, 0, 0, .75);
+        text-decoration: line-through;
+        font-weight: lighter;
+
+        &::before {
+          content: "\2713";
+          display: inline-block;
+          color: rgb(20, 140, 0);
+          font-size: 1.6em;
+          margin-right: .2em;
+        }
+      }
+    }
+    // 3. Buttons
+    &-btns {
     }
   }
-}
 
+
+}
 /* Buttons */
 .btns {
-    display: flex;
-    flex-wrap: wrap;
-    align-self: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  align-self: flex-end;
 }
 
 .toggle {
-    background:rgba(100, 100, 100, .1);
-    color: rgba(0, 0, 0, .5);
+  background: rgba(100, 100, 100, .1);
+  color: rgba(0, 0, 0, .25);
+  box-shadow: 0 0 .5em .1em rgba(128, 128, 128, 0.466) inset;
 }
 
 .btn span::before {
-    content: '  ' ;
-    white-space: pre;
+  content: '  ';
+  white-space: pre;
 }
 
 
 /* Transitions */
-.fade-enter-active, .fade-leave-active{
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 1s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
   opacity: 0;
 }
 
-.list-enter-active, .list-leave-active {
+.list-enter-active,
+.list-leave-active {
   transition: all 1s;
 }
-.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+
+.list-enter,
+.list-leave-to
+
+/* .list-leave-active below version 2.1.8 */
+  {
   opacity: 0;
   transform: translateY(30px);
 }

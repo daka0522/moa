@@ -1,9 +1,13 @@
 <template>
-    <div>
-        <h1>Editor JS</h1>
-        <div id="codex-editor">Editor</div>
-        <button @click="saveDoc">Save</button>
+  <div>
+    <h1>Editor JS</h1>
+    <div id="codex-editor">
+      Editor
     </div>
+    <button @click="saveDoc">
+      Save
+    </button>
+  </div>
 </template>
 
 <script>
@@ -17,15 +21,6 @@ export default {
     data(){
         return {
             editor: this.editorCreate
-        }
-    },
-    methods: {
-        saveDoc(){
-            this.editor.save().then(outputData => {
-                console.log('Article data: ', outputData)
-            }).catch(error => {
-                console.error("Saving failed", error)
-            })
         }
     },
     computed: {
@@ -51,6 +46,15 @@ export default {
     },
     mounted() {
         this.editorCreate
+    },
+    methods: {
+        saveDoc(){
+            this.editor.save().then(outputData => {
+                console.log('Article data: ', outputData)
+            }).catch(error => {
+                console.error("Saving failed", error)
+            })
+        }
     }
 }
 </script>

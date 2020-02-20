@@ -70,14 +70,14 @@ const routes = [
     },
     
     {
-        name: 'sign',
-        path: '/sign',
-        component: () => import('@/views/SignView.vue')
+        name: 'signin',
+        path: '/signin',
+        component: () => import('@/views/auth/SignIn.vue')
     },
     {
         name: 'signup',
         path: '/signup',
-        component: () => import('@/views/SignUp.vue')
+        component: () => import('@/views/auth/SignUp.vue')
     },
     {
         name: 'user',

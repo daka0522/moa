@@ -1,20 +1,57 @@
 <template>
   <div id="docs">
-    <h2 style="color: orange">Maybe Private</h2>
+    <h2 style="color: orange">
+      Maybe Private
+    </h2>
     <!-- Add -->
     <div>
       <div class="input-panel">
         <label>Add new google docs web publish URL</label>
         <select v-model="newDocID">
-          <option disabled value="">Please select document ID</option>
-          <option v-for="item in docIDs" :key="item">{{item}}</option>
-          <option value="New">+ Create New</option>
+          <option
+            disabled
+            value=""
+          >
+            Please select document ID
+          </option>
+          <option
+            v-for="item in docIDs"
+            :key="item"
+          >
+            {{ item }}
+          </option>
+          <option value="New">
+            + Create New
+          </option>
         </select>
-        <input class="input-part" v-if="newDocID === 'New' | !docIDs.includes(newDocID)" v-model="newDocID" placeholder="Document ID (Category)">
-        <input class="input-part" v-model="currentURL.title" placeholder="Title">
-        <input class="input-part" v-model="currentURL.url" placeholder="URL">
-        <button class="btn" @click="updateUrl(newDocID)">Add</button>
-        <button class="btn" @click="createNewUrl(newDocID, currentURL.title, currentURL.url)">Make New</button>
+        <input
+          v-if="newDocID === 'New' | !docIDs.includes(newDocID)"
+          v-model="newDocID"
+          class="input-part"
+          placeholder="Document ID (Category)"
+        >
+        <input
+          v-model="currentURL.title"
+          class="input-part"
+          placeholder="Title"
+        >
+        <input
+          v-model="currentURL.url"
+          class="input-part"
+          placeholder="URL"
+        >
+        <button
+          class="btn"
+          @click="updateUrl(newDocID)"
+        >
+          Add
+        </button>
+        <button
+          class="btn"
+          @click="createNewUrl(newDocID, currentURL.title, currentURL.url)"
+        >
+          Make New
+        </button>
       </div>
     </div>
 
@@ -23,24 +60,60 @@
     <div>
       <span>Listed Documents</span>
       <div>
-        <button class="btn" @click="readUrl('poem')">Read</button>
-        <button class="btn" @click="readAllUrl()">Read All</button>
+        <button
+          class="btn"
+          @click="readUrl('poem')"
+        >
+          Read
+        </button>
+        <button
+          class="btn"
+          @click="readAllUrl()"
+        >
+          Read All
+        </button>
       </div>
       <div>
         <select v-model="docID">
-          <option disabled value="">Please select document ID</option>
-          <option v-for="item in docIDs" :key="item">{{item}}</option>
+          <option
+            disabled
+            value=""
+          >
+            Please select document ID
+          </option>
+          <option
+            v-for="item in docIDs"
+            :key="item"
+          >
+            {{ item }}
+          </option>
         </select>
       </div>
-      <div v-if="docID" class="panel">
+      <div
+        v-if="docID"
+        class="panel"
+      >
         <table>
           <tr>
             <th>Title</th>
             <th>URL</th>
           </tr>
-          <tr v-for="doc in docObj[docID]['urls']" :key="doc.url">
-            <td @click="selectUrl(doc)" id="urlSelector">{{doc.title}}</td>
-            <td><a :href="doc.url" target="_blank">{{doc.url}}</a></td>
+          <tr
+            v-for="doc in docObj[docID]['urls']"
+            :key="doc.url"
+          >
+            <td
+              id="urlSelector"
+              @click="selectUrl(doc)"
+            >
+              {{ doc.title }}
+            </td>
+            <td>
+              <a
+                :href="doc.url"
+                target="_blank"
+              >{{ doc.url }}</a>
+            </td>
           </tr>
         </table>
       </div>
@@ -49,14 +122,32 @@
     <div>
       <div class="input- panel">
         <label>Parse</label>
-        <input class="input-part" v-model="url" placeholder="Please give URL here.">
-        <button class="btn" @click="parseHTML(url); isParseable = !isParseable">Parse</button>
+        <input
+          v-model="url"
+          class="input-part"
+          placeholder="Please give URL here."
+        >
+        <button
+          class="btn"
+          @click="parseHTML(url); isParseable = !isParseable"
+        >
+          Parse
+        </button>
       </div>
 
-      <div v-if="downloaded" class="panel content-area">
-        <h1 v-html="docData.title[0].innerHTML"></h1>
-        <div id="header" v-html="docData.header.innerHTML"></div>
-        <section v-html="docData.contents.innerHTML" class="htmlContents"></section>
+      <div
+        v-if="downloaded"
+        class="panel content-area"
+      >
+        <h1 v-html="docData.title[0].innerHTML" />
+        <div
+          id="header"
+          v-html="docData.header.innerHTML"
+        />
+        <section
+          class="htmlContents"
+          v-html="docData.contents.innerHTML"
+        />
       </div>
     </div>
   </div>
@@ -88,6 +179,22 @@
         },
 
         newDocID: ''
+      }
+    },
+    computed: {
+      loadGoogleDocs: function() {
+        console.log(this.$root.googleDocsUrl);
+
+        return Object.keys(this.$root.googleDocsUrl)
+      },
+
+    },
+    mounted() {
+      // Guard authentication
+      if (this.$root.account.curretUser) {
+        this.readAllUrl()
+      } else {
+        console.warn("Need a auth.")
       }
     },
     methods: {
@@ -184,22 +291,6 @@
             console.log(docID, " is successfully updated.");
           }
         )
-      }
-    },
-    computed: {
-      loadGoogleDocs: function() {
-        console.log(this.$root.googleDocsUrl);
-
-        return Object.keys(this.$root.googleDocsUrl)
-      },
-
-    },
-    mounted() {
-      // Guard authentication
-      if (this.$root.account.curretUser) {
-        this.readAllUrl()
-      } else {
-        console.warn("Need a auth.")
       }
     }
 

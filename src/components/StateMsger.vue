@@ -1,7 +1,15 @@
 <template>
-  <div :class="'msg-' + this.state" class="msg" v-show="this.$slots.default.length">
-    <fa-i v-if="iconSelector" :icon="iconSelector" class="icon" />
-    <slot></slot>
+  <div
+    v-if="this.$slots.default[0].text.length"
+    :class="'msg-' + this.state"
+    class="msg"
+  >
+    <fa-i
+      v-if="iconSelector"
+      :icon="iconSelector"
+      class="icon"
+    />
+    <slot />
   </div>
 </template>
 

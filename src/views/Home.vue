@@ -1,37 +1,37 @@
 <template>
-    <div id="home">
+  <div id="home">
+    <section>
+      <h1>Update</h1>
+    </section>
 
-      <section>
-        <h1>Update</h1>
-      </section>
 
-
-      <section>
-        <h1>New Blogs</h1>
-        <article v-for="doc in docs" :key="doc.id">
-          <div id="headline" @click="doc.show = !doc.show">
-            <h4>{{doc.data.title}}</h4>
-            <span>{{doc.data.author}}</span>
-          </div>
-          <div id="fullcontent" v-show="doc.show">
-            <div v-html="doc.data.content" id="mainContent">
-            </div>
-            <span id="date">{{doc.data.date.toDate()}}</span>
-          </div>
-        </article>
-      </section>
-
-    </div>
+    <section>
+      <h1>New Blogs</h1>
+      <article v-for="doc in docs" :key="doc.id">
+        <div class="headline" @click="doc.show = !doc.show">
+          <h4>{{ doc.data.title }}</h4>
+          <span>{{ doc.data.author }}</span>
+        </div>
+        <div v-show="doc.show" class="fullcontent">
+          <div class="mainContent" v-html="doc.data.content" />
+          <span class="date">{{ doc.data.date.toDate() }}</span>
+        </div>
+      </article>
+    </section>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "home",
+  name: "Home",
   data() {
     return {
       docIds: [],
       docs: [],
     }
+  },
+  mounted() {
+    this.listPublished()
   },
   methods: {
     listPublished() {
@@ -56,9 +56,6 @@ export default {
       })
     },
     
-  },
-  mounted() {
-    this.listPublished()
   }
 }
 
@@ -100,21 +97,19 @@ article {
     color: gray;
   }
 
-  #headline {
+  .headline {
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    
   }
 
-  #fullcontent {
+  .fullcontent {
     #mainContent{
       margin: 5vh 0;
     }
 
-    #date {
+    .date {
       font-size: .9rem;
     }
 
