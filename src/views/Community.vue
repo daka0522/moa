@@ -1,6 +1,8 @@
 <template>
   <section>
-    <h1>MOA</h1>
+    <header-unit header-title="Community Board">
+      <p>This page is to share published articles from users</p>
+    </header-unit>
     <!-- <button class="btn" @click="listPublished">List</button> -->
     <div class="content-wrapper">
       <!-- Documents -->

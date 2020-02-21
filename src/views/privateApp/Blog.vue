@@ -1,4 +1,8 @@
 <template>
+  <div>
+    <header-unit header-title="Blog">
+      <p>Write your article and share it with people</p>
+    </header-unit>
   <div id="blog-editor">
     <div class="msg-warning">
       <p>Require: Authenticaed!</p>
@@ -102,6 +106,7 @@
         </article>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

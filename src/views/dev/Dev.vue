@@ -1,28 +1,23 @@
 <template>
   <div>
-    <div
-      v-show="this.$route.path === '/dev'"
-      class="panel"
-    >
-      <ul>
-        <h2>Editors</h2>
-        <router-link to="/dev/edit-quill">
-          Edit with Quill
-        </router-link>
-        <router-link to="/dev/edit-tiptap">
-          Edit with Tiptap
-        </router-link>
-        <router-link to="/dev/edit-editorjs">
-          Edit with Editor JS
-        </router-link>
-      </ul>
-      <button
-        class="btn"
-        @click="this.$root.signOut"
-      >
-        Sign Out
-      </button>
-    </div>
+    <!-- Links -->
+    <section class="links">
+      <router-link to="/dev/testpage">Test Page</router-link>
+      <!-- <h2>Editors</h2> -->
+      <router-link to="/dev/quill">
+        Edit with Quill
+      </router-link>
+      <router-link to="/dev/edit-tiptap">
+        Edit with Tiptap
+      </router-link>
+      <router-link to="/dev/edit-editorjs">
+        Edit with Editor JS
+      </router-link>
+      <router-link to="/dev/writer">
+        Writer
+      </router-link>
+
+    </section>
 
     <router-view />
   </div>
@@ -41,5 +36,13 @@ a {
 }
 ul {
     margin: 3.2em 0 3.2em 0;
+}
+
+.links {
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  background-color:snow;
+  border-radius: .5em;
+  padding: 1.6vh 1.6vw;
+  font-size: small;
 }
 </style>

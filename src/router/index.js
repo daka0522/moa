@@ -101,10 +101,21 @@ const routes = [
         },
         children: [
             {
-                name: 'editor-quill',
-                path: 'edit-quill',
+                name: 'quill',
+                path: 'quill',
                 component: () => import('@/views/dev/EditorQuill.vue')
             },
+            {
+                name: 'testpage',
+                path: 'testpage',
+                component: () => import('@/views/dev/TestPage.vue')
+            },
+            {
+                name: 'writer',
+                path: 'writer',
+                component: () => import('@/views/dev/DevWriter.vue')
+            },
+
         ]
     },
 ]

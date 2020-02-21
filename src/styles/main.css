@@ -17,10 +17,6 @@ $h-sub: h-main / 2; */
   border-radius: .5em;
 }
 
-p {
-  margin: 0;
-}
-
 ul,
 ol {
   /*   list-style: none;

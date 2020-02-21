@@ -8,7 +8,7 @@
     <transition name="fade">
       <form class="todo-input panel">
         <input v-model="newDoc.content" class="content-area input-part" type="text" placeholder="Please write down things to do here!" @keyup.enter="saveNewDoc(); newDoc.content=''">
-        <button v-show="newDoc.content" class="btn" type="submit" @click.prevent="saveNewDoc(); newDoc.content=''">
+        <button  class="btn" type="submit" @click.prevent="saveNewDoc(); newDoc.content=''">
           <fa-i icon="save" /><span>Save</span>
         </button>
       </form>

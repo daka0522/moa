@@ -62,13 +62,13 @@
 
     <!-- <options-part id="nav-options"></options-part> -->
 
-    <!-- <router-link to="/dev" class="nav-dropdowner" title="for developer, manager of this site">
+    <router-link to="/dev" class="nav-dropdowner" title="for developer, manager of this site">
       Developer
-      <div class="nav-dropdown-list">
+      <!-- <div class="nav-dropdown-list">
         <router-link to="/docs">Docs</router-link>
         <router-link to="/dev/edit-quill">Quill</router-link>
-      </div>
-    </router-link> -->
+      </div> -->
+    </router-link>
   </nav>
 </template>
 

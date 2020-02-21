@@ -4,6 +4,9 @@ import App from './App.vue'
 import {
   mapState
 } from 'vuex'
+import VueMeta from 'vue-meta'
+
+Vue.use(VueMeta)
 
 Vue.config.productionTip = false
 
@@ -17,11 +20,17 @@ import firebase from './firebase_init'
 import Options from './components/Options.vue'
 import Nav from './components/Nav.vue'
 import StateMsger from '@/components/StateMsger.vue'
+import Buttons from '@/components/Buttons.vue'
+import HeaderUnit from '@/components/HeaderUnit.vue'
 
 Vue.component("state-msger", StateMsger)
 
 Vue.component("options-part", Options)
 Vue.component("nav-part", Nav)
+
+Vue.component("btn-unit", Buttons)
+
+Vue.component('header-unit', HeaderUnit)
 
 
 // Font Awesome

@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="main">
+    <header-unit header-title="About the Moa">
+      <p>Introduction of Moa website.</p>
+      <p>Here is the information, philosophy, design, how to make it about the site.</p>
+    </header-unit>
+
     <section id="about-intro">
       <h3>Introduction</h3>
       <p>This website is to share some apps like managing todo list, design tools, blog.</p>
@@ -20,3 +25,24 @@
     </section>
   </div>
 </template>
+
+<script>
+export default {
+  name: "About",
+  metaInfo: {
+    title: 'About',
+    meta: [
+      {
+        name: 'description',
+        content: 'Introduction of Moa website. Here is the information, philosophy, design, how to make it about the site.'
+      }
+    ]
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+.main {
+
+}
+</style>

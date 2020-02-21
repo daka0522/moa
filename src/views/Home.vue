@@ -1,33 +1,53 @@
 <template>
-  <div id="home">
-    <section>
-      <h1>Update</h1>
-    </section>
+  <div>
+    <header-unit header-title="Welcome to Moa">
+      <p>This is a functional and useful app collection</p>  
+    </header-unit>
+
+    <div id="home">
 
 
-    <section>
-      <h1>New Blogs</h1>
-      <article v-for="doc in docs" :key="doc.id">
-        <div class="headline" @click="doc.show = !doc.show">
-          <h4>{{ doc.data.title }}</h4>
-          <span>{{ doc.data.author }}</span>
-        </div>
-        <div v-show="doc.show" class="fullcontent">
-          <div class="mainContent" v-html="doc.data.content" />
-          <span class="date">{{ doc.data.date.toDate() }}</span>
-        </div>
-      </article>
-    </section>
+      <section>
+        <h1>Update</h1>
+        <article v-for="doc in update.docs" :key="doc.date">
+
+
+        </article>
+      </section>
+
+
+      <section>
+        <h1>New Blogs</h1>
+        <article v-for="doc in docs" :key="doc.id">
+          <div class="headline" @click="doc.show = !doc.show">
+            <h4>{{ doc.data.title }}</h4>
+            <span>{{ doc.data.author }}</span>
+          </div>
+          <div v-show="doc.show" class="fullcontent">
+            <div class="main" v-html="doc.data.content" />
+            <span class="date">{{ doc.data.date.toDate() }}</span>
+          </div>
+        </article>
+      </section>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "Home",
+  metaInfo: {
+    title: 'Home'
+  },
   data() {
     return {
       docIds: [],
       docs: [],
+
+      update: {
+        docIds: [],
+        docs: []
+      }
     }
   },
   mounted() {
@@ -55,6 +75,16 @@ export default {
           })
       })
     },
+   /*  readUpdate() {
+      let indexRef = this.$root.db.collectionGroup('update').where('isPublished', '==', true)
+      indexRef.get()
+      .then( snapshot => {
+        snaptshot.forEach( doc => {
+          let cont = {}
+          cont.id = 
+        })
+      })
+    } */
     
   }
 }
@@ -83,7 +113,7 @@ section {
 }
 article {
   
-  padding: 1.6vh 1.6vw;
+  padding: .62vh .62vw;
 
   border-bottom: 1px solid rgba(128, 128, 128, 0.25);
   display: flex;
@@ -102,11 +132,16 @@ article {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
   }
 
   .fullcontent {
-    #mainContent{
-      margin: 5vh 0;
+    .main {
+      background-color: rgba(navajowhite, .5);
+      border-radius: .5em;
+      margin: 1rem 0;
+      padding: 1rem;
+      // background-color: red;
     }
 
     .date {

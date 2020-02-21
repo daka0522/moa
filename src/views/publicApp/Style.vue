@@ -1,8 +1,9 @@
 <template>
   <div>
-    <p class="title-sub">
-      This is to experiment color spaces and implement to web app.
-    </p>
+    <header-unit header-title="Style projects">
+      <p>This is to experiment color spaces and implement to web app.</p>
+    </header-unit>
+
     <div class="contents">
       <section id="colorControlers">
         <div>

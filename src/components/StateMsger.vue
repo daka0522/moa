@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="this.$slots.default[0].text.length"
+    
     :class="'msg-' + this.state"
     class="msg"
   >
