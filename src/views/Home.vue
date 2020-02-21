@@ -2,32 +2,40 @@
   <div>
     <header-unit header-title="Welcome to Moa">
       <p>This is a functional and useful app collection</p>  
+      <img src="../assets/moa.svg" alt="moa-logo"  id="home-logo">
     </header-unit>
 
     <div id="home">
-
-
       <section>
         <h1>Update</h1>
-        <article v-for="doc in update.docs" :key="doc.date">
-
-
-        </article>
+        <div class="container">
+          <article v-for="doc in update.docs" :key="doc.id">
+            <div class="headline" @click="doc.show = !doc.show">
+              <h4>{{ doc.data.title }}</h4>
+              <span class="date">{{ new Date(doc.data.date.toDate()).toLocaleString() }}</span>
+            </div>
+            <div v-show="doc.show" class="fullcontent">
+              <div class="main" v-html="doc.data.content"></div>
+            </div>
+          </article>
+        </div>
       </section>
 
 
       <section>
         <h1>New Blogs</h1>
-        <article v-for="doc in docs" :key="doc.id">
-          <div class="headline" @click="doc.show = !doc.show">
-            <h4>{{ doc.data.title }}</h4>
-            <span>{{ doc.data.author }}</span>
-          </div>
-          <div v-show="doc.show" class="fullcontent">
-            <div class="main" v-html="doc.data.content" />
-            <span class="date">{{ doc.data.date.toDate() }}</span>
-          </div>
-        </article>
+        <div class="container">
+          <article v-for="doc in docs" :key="doc.id">
+            <div class="headline" @click="doc.show = !doc.show">
+              <h4>{{ doc.data.title }}</h4>
+              <span>{{ doc.data.author }}</span>
+            </div>
+            <div v-show="doc.show" class="fullcontent">
+              <div class="main" v-html="doc.data.content" />
+              <span class="date">{{ doc.data.date.toDate() }}</span>
+            </div>
+          </article>
+        </div>
       </section>
     </div>
   </div>
@@ -52,6 +60,7 @@ export default {
   },
   mounted() {
     this.listPublished()
+    this.readUpdate()
   },
   methods: {
     listPublished() {
@@ -75,16 +84,21 @@ export default {
           })
       })
     },
-   /*  readUpdate() {
+    readUpdate() {
       let indexRef = this.$root.db.collectionGroup('update').where('isPublished', '==', true)
       indexRef.get()
       .then( snapshot => {
-        snaptshot.forEach( doc => {
+        snapshot.forEach( doc => {
           let cont = {}
-          cont.id = 
+          cont.id = doc.id 
+          cont.data = doc.data()
+          cont.show = false
+          console.log(cont);
+          
+          this.update.docs.push(cont)
         })
       })
-    } */
+    }
     
   }
 }
@@ -97,12 +111,22 @@ $test-second: hsla(90, 100, 30, .5);
 
 #home {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+  grid-gap: 1vmax;
 }
 
 section {
-  display: grid;
-  grid-gap: .6rem;
+  font-size: small;
+
+  border-right: 1px solid rgba(128, 128, 128, 0.25);
+  border-left: 1px solid rgba(128, 128, 128, 0.25);
+  padding: 1.6vh 1.6vw;
+
+  .container {
+    display: grid;
+    grid-gap: .6rem;
+  }
+
   h1 {
     text-align: center;
     background: linear-gradient(23.5deg, rgba($test-first, 1) 0%, rgba($test-second, 1) 100%);
@@ -132,12 +156,11 @@ article {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
   }
 
   .fullcontent {
     .main {
-      background-color: rgba(navajowhite, .5);
+      background-color: rgba(navajowhite, .25);
       border-radius: .5em;
       margin: 1rem 0;
       padding: 1rem;
@@ -149,5 +172,11 @@ article {
     }
 
   }
+}
+
+#home-logo {
+  margin-top: 1.6em;
+  border-radius: .5em;
+  box-shadow: 0 0 .5em .1em rgba(128, 128, 128, 0.55);
 }
 </style>

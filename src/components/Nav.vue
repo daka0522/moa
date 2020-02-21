@@ -62,7 +62,8 @@
 
     <!-- <options-part id="nav-options"></options-part> -->
 
-    <router-link to="/dev" class="nav-dropdowner" title="for developer, manager of this site">
+    <router-link to="/dev" v-if="this.$root.account.currentUser && this.$root.account.currentUser.email === 'daka0522@gmail.com'" 
+    class="nav-dropdowner" title="for developer, manager of this site">
       Developer
       <!-- <div class="nav-dropdown-list">
         <router-link to="/docs">Docs</router-link>

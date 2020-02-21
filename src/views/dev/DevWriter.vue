@@ -53,24 +53,22 @@ export default {
   methods: {
     writeUpdate() {
       let now = new Date
-      let data = {} 
-      data[now] = {
+      let data = {
         author: this.$root.account.currentUser.uid ,
         title: this.newUpdate.title ,
         content: this.newUpdate.content,
         date: now,
         isPublished: this.newUpdate.isPublished
       }
-      console.log(data);
       
       this.$root.db.collection('dev/document/update').doc(now.getTime().toString()).set(
         data
       ).then( () => {
-        console.log('Success');
         this.msger.msg = "Successfully written!" 
         this.msger.state = 'success'
+        this.newUpdate.title = '',
+        this.newUpdate.content = ''
       }).catch( error => {
-        console.error('Error', error);
         this.msger.msg = error.message 
         this.msger.state = 'error'
         

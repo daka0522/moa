@@ -5,10 +5,17 @@
       <router-view />
     </main>
 
-    <footer title="Footer section. Contains some additional information of this site.">
+    <footer>
+      <div class="foot-item">
+        <a href="https://github.com/daka0522/moa" target="_blank">Github</a>
+      </div>
+
       <p>Moa, 2020</p>
-      <span>Github</span>
-      <span>Contact</span>
+
+      <div class="foot-item">
+        <span>Contact</span>
+        <a href="mailto:daka0522@gmail.com">Email</a>
+      </div>
     </footer>
   </div>
 </template>
@@ -70,9 +77,20 @@ footer {
   padding: 1.6vh 1.6vw;
   background-color: rgba(128, 128, 128, 0.025);
   border-top: $border-main;
-  width: 100%;
   text-align: center;
   color: rgba(100, 100, 100, 1);
+
+  display: flex;
+  justify-content: space-between;
+
+  .foot-item {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    * {
+      // margin: .6rem;
+    }
+  }
 }
 
 </style>
