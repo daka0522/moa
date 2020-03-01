@@ -20,7 +20,7 @@
         <!-- 2. Document main contents, Article-->
         <section class="content-main">
           <h1>{{ doc.data.title }}</h1>
-          <div v-html="doc.data.content" />
+          <div class="doc-content" v-html="doc.data.content" />
         </section>
 
         <!-- 3. userdata -->
@@ -40,15 +40,12 @@
         docs: []
       }
     },
-    computed: {
-
-    },
     mounted() {
       this.listPublished()
     },
     methods: {
       listPublished() {
-        let indexRef = this.$root.db.collectionGroup('blog').where('isPublished', '==', true)
+        let indexRef = this.$root.db.collectionGroup('blog').where('isPublished', '==', true).orderBy('date', 'desc')
         indexRef.get()
           .then(querySnapshot => {
             querySnapshot.forEach(doc => {
@@ -65,13 +62,9 @@
               this.docIds.push(doc.id)
               this.docs.push(cont)
             })
-
         })
       },
-      
     }
-
-
   }
 </script>
 

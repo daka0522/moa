@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     listPublished() {
-      let indexRef = this.$root.db.collectionGroup('blog').where('isPublished', '==', true)
+      let indexRef = this.$root.db.collectionGroup('blog').where('isPublished', '==', true).orderBy('date', 'desc')
       indexRef.get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
@@ -79,6 +79,7 @@ export default {
             if (this.docs.includes(cont)) {
               return
             }
+            
             this.docIds.push(doc.id)
             this.docs.push(cont)
           })
@@ -93,7 +94,6 @@ export default {
           cont.id = doc.id 
           cont.data = doc.data()
           cont.show = false
-          console.log(cont);
           
           this.update.docs.push(cont)
         })

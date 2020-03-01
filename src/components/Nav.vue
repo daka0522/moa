@@ -52,13 +52,12 @@
           <p>{{ this.$root.account.currentUser.email }}</p>
         </div>
         <div id="nav-user-profile-tool">
-          <router-link to="/user">More Profile</router-link>
+          <router-link to="/user">Profile</router-link>
           <button class="btn-basic" title="Sign out" @click="this.$root.signOut">Sign Out</button>
         </div>
       </div>
 
     </div>
-
 
     <!-- <options-part id="nav-options"></options-part> -->
 
@@ -125,7 +124,7 @@
       font-weight: 400;
       visibility: hidden;
       position: absolute;
-      background-color: rgb(250, 250, 250);
+      background-color: rgba(250, 250, 250, .95);
       // box-shadow: 0 0 1em .1em rgba(200, 200, 200, 0.5) inset;
       // margin-top: 1.9rem;
       box-shadow: 0 0 .5em .05em rgba(128, 128, 128, 0.375);
@@ -146,7 +145,6 @@
     // padding: 0 .62rem;
     min-width: 6rem;
     text-align: center;
-
 
     &-icon {
       vertical-align: middle;

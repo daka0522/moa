@@ -7,7 +7,7 @@
 
     <footer>
       <div class="foot-item">
-        <a href="https://github.com/daka0522/moa" target="_blank">Github</a>
+        <a href="https://github.com/daka0522/moa" target="_blank" rel="noopener">Github</a>
       </div>
 
       <p>Moa, 2020</p>
