@@ -3,287 +3,251 @@
     <header-unit header-title="Blog">
       <p>Write your article and share it with people</p>
     </header-unit>
-  <div id="blog-editor">
-    <div class="msg-warning">
-      <p>Require: Authenticaed!</p>
+    <state-msger v-if="!this.$root.account.currentUser" state="warning">
+      <p>Require: Authenticated!</p>
       <router-link :to="{name: 'signin'}">
         Sign In
       </router-link>
-    </div>
-    <transition name="button-effect">
-      <div id="tool-btns">
-        <button
-          class="btn"
-          @click="createNewDoc"
-        >
-          Create New
-        </button>
-        <div
-          v-show="mode.write"
-          id="tool-write"
-        >
-          <button
-            class="btn"
-            @click="mode.write = false"
-          >
-            Back
+    </state-msger>
+    <state-msger v-else :state="mainState.state">
+      {{mainState.msg}}
+    </state-msger>
+
+    <div id="blog-editor">
+      <transition name="button-effect">
+        <div id="tool-btns">
+          <button class="btn" @click="createNewDoc">
+            Create New
           </button>
-        
-          <div
-            v-show="newBlogTitle && newBlogContent"
-            id="newDocTools"
-          >
-            <div>
-              <label for="publishing">Publishing</label>
-              <input
-                id="publishing"
-                v-model="isPublished"
-                type="checkbox"
-                name="publishing"
-              >
-            </div>
-            <button
-              class="btn"
-              @click="saveDoc"
-            >
-              Save
+          <div v-show="mode.write" id="tool-write">
+            <button class="btn" @click="mode.write = false">
+              Back
             </button>
+
+            <div v-show="newBlogTitle && newBlogContent" id="newDocTools">
+              <div>
+                <label for="publishing">Publishing</label>
+                <input id="publishing" v-model="isPublished" type="checkbox" name="publishing">
+              </div>
+              <button class="btn" @click="saveDoc">
+                Save
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
 
 
-    <!-- Create new document -->
-    <div
-      v-if="mode.write"
-      id="writeDoc"
-    >
-      <div>
-        <p
-          id="mainStateMsg"
-          :class="mainState.class"
-        >
-          {{ mainState.msg }}
-        </p>
+      <!-- Create new document -->
+      <div v-if="mode.write" id="writeDoc">
+        <div id="editor">
+          <input id="editor-title" v-model="newBlogTitle" placeholder="Title">
+          <quill-editor ref="myQuillEditor" v-model="newBlogContent" :content="content" />
+        </div>
       </div>
 
-      <div>
-        <input
-          id="editor-title"
-          v-model="newBlogTitle"
-          placeholder="Title"
-        >
-        <quill-editor
-          id="editor"
-          ref="myQuillEditor"
-          v-model="newBlogContent"
-          :content="content"
-        />
+      <!-- Read and list my documents -->
+      <div v-else id="readDoc">
+        <div v-for="doc in myDoc" id="docList" :key="doc.date.seconds">
+          <article class="panel">
+            <div id="docInfo">
+              <span id="docPublish" :class="{published: doc.isPublished}">{{ doc.isPublished ? 'Published' : "Privated" }}</span>
+              <span id="docDate">{{ doc.date.toDate() }}</span>
+            </div>
+            <h4>{{ doc.title }}</h4>
+            <div v-html="doc.content" />
+          </article>
+        </div>
       </div>
     </div>
-
-    <!-- Read and list my documents -->
-    <div
-      v-else
-      id="readDoc"
-    >
-      <div
-        v-for="doc in myDoc"
-        id="docList"
-        :key="doc.date.seconds"
-      >
-        <article class="panel">
-          <div id="docInfo">
-            <span
-              id="docPublish"
-              :class="{published: doc.isPublished}"
-            >{{ doc.isPublished ? 'Published' : "Privated" }}</span>
-            <span id="docDate">{{ doc.date.toDate() }}</span>
-          </div>
-          <h4>{{ doc.title }}</h4>
-          <div v-html="doc.content" />
-        </article>
-      </div>
-    </div>
-  </div>
   </div>
 </template>
 
 <script>
-import {colRef, getUserID} from '@/utils/firestoreUtils'
-import 'quill/dist/quill.snow.css'
-import {quillEditor} from "vue-quill-editor"
-
-export default {
-  components: {
-    quillEditor
-  },
-  data() {
-    return {
-      appName: 'blog',
-      docID: 'blog',
-
-      newBlogTitle: '',
-      newBlogContent: '',
-
-      isPublished: false,
-      
-      mainState: {
-        msg: '',
-        class: null
-      },
-
-      mode: {
-        write: false,
-        read: true 
-      },
-
-      myDoc: [],
-
-      content: ''
-    }
-  },
-  computed: {
+  import {
     colRef,
-    getUserID,
+    getUserID
+  } from '@/utils/firestoreUtils'
+  import 'quill/dist/quill.snow.css'
+  import {
+    quillEditor
+  } from "vue-quill-editor"
 
-    docDate() {
-      return this.$root.firebase.firestore.Timestamp.fromDate(new Date)
+  export default {
+    components: {
+      quillEditor
     },
-    editor() {
-      return this.$refs.myQuillEditor.quill
-    },
+    data() {
+      return {
+        appName: 'blog',
 
-  },
-  mounted() {
-    if (this.$root.account.currentUser) {
-      this.readDoc()
-    } 
-  },
-  methods: {
-    saveDoc() {
-      if (!this.$root.account.currentUser) {
-        this.stateMsger("The document will not saved. Please sign in firstly." , 'error')
-      } else {      
-      this.colRef.doc(this.docDate.toMillis().toString()).set({
-        title: this.newBlogTitle,
-        content: this.newBlogContent,
-        date: this.docDate,
-        isPublished: this.isPublished,
-        author: this.$root.account.currentUser.email
-      }).then( ()=> {
-        let end = this.isPublished ? 'and published.' : '.'
-        this.stateMsger("The document succefully saved " + end , 'success')
-      }).catch(error => {
-        this.stateMsger(`Error! ${error.message}` , 'error')
-      }) 
+        newBlogTitle: '',
+        newBlogContent: '',
+
+        isPublished: false,
+
+        mainState: {
+          msg: '',
+          class: null
+        },
+
+        mode: {
+          write: false,
+          read: true
+        },
+
+        myDoc: [],
+
+        content: ''
       }
     },
-    createNewDoc() {
-      this.mode.write = true
+    computed: {
+      colRef,
+      getUserID,
 
-      this.newBlogTitle = ''
-      this.newBlogContent = ''
+      docDate() {
+        return this.$root.firebase.firestore.Timestamp.fromDate(new Date)
+      },
+      editor() {
+        return this.$refs.myQuillEditor.quill
+      },
+
     },
-    readDoc() {
-      let docRef = this.$root.firebase.firestore().collection('user').doc(this.$root.account.currentUser.uid)
-      docRef.collection('blog').get()
-      .then( docs => {
-        docs.empty ? false : docs.forEach( doc => {
-          this.myDoc.push(doc.data())
-        })
-      })
+    mounted() {
+      if (this.$root.account.currentUser) {
+        this.readDoc()
+      }
     },
-    stateMsger(msg, state) {
-      this.mainState.msg = msg 
-      this.mainState.class = 'msg-' + state
-      setTimeout(() => {
-        this.mainState.msg = ''
-        this.mainState.class= null
-      }, 10000)
+    methods: {
+      saveDoc() {
+        if (!this.$root.account.currentUser) {
+          this.stateMsger("The document will not saved. Please sign in firstly.", 'error')
+        } else {
+          this.colRef.doc(this.docDate.toMillis().toString()).set({
+            title: this.newBlogTitle,
+            content: this.newBlogContent,
+            date: this.docDate,
+            isPublished: this.isPublished,
+            author: this.$root.account.currentUser.email
+          }).then(() => {
+            let end = this.isPublished ? 'and published.' : '.'
+            this.stateMsger("The document succefully saved " + end, 'success')
+          }).catch(error => {
+            this.stateMsger(`Error! ${error.message}`, 'error')
+          })
+        }
+      },
+      createNewDoc() {
+        this.mode.write = true
+
+        this.newBlogTitle = ''
+        this.newBlogContent = ''
+      },
+      readDoc() {
+        let docRef = this.$root.firebase.firestore().collection('user').doc(this.$root.account.currentUser.uid)
+        docRef.collection('blog').get()
+          .then(docs => {
+            docs.empty ? false : docs.forEach(doc => {
+              this.myDoc.push(doc.data())
+            })
+          })
+      },
+      stateMsger(msg, state) {
+        this.mainState.msg = msg
+        this.mainState.state = state
+        setTimeout(() => {
+          this.mainState.msg = ''
+          this.mainState.state = null
+        }, 10000)
+      }
     }
+
   }
-  
-}
 </script>
 
 <style lang="scss" scoped>
+  #blog-editor {
+    display: flex;
+    flex-direction: column;
 
-#blog-editor {
-  display: flex;
-  flex-direction: column;
+    #editor-title {
+      border-style: none;
+      border-radius: unset;
+      border: 1px solid rgba(0, 0, 0, .2);
+      border-bottom: unset;
+      padding: 12px 15px 12px 15px;
+      background-color: transparent;
 
-  #editor-title {
-    border-style: none;
-    border: 1px solid rgba(0, 0, 0, .2);
-    padding: 12px 15px 12px 15px;
+      font-size: 1rem;
+      color: inherit;
+    }
 
-    font-size: 1rem;
-    width: 100%;
+    #editor {
+      display: grid;
+      
+    }
+
+
   }
 
-  #editor {
-    font-size: 1rem;
+  .btn {
+    transition: display 3s ease;
+  }
+
+  .button-effect-enter,
+  .button-effect-leave-to {
+    opacity: 0;
+  }
+
+  .button-effect-enter-active,
+  .button-effect-leave-active {
+    transition: opacity 1s;
   }
 
 
-}
 
-.btn {
-  transition: display 3s ease;
-}
+  #docInfo {
+    color: gray;
+    text-align: right;
 
-.button-effect-enter, .button-effect-leave-to {
-  opacity: 0;
-}
-.button-effect-enter-active, .button-effect-leave-active {
-  transition: opacity 1s;
-}
+    & * {
+      margin-left: 1.6rem;
+    }
 
+    #docPublish {
+      color: indianred;
 
-
-#docInfo {
-  color: gray;
-  text-align: right;
-  & * {
-    margin-left: 1.6rem;
+      &.published {
+        color: green;
+      }
+    }
   }
 
-  #docPublish {
-    color:indianred;
+  #docList {
+    margin: 1.6em 0;
+  }
 
-    &.published {
+  .msg {
+
+    &-success {
       color: green;
     }
-  }
-}
 
-#docList {
-  margin: 1.6em 0;
-}
-
-.msg {
-
-  &-success {
-    color: green;
-  }
-
-  &-error {
-    color: red;
-  }
-}
-
-#tool-btns {
-  display:inline-flex;
-
-  #tool-write {
-    display:inline-flex;
-
-    #newDocTools {
-      display: flex;
-      align-items: center;
+    &-error {
+      color: red;
     }
   }
-}
+
+  #tool-btns {
+    display: inline-flex;
+
+    #tool-write {
+      display: inline-flex;
+
+      #newDocTools {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
 </style>

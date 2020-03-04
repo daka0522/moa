@@ -46,7 +46,6 @@ export default {
 .main {
   display: grid; 
   grid-template-rows: repeat(auto-fit, minmax(1fr, 1fr));
-  // grid-gap: 5vh;
   grid-row-gap: 3vh;
 }
 

@@ -45,10 +45,9 @@
       <img id="nav-user-icon" :src="this.$root.account.currentUser.photoURL" :alt="this.$root.account.currentUser.displayName + '\'s profile photo'" @click="showProfile = !showProfile">
 
       <div id="nav-user-profile" v-if="showProfile">
-        <h3>Profile</h3>
         <div id="nav-user-profile-info">
+          <h3>{{ this.$root.account.currentUser.displayName }}</h3>
           <img :src="this.$root.account.currentUser.photoURL" :alt="this.$root.account.currentUser.displayName + '\'s profile photo'">
-          <p>{{ this.$root.account.currentUser.displayName }}</p>
           <p>{{ this.$root.account.currentUser.email }}</p>
         </div>
         <div id="nav-user-profile-tool">
@@ -92,20 +91,8 @@
       padding: .62rem;
       min-width: 6rem;
       text-align: center;
-      color: inherit;
 
-      &:hover {
-        // border-bottom: $border-main;
-        font-weight: 700;
-      }
-
-      &:focus {
-        // border-bottom: .14rem solid  $purple;
-        font-weight: 700;
-      }
-
-      &:active {
-        color: $purple;
+      &:hover, &:focus, &:active {
         font-weight: 700;
       }
     }
@@ -124,9 +111,7 @@
       font-weight: 400;
       visibility: hidden;
       position: absolute;
-      background-color: rgba(250, 250, 250, .95);
-      // box-shadow: 0 0 1em .1em rgba(200, 200, 200, 0.5) inset;
-      // margin-top: 1.9rem;
+      background-color: rgba($bg-main, .95);
       box-shadow: 0 0 .5em .05em rgba(128, 128, 128, 0.375);
       border-radius: .5em;
 
@@ -142,7 +127,6 @@
   #nav-user {
     margin-top: auto;
     margin-bottom: auto;
-    // padding: 0 .62rem;
     min-width: 6rem;
     text-align: center;
 
@@ -159,7 +143,7 @@
     }
 
     &-profile {
-      background-color: white;
+      background-color: rgba(255, 255, 255, 0.95);
       position: absolute;
       width: 12em;
       min-width: 10em;
@@ -173,6 +157,11 @@
         display:grid;
         grid-gap: 1rem;
         place-items: center;
+        margin: 1.6rem auto;
+
+        h3 {
+          margin: 0;
+        }
 
         img {
           width: 5rem;

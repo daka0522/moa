@@ -32,23 +32,16 @@ header {
   margin-right: auto;
   margin-bottom: 6.85vh;
 
-  padding-bottom: 6.85vh;
+  padding-bottom: 4.24vh;
 
-  border-bottom: 2px solid rgba(gray, .25);
+  border-bottom: 2px solid rgba(gray, .15);
 
   .header-title {
-    // background-color: red;
-    // margin: 0;
   }
 
   .header-sub {
-    // background-color: orange;
-    // font-size: 1.6em;
-    // padding: 50px 50px;
-
-    color: rgba(black, .5);
-
-    // margin: 1.6rem 0;
+    // color: rgba(black, .65);
+    color: $color-sub;
   }
 }
 </style>

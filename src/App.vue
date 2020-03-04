@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :theme="theme">
     <nav-part />
     <main>
       <router-view />
@@ -16,6 +16,11 @@
         <span>Contact</span>
         <a href="mailto:daka0522@gmail.com">Email</a>
       </div>
+
+      <div id="options">
+        <label for="theme">Dark Theme</label>
+        <input type="checkbox" name="theme" id="theme" v-model="isDarkTheme">
+      </div>
     </footer>
   </div>
 </template>
@@ -28,7 +33,8 @@ export default {
   },
   data(){
     return {
-      // routeName: ''
+      isDarkTheme: false,
+      theme: 'default'
     }
   } ,
  
@@ -39,43 +45,47 @@ export default {
       } else {
         return "no name"
       }
+    },
+  },
+  computed: {
+    
+  },
+  watch: {
+    isDarkTheme(nv) {
+      if (nv) {
+        this.theme = 'dark'
+      } else {
+        this.theme = 'default'
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
-
-
-html {
-  background-color: rgba(128, 128, 128, .05);
-}
 #app {
-  // display: grid;
-  // grid-template-rows: 3rem auto 3rem;  
-  
-  height: 100%;
-
 }
 nav {
   border-bottom: $border-main;
+  background-color: rgba(128, 128, 128, .025);
 }
+
 main {
+  min-height: 72.6vh;
+
+
   width: 90vw;
   max-width: 80em;
   
   margin: 0 auto;
-  // padding-bottom: 6.85vh;
-  padding: 6.85vh 4.24vw;
+  padding: 4.24vh 4.24vw;
   padding-bottom: 11.09vh;
-  background-color: white;
-  // box-shadow: 0 0 1em .5em gray;
 }
 
 footer {
   font-size: small;
   padding: 1.6vh 1.6vw;
-  background-color: rgba(128, 128, 128, 0.025);
+  background-color: rgba(128, 128, 128, 0.05);
   border-top: $border-main;
   text-align: center;
   color: rgba(100, 100, 100, 1);
@@ -87,9 +97,6 @@ footer {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    * {
-      // margin: .6rem;
-    }
   }
 }
 

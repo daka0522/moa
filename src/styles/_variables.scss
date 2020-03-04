@@ -2,59 +2,33 @@
 // 1.Black and White
 $black: rgba(0, 0, 0, 1);
 $white: rgba(255, 255, 255, 1);
-
 $green: hsla(100, 80, 35, .8);
 $purple: hsla(200, 80, 35, .8);
-
 // 2. Concept color
 $degree: 10;
-
 $s: 100;
 $l: 40;
-
-@function hueControl($degree , $divine,  $divineOrder) {
-    $result: $degree + ((360 / $divine) * $divineOrder); 
+@function hueControl($degree, $divine, $divineOrder) {
+    $result: $degree + ((360 / $divine) * $divineOrder);
     @return $result % 360;
 }
 
-
 $first: hsl(hueControl($degree, 6, 0), $s, $l);
 $second: hsl(hueControl($degree, 6, 1), $s, $l);
-$third: hsl(hueControl($degree, 6, 2) , $s, $l);
-$forth: hsl(hueControl($degree, 6, 3) , $s, $l);
-$fifth: hsl(hueControl($degree, 6, 4) , $s, $l);
-$six: hsl(hueControl($degree, 6, 5) , $s, $l);
-
+$third: hsl(hueControl($degree, 6, 2), $s, $l);
+$forth: hsl(hueControl($degree, 6, 3), $s, $l);
+$fifth: hsl(hueControl($degree, 6, 4), $s, $l);
+$six: hsl(hueControl($degree, 6, 5), $s, $l);
 $shadow-primary: 0 0 .64em .1em rgba(0, 0, 0, .1);
-
-// Test
-:root {
-    --first-color: darkblue;
-    --second-color: lime;
+// @ Padding and margin variables maker
+// For setting the box properties (Padding, margin, etc)
+$primary-em: .8em;
+@function box-maker($unit) {
+    $box-height: 1 * $unit;
+    $box-width: 2 * $unit;
+    @return $box-height $box-width $box-height $box-width
 }
 
-$test-color: var(--my-test-color);
-$test-size: var(--my-font-size);
-
-
-// Order signs 
-// 1. Request (order)
-// 2. Progress (wait) - Amber, ...
-// 3. Result
-//  a. Confirmed (success) - Green, O
-//  b. Denied (fail) - Red, X
-//   1. Tip, info (how to success) - Maybe pink?, *
-
-.order-signs::before {
-
-}
-
-
-// # Size 
-/* $w-main: 1.62rem;
-$h-main: 1.62rem;
-
-$w-sub: w-main / 2;
-$h-sub: h-main / 2; */
-
+$box-primary: box-maker($primary-em);
+$box-small: box-maker($primary-em / 2);
 $border-main: .14rem solid rgba(128, 128, 128, .1);
