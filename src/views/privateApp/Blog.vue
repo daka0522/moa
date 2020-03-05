@@ -128,7 +128,7 @@
             content: this.newBlogContent,
             date: this.docDate,
             isPublished: this.isPublished,
-            author: this.$root.account.currentUser.email
+            author: this.$root.account.currentUser.displayName
           }).then(() => {
             let end = this.isPublished ? 'and published.' : '.'
             this.stateMsger("The document succefully saved " + end, 'success')

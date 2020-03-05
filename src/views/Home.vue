@@ -23,7 +23,7 @@
 
 
       <section>
-        <h1>New Blogs</h1>
+        <h1>New Posts</h1>
         <div class="container">
           <article v-for="doc in docs" :key="doc.id">
             <div class="headline" @click="doc.show = !doc.show">
@@ -32,7 +32,7 @@
             </div>
             <div v-show="doc.show" class="fullcontent">
               <div class="main" v-html="doc.data.content" />
-              <span class="date">{{ doc.data.date.toDate() }}</span>
+              <span class="date">{{ new Date(doc.data.date.toDate()).toLocaleString() }}</span>
             </div>
           </article>
         </div>
@@ -148,7 +148,7 @@ article {
   }
 
   span {
-    color: gray;
+    color: rgb(73, 73, 73);
   }
 
   .headline {
@@ -159,16 +159,20 @@ article {
   }
 
   .fullcontent {
+    background-color: rgba(navajowhite, .25);
+    border-radius: .5em;
+    padding: 1rem 0;
+    margin: 1rem 0;
+
     .main {
-      background-color: rgba(navajowhite, .25);
-      border-radius: .5em;
       margin: 1rem 0;
       padding: 1rem;
-      // background-color: red;
     }
 
     .date {
       font-size: .9rem;
+      float: right;
+      margin-right: 1rem;
     }
 
   }

@@ -111,9 +111,12 @@
       font-weight: 400;
       visibility: hidden;
       position: absolute;
-      background-color: rgba($bg-main, .95);
+      background-color: $bg-main;
       box-shadow: 0 0 .5em .05em rgba(128, 128, 128, 0.375);
       border-radius: .5em;
+      color: $color-main;
+
+      margin-top: 1.6rem;
 
       display: flex;
       flex-direction: column;
