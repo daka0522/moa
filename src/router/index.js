@@ -106,6 +106,16 @@ const routes = [
                 component: () => import('@/views/dev/EditorQuill.vue')
             },
             {
+                name: 'tiptap',
+                path: 'tiptap',
+                component: () => import('@/views/dev/EditorTiptap.vue')
+            },
+            {
+                name: 'editorJs',
+                path: 'editorJs',
+                component: () => import('@/views/dev/EditorJS.vue')
+            },
+            {
                 name: 'testpage',
                 path: 'testpage',
                 component: () => import('@/views/dev/TestPage.vue')

@@ -1,16 +1,15 @@
 <template>
-  <div class="editor">
-    <editor-menu-bar
-      v-slot="{ commands, isActive }"
-      :editor="editor"
-    >
-      <div class="menubar">
-        <button
+  <div class="editor" id="editor-tiptap">
+    <input type="text" name="title" id="title" v-model="title" placeholder="Title">
+
+    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }" class="editor-menu-bar">
+      <div>
+               <button
           class="menubar__button"
           :class="{ 'is-active': isActive.bold() }"
           @click="commands.bold"
         >
-          <icon name="bold" />
+        Bold
         </button>
 
         <button
@@ -18,7 +17,7 @@
           :class="{ 'is-active': isActive.italic() }"
           @click="commands.italic"
         >
-          <icon name="italic" />
+        Italic
         </button>
 
         <button
@@ -26,7 +25,7 @@
           :class="{ 'is-active': isActive.strike() }"
           @click="commands.strike"
         >
-          <icon name="strike" />
+        Strike
         </button>
 
         <button
@@ -34,7 +33,7 @@
           :class="{ 'is-active': isActive.underline() }"
           @click="commands.underline"
         >
-          <icon name="underline" />
+        Underline
         </button>
 
         <button
@@ -42,7 +41,7 @@
           :class="{ 'is-active': isActive.code() }"
           @click="commands.code"
         >
-          <icon name="code" />
+        Code
         </button>
 
         <button
@@ -50,7 +49,7 @@
           :class="{ 'is-active': isActive.paragraph() }"
           @click="commands.paragraph"
         >
-          <icon name="paragraph" />
+        Paragraph
         </button>
 
         <button
@@ -82,7 +81,7 @@
           :class="{ 'is-active': isActive.bullet_list() }"
           @click="commands.bullet_list"
         >
-          <icon name="ul" />
+        UL
         </button>
 
         <button
@@ -90,7 +89,7 @@
           :class="{ 'is-active': isActive.ordered_list() }"
           @click="commands.ordered_list"
         >
-          <icon name="ol" />
+        OL
         </button>
 
         <button
@@ -98,7 +97,7 @@
           :class="{ 'is-active': isActive.blockquote() }"
           @click="commands.blockquote"
         >
-          <icon name="quote" />
+        Quote
         </button>
 
         <button
@@ -106,117 +105,171 @@
           :class="{ 'is-active': isActive.code_block() }"
           @click="commands.code_block"
         >
-          <icon name="code" />
+        Code
         </button>
 
         <button
           class="menubar__button"
           @click="commands.horizontal_rule"
         >
-          <icon name="hr" />
+        HR
         </button>
 
         <button
           class="menubar__button"
           @click="commands.undo"
         >
-          <icon name="undo" />
+        Undo
         </button>
 
         <button
           class="menubar__button"
           @click="commands.redo"
         >
-          <icon name="redo" />
+        Redo
         </button>
+
       </div>
     </editor-menu-bar>
 
-    <editor-content
-      class="editor__content"
-      :editor="editor"
-    />
+    <editor-content class="editor__content" :editor="editor"/>
+    <button id="btn-save" class="btn-basic" @click="saveDoc">Save</button>
   </div>
 </template>
 
 <script>
-
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
-import {
-  Blockquote,
-  CodeBlock,
-  HardBreak,
-  Heading,
-  HorizontalRule,
-  OrderedList,
-  BulletList,
-  ListItem,
-  TodoItem,
-  TodoList,
-  Bold,
-  Code,
-  Italic,
-  Link,
-  Strike,
-  Underline,
-  History,
-} from 'tiptap-extensions'
-
-export default {
-  components: {
+  import {
+    Editor,
     EditorContent,
-    EditorMenuBar,
+    EditorMenuBar
+  } from 'tiptap'
+  import {
+    Blockquote,
+    CodeBlock,
+    HardBreak,
+    Heading,
+    HorizontalRule,
+    OrderedList,
+    BulletList,
+    ListItem,
+    TodoItem,
+    TodoList,
+    Bold,
+    Code,
+    Italic,
+    Link,
+    Strike,
+    Underline,
+    History,
+    Placeholder
+  } from 'tiptap-extensions'
+  export default {
+    name: 'EditorTiptap',
+    components: {
+      EditorContent,
+      EditorMenuBar
+    },
+    data() {
+      return {
+        title: '',
+        editor: new Editor({
+          extensions: [
+            new Blockquote(),
+            new BulletList(),
+            new CodeBlock(),
+            new HardBreak(),
+            new Heading({
+              levels: [1, 2, 3]
+            }),
+            new HorizontalRule(),
+            new ListItem(),
+            new OrderedList(),
+            new TodoItem(),
+            new TodoList(),
+            new Link(),
+            new Bold(),
+            new Code(),
+            new Italic(),
+            new Strike(),
+            new Underline(),
+            new History(),
+            // 
+            new Placeholder({
+              emptyEditorClass: 'is-editor-empty',
+            emptyNodeClass: 'is-empty',
+            emptyNodeText: 'Write something …',
+            showOnlyWhenEditable: true,
+            showOnlyCurrent: true,
+            })
+          ],
+          // content: `<p>Write here down</p>`,
+          /* onUpdate: ({getHTML}) => {
+            console.log(getHTML());
+          } */
+        }),
+      }
+    },
+    beforeDestroy() {
+      this.editor.destroy()
+    },
+    methods: {
+      saveDoc() {
+        const doc = this.editor.getHTML()
 
-  },
-  data() {
-    return {
-      editor: new Editor({
-        extensions: [
-          new Blockquote(),
-          new BulletList(),
-          new CodeBlock(),
-          new HardBreak(),
-          new Heading({ levels: [1, 2, 3] }),
-          new HorizontalRule(),
-          new ListItem(),
-          new OrderedList(),
-          new TodoItem(),
-          new TodoList(),
-          new Link(),
-          new Bold(),
-          new Code(),
-          new Italic(),
-          new Strike(),
-          new Underline(),
-          new History(),
-        ],
-        content: `
-          <h2>
-            Hi there,
-          </h2>
-          <p>
-            this is a very <em>basic</em> example of tiptap.
-          </p>
-          <pre><code>body { display: none; }</code></pre>
-          <ul>
-            <li>
-              A regular list
-            </li>
-            <li>
-              With regular items
-            </li>
-          </ul>
-          <blockquote>
-            It's amazing 👏
-            <br />
-            – mom
-          </blockquote>
-        `,
-      }),
+        const dbRef = this.$root.db.collection('user').doc(this.$root.account.currentUser.uid).collection('blog')
+        dbRef.doc(Date.now().toString()).set({
+          author: this.$root.account.currentUser.displayName,
+          content: doc,
+          date: new Date,
+          isPublished: true,
+          title: this.title
+        })
+      }
     }
-  },
-  beforeDestroy() {
-    this.editor.destroy()
-  },
-}
+  }
 </script>
+
+<style lang="scss" scoped>
+  #editor-tiptap {
+    border-radius: .5em;
+    margin: 1vh 0;
+    height: 80vh;
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .editor__content {
+    padding: 1vh 1vw;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    border-radius: .5em;
+    
+    
+  }
+  button {
+    @extend .btn-basic;
+    font-size: small;
+    margin: 0 .15em;
+    background-color: inherit;
+    color: inherit;
+  }
+  .editor-menu-bar {
+    background-color: rgba(128, 128, 128, 0.05);
+    width: fit-content;
+    margin: .62em 0;
+  }
+  input {
+    border-style: none;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    padding: 1vh 1vw;
+  }
+  #btn-save {
+    margin: .62em 0;
+    background-color: rgba(0, 128, 0, 0.75);
+    color: white;
+    width: fit-content;
+  }
+
+</style>

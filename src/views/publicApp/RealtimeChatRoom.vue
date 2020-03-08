@@ -67,7 +67,7 @@ export default {
     setOnline() {
       if (this.$root.account.currentUser) {
         let db = this.$root.firebase.database()
-        console.log('logined');
+        // console.log('logined');
         
         let now = Date.now()
         let data = {}
@@ -83,7 +83,7 @@ export default {
     readOnline() {
       if (this.$root.account.currentUser) {
         let db = this.$root.firebase.database()
-        console.log('read')
+        // console.log('read')
 
         db.ref('user/online').on('value', snapshot => {
           // console.log(snapshot.val());

@@ -359,12 +359,11 @@ export default {
         // user/{userid}/profile.png
         let childRef = storageRef.child(`/user/${currentUser.uid}/profile-photo.png`)
         childRef.put(blob).then(snapshot => {
-          console.log('Snap', snapshot)
           childRef.getDownloadURL().then(url => {
             currentUser.updateProfile({
               photoURL: url
             }) 
-            console.log('User photo url is successfully updated!', url)
+            // console.log('User photo url is successfully updated!', url)
           })
         })
       })

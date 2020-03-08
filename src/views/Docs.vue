@@ -183,7 +183,7 @@
     },
     computed: {
       loadGoogleDocs: function() {
-        console.log(this.$root.googleDocsUrl);
+        // console.log(this.$root.googleDocsUrl);
 
         return Object.keys(this.$root.googleDocsUrl)
       },
@@ -194,7 +194,7 @@
       if (this.$root.account.curretUser) {
         this.readAllUrl()
       } else {
-        console.warn("Need a auth.")
+        // console.warn("Need a auth.")
       }
     },
     methods: {
@@ -202,18 +202,18 @@
         this.axios.get(url).then(res => {
           this.webData = res
         }).catch(error => {
-          console.log(error)
+          // console.log(error)
         }).then(() => {
-          console.log("after all!")
+          // console.log("after all!")
         })
       },
       parseHTML(url) {
         this.axios.get(url).then(res => {
-          console.log(res);
+          // console.log(res);
 
           let parser = new DOMParser()
           const htmlDoc = parser.parseFromString(res.data, 'text/html')
-          console.log(htmlDoc)
+          // console.log(htmlDoc)
 
           this.docData.title = htmlDoc.getElementsByTagName('title')
           this.docData.header = htmlDoc.getElementById('header')
@@ -250,13 +250,13 @@
       readUrl(docID) {
         this.$root.db.collection(this.collectionID).doc(docID).get().then(doc => {
           if (doc.exists) {
-            console.log(doc);
-            console.log(doc.data());
+            // console.log(doc);
+            // console.log(doc.data());
           } else {
-            console.log("No such doc! ", docID)
+            // console.log("No such doc! ", docID)
           }
         }).catch(err => {
-          console.log("Error getting document:", err);
+          // console.log("Error getting document:", err);
         })
       },
       // 2-2. Read All Docs in the given collection
@@ -264,8 +264,8 @@
         this.$root.db.collection(this.collectionID).get().then(
           snapshot => {
             snapshot.forEach(doc => {
-              /* console.log("Read successfully!")
-              console.log(doc) */
+              // /* console.log("Read successfully!")
+              // console.log(doc) */
 
               /* let cont = new Object 
               cont["docID"] = doc.id 
@@ -288,7 +288,7 @@
 
         docRef.update(data).then(
           () => {
-            console.log(docID, " is successfully updated.");
+            // console.log(docID, " is successfully updated.");
           }
         )
       }

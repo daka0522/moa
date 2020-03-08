@@ -1,22 +1,20 @@
 <template>
   <div>
     <!-- Links -->
-    <section class="links">
+    <section class="links" v-if="$route.name === 'development'">
       <router-link to="/dev/testpage">Test Page</router-link>
-      <!-- <h2>Editors</h2> -->
       <router-link to="/dev/quill">
         Edit with Quill
       </router-link>
-      <router-link to="/dev/edit-tiptap">
+      <router-link to="/dev/tiptap">
         Edit with Tiptap
       </router-link>
-      <router-link to="/dev/edit-editorjs">
+      <router-link to="/dev/editorjs">
         Edit with Editor JS
       </router-link>
       <router-link to="/dev/writer">
         Writer
       </router-link>
-
     </section>
 
     <router-view />

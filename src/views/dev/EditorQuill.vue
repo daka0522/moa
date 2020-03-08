@@ -236,8 +236,8 @@ export default {
     },
 
     $event(nv, ov) {
-      console.log(ov);
-      console.log(nv);
+      // console.log(ov);
+      // console.log(nv);
       
     }
   },
@@ -271,14 +271,14 @@ export default {
             } */
           })
           .then(function () {
-            console.log("Document successfully written!")
+            // console.log("Document successfully written!")
             this.stateMsg = "Document successfully written!"
           })
           .catch(function (err) {
-            console.error("Error writing document: ", err)
+            // console.error("Error writing document: ", err)
           })
       } else {
-        console.warn("The title and content is empty. This document is not saved.")
+        // console.warn("The title and content is empty. This document is not saved.")
       }
     },
     
@@ -297,12 +297,12 @@ export default {
 
       /* .delete().then(() => {
         this.docs.splice(docIndex, 1)
-        console.log(this.docID, "Document successfully deleted!")
+        // console.log(this.docID, "Document successfully deleted!")
         // this.stateMsg = "Document successfully deleted!"
 
       }).catch(error => {
         // this.stateMsg = "Error removing document: "
-        console.log("Error removing document: ", error)
+        // console.log("Error removing document: ", error)
       }) */
 
     },
@@ -314,7 +314,7 @@ export default {
         this.db.collection(collectionName).get().then(
             snapshot => {
               snapshot.forEach(doc => {
-                console.log("read successfully");
+                // console.log("read successfully");
                 
                 this.docs.push(doc.id)
               });
@@ -323,7 +323,7 @@ export default {
             }
           )
           .catch(err => {
-            console.log('Error getting documents', err);
+            // console.log('Error getting documents', err);
           })
       }
     },
@@ -338,7 +338,7 @@ export default {
               container[collectionName][doc.id] = doc.data() 
               // container[collectionName].docData = doc.data()
               this.dataLists.push(container)
-              console.log("List Doc")
+              // console.log("List Doc")
             })
           }
         )
@@ -352,13 +352,13 @@ export default {
           doc => {
             if (doc.exists) {
               this.docData = doc.data()
-              console.log("document data:", doc.data())
+              // console.log("document data:", doc.data())
             } else {
-              console.log("No such document!")
+              // console.log("No such document!")
             }
           }
         ).catch(err => {
-          console.log("Error getting document:", err);
+          // console.log("Error getting document:", err);
         })
       }
     },

@@ -185,7 +185,7 @@ export default {
 
       this.$root.db.collection('user').doc(user.uid).set(data).then(
         () => {
-          console.log('create User data! success.')
+          // console.log('create User data! success.')
         }
       )
     }

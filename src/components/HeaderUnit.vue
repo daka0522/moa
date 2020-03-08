@@ -27,7 +27,7 @@ header {
   display: flex;
   flex-direction: column;
   
-  width: 90%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 6.85vh;
@@ -40,8 +40,10 @@ header {
   }
 
   .header-sub {
-    // color: rgba(black, .65);
     color: $color-sub;
+  }
+  h1 {
+    margin: .62rem;
   }
 }
 </style>

@@ -111,7 +111,7 @@ $test-second: hsla(90, 100, 30, .5);
 
 #home {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
   grid-gap: 1vmax;
 }
 

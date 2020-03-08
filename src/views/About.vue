@@ -21,6 +21,7 @@
         Moa is korean word '모아'. It means collect or gather. I use this word for the site because
         I hope people enjoy the apps and share their story & useful things.
       </p>
+      <br>
       <p>The source code is shared on Github. You can visit and review the code.</p>
       <a href="https://github.com/daka0522/moa">Github</a>
     </section>

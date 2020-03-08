@@ -45,7 +45,9 @@ import {
     faExclamationTriangle,
     faTools,
     faPalette,
-    faCertificate
+    faCertificate,
+    faLock,
+    faLockOpen
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -59,7 +61,9 @@ library.add({
     faExclamationTriangle,
     faTools,
     faPalette,
-    faCertificate
+    faCertificate,
+    faLock,
+    faLockOpen
 })
 Vue.component('fa-i', FontAwesomeIcon)
 
@@ -71,6 +75,8 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
 Vue.use(VueQuillEditor, ) */
+
+
 
 firebase.auth().onAuthStateChanged(user => {
     if (user) {

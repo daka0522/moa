@@ -74,11 +74,11 @@ main {
   min-height: 72.6vh;
 
 
-  width: 90vw;
+  // width: 90vw;
   max-width: 80em;
   
   margin: 0 auto;
-  padding: 4.24vh 4.24vw;
+  padding: 4.24vh 1.62vw;
   padding-bottom: 11.09vh;
 }
 
