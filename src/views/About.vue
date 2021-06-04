@@ -50,5 +50,4 @@ export default {
   grid-row-gap: 3vh;
 }
 
-
 </style>

@@ -1,6 +1,5 @@
 <template>
   <section>
-    <!-- <p>Page not found.</p> -->
     <header-unit header-title="Page not found">
       <state-msger state="error">
         <p>This page seems not exist. Please check out the address again.</p>

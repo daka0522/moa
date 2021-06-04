@@ -21,7 +21,6 @@
         </div>
       </section>
 
-
       <section>
         <h1>New Posts</h1>
         <div class="container">
@@ -118,8 +117,8 @@ $test-second: hsla(90, 100, 30, .5);
 section {
   font-size: small;
 
-  border-right: 1px solid rgba(128, 128, 128, 0.25);
-  border-left: 1px solid rgba(128, 128, 128, 0.25);
+  border-right: 1px dotted rgba(128, 128, 128, 0.25);
+  border-left: 1px dotted rgba(128, 128, 128, 0.25);
   padding: 1.6vh 1.6vw;
 
   .container {

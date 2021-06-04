@@ -61,7 +61,6 @@ const routes = [
                 component: () => import('@/views/privateApp/Blog.vue')
             },
         ]
-
     },
     {
         name: 'community',
