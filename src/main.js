@@ -8,6 +8,8 @@ import VueMeta from 'vue-meta'
 
 Vue.use(VueMeta)
 
+// some
+
 Vue.config.productionTip = false
 
 // Utils
