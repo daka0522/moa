@@ -1,9 +1,8 @@
-import { createApp } from 'vue'
+import { createApp, defineComponent } from 'vue'
 import App from './App.vue'
 import router from "./router"
 import  "./init"
 import firebase from "firebase/app"
-
 const app = createApp(App)
 
 app.use(router)
@@ -15,7 +14,7 @@ import StateMsger from "./components/StateMsger.vue"
 app.component("header-unit", HeaderUnit)
 app.component("state-msger", StateMsger)
 
-
+app.component("fa-i", defineComponent({}))
 
 
 

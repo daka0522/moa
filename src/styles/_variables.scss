@@ -1,25 +1,32 @@
+@use "sass:math";
+
 // @Color scheme
 // 1.Black and White
 $black: rgba(0, 0, 0, 1);
 $white: rgba(255, 255, 255, 1);
 $green: hsla(100, 80, 35, .8);
-$purple: hsla(200, 80, 35, .8);
+// $purple: hsla(200, 80, 35, .8);
+
 // 2. Concept color
 $degree: 10;
-$s: 100;
-$l: 40;
 @function hueControl($degree, $divine, $divineOrder) {
-    $result: $degree + ((360 / $divine) * $divineOrder);
+    $result: $degree + (math.div(360, $divine) * $divineOrder);
     @return $result % 360;
 }
 
-$first: hsl(hueControl($degree, 6, 0), $s, $l);
+
+/* $s: 100;
+$l: 40; */
+
+/* $first: hsl(hueControl($degree, 6, 0), $s, $l);
 $second: hsl(hueControl($degree, 6, 1), $s, $l);
 $third: hsl(hueControl($degree, 6, 2), $s, $l);
 $forth: hsl(hueControl($degree, 6, 3), $s, $l);
 $fifth: hsl(hueControl($degree, 6, 4), $s, $l);
 $six: hsl(hueControl($degree, 6, 5), $s, $l);
-$shadow-primary: 0 0 .64em .1em rgba(0, 0, 0, .1);
+*/
+$shadow-primary: 0 0 .64em .1em rgba(0, 0, 0, .1); 
+
 // @ Padding and margin variables maker
 // For setting the box properties (Padding, margin, etc)
 $primary-em: .8em;
@@ -30,7 +37,8 @@ $primary-em: .8em;
 }
 
 $box-primary: box-maker($primary-em);
-$box-small: box-maker($primary-em / 2);
+// $box-small: box-maker($primary-em / 2);
+$box-small: box-maker(math.div($primary-em, 2));
 $border-main: .14rem solid rgba(128, 128, 128, .1);
 
 

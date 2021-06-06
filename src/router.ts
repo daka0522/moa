@@ -21,11 +21,11 @@ const routes = [
         path: '/public-app',
         component: () => import( './views/publicApp/PublicDefault.vue'),
         children: [
-            // {   
-            //     name: 'todo',
-            //     path: 'todo',
-            //     component: () => import('./views/publicApp/Todo.vue')
-            // },
+            {   
+                name: 'todo',
+                path: 'todo',
+                component: () => import('./views/publicApp/Todo.vue')
+            },
             // {
             //     name: 'style',
             //     path: 'style',

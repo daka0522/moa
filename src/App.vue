@@ -8,14 +8,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
 import Foot from "./views/Foot.vue"
 import Nav from "./views/Nav.vue"
 
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld,
     Foot,
     Nav
   },
@@ -50,8 +48,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "./styles/main.scss";
 
-/* #app {
+#app {
 }
 nav {
   border-bottom: $border-main;
@@ -83,6 +82,6 @@ footer {
     flex-direction: column;
     flex-wrap: wrap;
   }
-} */
+} 
 
 </style>

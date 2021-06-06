@@ -1,6 +1,6 @@
 <template>
   <div v-if="state" :class="'msg-' + this.state" class="msg">
-    <fa-i v-if="iconSelector" :icon="iconSelector" class="icon" />
+    <!-- <fa-i v-if="iconSelector" :icon="iconSelector" class="icon" /> -->
     <slot />
   </div>
 </template>
@@ -55,7 +55,6 @@
       background-color: rgba(255, 166, 0, 0.05);
       border: .14rem solid rgba(255, 166, 0, 0.1);
       color: rgba(255, 166, 0, 0.95);
-
     }
 
     &-error {
@@ -63,8 +62,6 @@
       background-color: rgba(255, 0, 0, 0.05);
       border: .14rem solid rgba(255, 0, 0, 0.1);
       color: rgba(255, 0, 0, 0.95);
-
-
     }
 
     &-success {

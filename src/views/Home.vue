@@ -49,7 +49,7 @@ export default defineComponent({
   name: "Home",
   data() {
     return {
-      docIds: []  as string[],
+      docIds: [] as string[],
       docs: [] as Record<string, any>[],
 
       update: {

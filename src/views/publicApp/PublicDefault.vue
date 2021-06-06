@@ -5,9 +5,9 @@
       v-if="$route.name === 'public-app'"
       id="public-links"
     > 
-      <!-- <router-link :to="{name: 'todo'}">
+      <router-link :to="{name: 'todo'}">
         Todo
-      </router-link> -->
+      </router-link>
       <!-- <router-link :to="{name: 'style'}">
         Style
       </router-link>

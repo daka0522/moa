@@ -14,7 +14,7 @@
       </router-link>
     </state-msger> -->
     
-      <div id="todo">
+    <div id="todo">
       <transition name="fade">
         <span id="mainStatePanel" class="msg">{{ mainStateMsg }}</span>
       </transition>
@@ -24,7 +24,8 @@
         <form class="todo-input panel">
           <input v-model="newDoc.content" class="content-area input-part" type="text" placeholder="Please write down things to do here!" @keyup.enter="saveNewDoc(); newDoc.content=''">
           <button  class="btn" type="submit" @click.prevent="saveNewDoc(); newDoc.content=''">
-            <fa-i icon="save" /><span>Save</span>
+            <!-- <fa-i icon="save" /> -->
+            <span>Save</span>
           </button>
         </form>
       </transition>
@@ -33,7 +34,7 @@
       <div v-show="docs.length" id="todo-options" class="panel-sub">
         <span>Options</span>
         <button class="btn-delete" @click="deleteAll()">
-          <fa-i icon="trash" />
+          <!-- <fa-i icon="trash" /> -->
           Delete All!
         </button>
       </div>
@@ -74,7 +75,8 @@
                 class="btn edit-btns"
                 @click="doc.fields.editable = !doc.fields.editable"
               >
-                <fa-i icon="pencil-alt" /><span>Edit</span>
+                <!-- <fa-i icon="pencil-alt" /> -->
+                <span>Edit</span>
               </button>
 
               <div
@@ -103,15 +105,17 @@
               </div>
             </div>
           </li>
-        </transition-group>
+      </transition-group>
     </div>
+
   </div>
 </template>
 
-<script>
-import {colRef, getUserID} from '@/utils/firestoreUtils'
+<script lang="ts">
+import {colRef, getUserID} from '../../utils/firestoreUtils'
+import { defineComponent } from "vue"
 
-export default {
+export default defineComponent({
   data() {
     return {
       // Database Refrence of this app
@@ -305,10 +309,10 @@ export default {
     }
 
   }
-}
+})
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 /* A. Todo input */
 .todo-input {
   margin: 4.8em 0 4.8em 0;
