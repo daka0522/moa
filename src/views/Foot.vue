@@ -1,7 +1,9 @@
-<template>  
+<template>
   <footer>
     <div class="foot-item">
-      <a href="https://github.com/daka0522/moa" target="_blank" rel="noopener">Github</a>
+      <a href="https://github.com/daka0522/moa" target="_blank" rel="noopener"
+        >Github</a
+      >
     </div>
 
     <p>Moa, 2021</p>
@@ -13,22 +15,20 @@
 
     <div id="options">
       <label for="theme">Dark Theme</label>
-      <input type="checkbox" name="theme" id="theme" v-model="isDarkTheme">
+      <input id="theme" v-model="isDarkTheme" type="checkbox" name="theme" />
     </div>
   </footer>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+  import { defineComponent } from "vue"
 
-export default defineComponent({
-  data() {
-    return {
-      isDarkTheme: false
-    }
-  },
-  setup() {
-    
-  },
-})
+  export default defineComponent({
+    setup() {},
+    data() {
+      return {
+        isDarkTheme: false,
+      }
+    },
+  })
 </script>

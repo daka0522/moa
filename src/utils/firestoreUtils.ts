@@ -1,6 +1,9 @@
 function colRef() {
   if (this.$root.account.currentUser) {
-    return this.$root.db.collection('user').doc(this.getUserID).collection(this.appName)
+    return this.$root.db
+      .collection("user")
+      .doc(this.getUserID)
+      .collection(this.appName)
   } else {
     return null
   }
@@ -14,4 +17,4 @@ function getUserID() {
   }
 }
 
-export  {colRef, getUserID}
+export { colRef, getUserID }

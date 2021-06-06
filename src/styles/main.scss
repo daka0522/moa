@@ -2,45 +2,45 @@
 @import "_variables.scss";
 
 * {
-    line-height: 1.6em;
-    font-family: 'Philosopher', sans-serif;
+  line-height: 1.6em;
+  font-family: "Philosopher", sans-serif;
 }
 
 body {
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .btn,
 .panel,
 .input-part,
 input {
-    border-radius: .5em;
+  border-radius: 0.5em;
 }
 
 p {
-    margin: 0;
+  margin: 0;
 }
 
 input {
-    &:focus {
-        background-color: rgb(255, 255, 255);
-    }
-    &[type="checkbox"] {
-        width: 1.6em;
-        height: 1.6em;
-    }
-    &[type="submit"] {
-        background-color: $green;
-        color: $white;
-    }
+  &:focus {
+    background-color: rgb(255, 255, 255);
+  }
+  &[type="checkbox"] {
+    width: 1.6em;
+    height: 1.6em;
+  }
+  &[type="submit"] {
+    background-color: $green;
+    color: $white;
+  }
 }
 
 select:focus,
 input:focus,
 .btn:focus {
-    outline: none;
-    box-shadow: 0 0 .16em .1em rgba(20, 140, 0, .8);
+  outline: none;
+  box-shadow: 0 0 0.16em 0.1em rgba(20, 140, 0, 0.8);
 }

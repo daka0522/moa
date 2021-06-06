@@ -1,25 +1,25 @@
 #app {
+  color: $color-main;
+
+  &[theme="default"] {
+    // background-color: red;
+  }
+  &[theme="dark"] {
+    $color-main: white;
+    $bg-main: rgba(0, 0, 0, 0.85);
+
     color: $color-main;
-
-    &[theme=default] {
-        // background-color: red;
-    }
-    &[theme=dark] {
-        $color-main: white;
-        $bg-main: rgba(0, 0, 0, 0.85);
-
-        color: $color-main;
-        background-color: $bg-main;
-    }
+    background-color: $bg-main;
+  }
 }
 
 a {
-    color: inherit;
-    
-    &:link {
-        text-decoration: none;
-    }
-    &:visited {
-        // color: inherit;
-    }
+  color: inherit;
+
+  &:link {
+    text-decoration: none;
+  }
+  &:visited {
+    // color: inherit;
+  }
 }

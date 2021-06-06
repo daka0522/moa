@@ -1,7 +1,7 @@
-import { createApp, defineComponent } from 'vue'
-import App from './App.vue'
+import { createApp, defineComponent } from "vue"
+import App from "./App.vue"
 import router from "./router"
-import  "./init"
+import "./init"
 import firebase from "firebase/app"
 const app = createApp(App)
 
@@ -11,23 +11,20 @@ app.use(router)
 import HeaderUnit from "./components/HeaderUnit.vue"
 import StateMsger from "./components/StateMsger.vue"
 
-app.component("header-unit", HeaderUnit)
-app.component("state-msger", StateMsger)
+app.component("HeaderUnit", HeaderUnit)
+app.component("StateMsger", StateMsger)
 
-app.component("fa-i", defineComponent({}))
+app.component("FaI", defineComponent({}))
 
-
-
-
-app.mount('#app')
+app.mount("#app")
 
 // Global Properties & Type Declarations
-app.config.globalProperties.$firebase = firebase 
+app.config.globalProperties.$firebase = firebase
 app.config.globalProperties.$db = firebase.firestore()
 
 declare module "@vue/runtime-core" {
   export interface ComponentCustomProperties {
-    $firebase: typeof firebase 
-    $db: firebase.firestore.Firestore;
+    $firebase: typeof firebase
+    $db: firebase.firestore.Firestore
   }
 }

@@ -4,55 +4,44 @@
 // 1.Black and White
 $black: rgba(0, 0, 0, 1);
 $white: rgba(255, 255, 255, 1);
-$green: hsla(100, 80, 35, .8);
+$green: hsla(100, 80%, 35%, 0.8);
 // $purple: hsla(200, 80, 35, .8);
 
 // 2. Concept color
 $degree: 10;
 @function hueControl($degree, $divine, $divineOrder) {
-    $result: $degree + (math.div(360, $divine) * $divineOrder);
-    @return $result % 360;
+  $result: $degree + (math.div(360, $divine) * $divineOrder);
+  @return $result % 360;
 }
 
+$s: 100%;
+$l: 40%;
 
-/* $s: 100;
-$l: 40; */
-
-/* $first: hsl(hueControl($degree, 6, 0), $s, $l);
+$first: hsl(hueControl($degree, 6, 0), $s, $l);
 $second: hsl(hueControl($degree, 6, 1), $s, $l);
 $third: hsl(hueControl($degree, 6, 2), $s, $l);
 $forth: hsl(hueControl($degree, 6, 3), $s, $l);
 $fifth: hsl(hueControl($degree, 6, 4), $s, $l);
 $six: hsl(hueControl($degree, 6, 5), $s, $l);
-*/
-$shadow-primary: 0 0 .64em .1em rgba(0, 0, 0, .1); 
+
+$shadow-primary: 0 0 0.64em 0.1em rgba(0, 0, 0, 0.1);
 
 // @ Padding and margin variables maker
 // For setting the box properties (Padding, margin, etc)
-$primary-em: .8em;
+$primary-em: 0.8em;
 @function box-maker($unit) {
-    $box-height: 1 * $unit;
-    $box-width: 2 * $unit;
-    @return $box-height $box-width $box-height $box-width
+  $box-height: 1 * $unit;
+  $box-width: 2 * $unit;
+  @return $box-height $box-width $box-height $box-width;
 }
 
 $box-primary: box-maker($primary-em);
-// $box-small: box-maker($primary-em / 2);
 $box-small: box-maker(math.div($primary-em, 2));
-$border-main: .14rem solid rgba(128, 128, 128, .1);
+$border-main: 0.14rem solid rgba(128, 128, 128, 0.1);
 
-
-
-
-
-
-
-
-
-// Theme 
+// Theme
 $color-main: black;
 $color-sub: gray;
 
 $bg-main: white;
 $bg-sub: rgba(128, 128, 128, 0.123);
-

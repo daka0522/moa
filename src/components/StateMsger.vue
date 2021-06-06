@@ -1,5 +1,5 @@
 <template>
-  <div v-if="state" :class="'msg-' + this.state" class="msg">
+  <div v-if="state" :class="'msg-' + state" class="msg">
     <!-- <fa-i v-if="iconSelector" :icon="iconSelector" class="icon" /> -->
     <slot />
   </div>
@@ -17,32 +17,32 @@
       iconSelector() {
         let icon = null
         switch (this.state) {
-          case 'error':
-            icon = 'exclamation';
-            break;
-          case 'success':
-            icon = 'check';
-            break;
-          case 'warning':
-            icon = 'exclamation-triangle';
-            break;
+          case "error":
+            icon = "exclamation"
+            break
+          case "success":
+            icon = "check"
+            break
+          case "warning":
+            icon = "exclamation-triangle"
+            break
         }
 
         return icon
       },
-    }
+    },
   }
 </script>
 
 <style lang="scss" scoped>
   // @ Message
   .msg {
-    color: rgba(0, 0, 0, .5);
+    color: rgba(0, 0, 0, 0.5);
     font-weight: lighter;
 
-    background-color: rgba(128, 128, 128, .05);
+    background-color: rgba(128, 128, 128, 0.05);
 
-    border-radius: .5rem;
+    border-radius: 0.5rem;
     text-align: center;
 
     padding: 1.6vh 1.6vw;
@@ -53,26 +53,26 @@
     &-warning {
       @extend .msg;
       background-color: rgba(255, 166, 0, 0.05);
-      border: .14rem solid rgba(255, 166, 0, 0.1);
+      border: 0.14rem solid rgba(255, 166, 0, 0.1);
       color: rgba(255, 166, 0, 0.95);
     }
 
     &-error {
       @extend .msg;
       background-color: rgba(255, 0, 0, 0.05);
-      border: .14rem solid rgba(255, 0, 0, 0.1);
+      border: 0.14rem solid rgba(255, 0, 0, 0.1);
       color: rgba(255, 0, 0, 0.95);
     }
 
     &-success {
       @extend .msg;
       background-color: rgba(0, 128, 0, 0.05);
-      border: .14rem solid rgba(0, 128, 0, 0.1);
+      border: 0.14rem solid rgba(0, 128, 0, 0.1);
       color: rgba(0, 128, 0, 0.95);
     }
 
     .icon {
-      margin: 0 .6rem;
+      margin: 0 0.6rem;
     }
   }
 </style>

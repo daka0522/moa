@@ -1,33 +1,42 @@
 <template>
   <Nav />
   <main>
-    <router-view></router-view>
+    <router-view />
   </main>
   <Foot />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue"
 import Foot from "./views/Foot.vue"
 import Nav from "./views/Nav.vue"
 
 export default defineComponent({
-  name: 'App',
+  name: "App",
   components: {
     Foot,
-    Nav
-  },
-  data() {
-    return {
-      isDarkTheme: false,
-      theme: 'default'
-    }
+    Nav,
   },
   setup() {
     // console.log(firebase)
   },
+  data() {
+    return {
+      isDarkTheme: false,
+      theme: "default",
+    }
+  },
+  watch: {
+    isDarkTheme(nv) {
+      if (nv) {
+        this.theme = "dark"
+      } else {
+        this.theme = "default"
+      }
+    },
+  },
   methods: {
-    routeName(){
+    routeName() {
       if (this.$route.name) {
         return this.$route.name
       } else {
@@ -35,15 +44,6 @@ export default defineComponent({
       }
     },
   },
-  watch: {
-    isDarkTheme(nv) {
-      if (nv) {
-        this.theme = 'dark'
-      } else {
-        this.theme = 'default'
-      }
-    }
-  }
 })
 </script>
 
@@ -54,13 +54,13 @@ export default defineComponent({
 }
 nav {
   border-bottom: $border-main;
-  background-color: rgba(128, 128, 128, .025);
+  background-color: rgba(128, 128, 128, 0.025);
 }
 
 main {
   min-height: 72.6vh;
   max-width: 80em;
-  
+
   margin: 0 auto;
   padding: 4.24vh 1.62vw;
   padding-bottom: 11.09vh;
@@ -82,6 +82,5 @@ footer {
     flex-direction: column;
     flex-wrap: wrap;
   }
-} 
-
+}
 </style>
