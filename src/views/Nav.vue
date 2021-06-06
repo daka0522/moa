@@ -1,15 +1,15 @@
 <template>
   <nav id="nav-public" title="main navigation">
     <router-link to="/" title="go to main default page">
-      Home
+      Home @
     </router-link>
     <router-link to="/about" title="about the site">
-      About
+      About @
     </router-link>
 
-    <router-link to="/public-apps" class="nav-dropdowner" title="public applications">
+    <router-link to="/public-app" class="nav-dropdowner" title="public applications">
       Public
-      <div class="nav-dropdown-list">
+      <!-- <div class="nav-dropdown-list">
         <router-link :to="{name: 'todo'}">
           Todo
         </router-link>
@@ -25,19 +25,19 @@
         <router-link :to="{name: 'chatroom'}">
           Chat Room
         </router-link>
-      </div>
+      </div> -->
     </router-link>
 
-    <router-link to="/private-apps" class="nav-dropdowner" title="private applications">
+    <!-- <router-link to="/private-apps" class="nav-dropdowner" title="private applications">
       Private
       <div class="nav-dropdown-list">
         <router-link :to="{name: 'blog'}">
           Blog
         </router-link>
       </div>
-    </router-link>
+    </router-link> -->
 
-    <router-link v-show="!this.$root.account.currentUser" to="/signin" title="sign in and sign up page">
+    <!-- <router-link v-show="!this.$root.account.currentUser" to="/signin" title="sign in and sign up page">
       Sign In
     </router-link>
 
@@ -55,19 +55,18 @@
           <button class="btn-basic" title="Sign out" @click="this.$root.signOut">Sign Out</button>
         </div>
       </div>
-
-    </div>
+    </div> -->
 
     <!-- <options-part id="nav-options"></options-part> -->
 
-    <router-link to="/dev" v-if="this.$root.account.currentUser && this.$root.account.currentUser.email === 'daka0522@gmail.com'" 
+    <!-- <router-link to="/dev" v-if="this.$root.account.currentUser && this.$root.account.currentUser.email === 'daka0522@gmail.com'" 
     class="nav-dropdowner" title="for developer, manager of this site">
       Developer
-      <!-- <div class="nav-dropdown-list">
+      <div class="nav-dropdown-list">
         <router-link to="/docs">Docs</router-link>
         <router-link to="/dev/edit-quill">Quill</router-link>
-      </div> -->
-    </router-link>
+      </div>
+    </router-link> -->
   </nav>
 </template>
 
@@ -81,14 +80,16 @@
   }
 </script>
 
-<style scoped>
-  /*
-
-  // Navigation 
+<style lang="scss" scoped>
+$bg-main: black;
+$color-main: black;
+$border-main: .14rem solid rgba(128, 128, 128, .1);
+  
+  /* Navigation */ 
   nav {
     font-size: small;
 
-    // Links
+    /* Links */ 
     a {
       padding: .62rem;
       min-width: 6rem;
@@ -99,7 +100,7 @@
       }
     }
 
-    // Nav dropdown
+    /* Nav dropdown */
     .nav-dropdowner {
       display: flex;
       justify-content: center;
@@ -157,7 +158,7 @@
       padding: 1.6vh 1.6vw;
       box-shadow: 0 0 .5em .05em rgba(128, 128, 128, 0.375);
 
-      // Content layout 
+      /* Content layout */ 
       &-info {
         display:grid;
         grid-gap: 1rem;
@@ -191,5 +192,5 @@
     justify-items: center;
   }
 
-  */
+ 
 </style>

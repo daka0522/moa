@@ -1,6 +1,5 @@
 {
   "projects": {
-    "webapp": "moa-now",
     "default": "moa-now"
   }
 }

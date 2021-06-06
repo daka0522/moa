@@ -1,11 +1,10 @@
 <template>  
   <footer>
-    <div>?!!</div>
     <div class="foot-item">
       <a href="https://github.com/daka0522/moa" target="_blank" rel="noopener">Github</a>
     </div>
 
-    <p>Moa, 2020</p>
+    <p>Moa, 2021</p>
 
     <div class="foot-item">
       <span>Contact</span>
@@ -18,3 +17,18 @@
     </div>
   </footer>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  data() {
+    return {
+      isDarkTheme: false
+    }
+  },
+  setup() {
+    
+  },
+})
+</script>
