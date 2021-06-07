@@ -4,6 +4,7 @@
       <router-link :to="{ name: 'todo' }">Todo</router-link>
       <router-link :to="{ name: 'style' }">Style @</router-link>
       <router-link :to="{ name: 'canvas' }">Canvas</router-link>
+      <router-link :to="{ name: 'community' }"> Community @</router-link>
     </div>
 
     <router-view />

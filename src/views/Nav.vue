@@ -4,16 +4,16 @@
     <router-link to="/about" title="about the site"> About @ </router-link>
 
     <router-link
-      to="/public-app"
+      to="/public"
       class="nav-dropdowner"
       title="public applications"
     >
       Public
       <div class="nav-dropdown-list">
         <router-link :to="{ name: 'todo' }"> Todo </router-link>
-        <router-link :to="{ name: 'style' }"> Style </router-link>
+        <router-link :to="{ name: 'style' }"> Style @</router-link>
         <router-link :to="{ name: 'canvas' }"> Canvas </router-link>
-        <router-link to="/community"> Community </router-link>
+        <router-link :to="{ name: 'community' }"> Community @</router-link>
         <router-link :to="{ name: 'chatroom' }"> Chat Room </router-link>
       </div>
     </router-link>
@@ -27,51 +27,72 @@
       </div>
     </router-link> -->
 
-    <!-- <router-link v-show="!this.$root.account.currentUser" to="/signin" title="sign in and sign up page">
+    <router-link v-show="!user" to="/signin" title="sign in and sign up page">
       Sign In
     </router-link>
 
-    <div v-if="this.$root.account.currentUser" id="nav-user">
-      <img id="nav-user-icon" :src="this.$root.account.currentUser.photoURL" :alt="this.$root.account.currentUser.displayName + '\'s profile photo'" @click="showProfile = !showProfile">
+    <div v-if="user" id="nav-user">
+      <img
+        id="nav-user-icon"
+        :src="user.photoURL"
+        :alt="user.displayName + '\'s profile photo'"
+        @click="showProfile = !showProfile"
+      />
 
       <div id="nav-user-profile" v-if="showProfile">
         <div id="nav-user-profile-info">
-          <h3>{{ this.$root.account.currentUser.displayName }}</h3>
-          <img :src="this.$root.account.currentUser.photoURL" :alt="this.$root.account.currentUser.displayName + '\'s profile photo'">
-          <p>{{ this.$root.account.currentUser.email }}</p>
+          <h3>{{ user.displayName }}</h3>
+          <img
+            :src="user.photoURL"
+            :alt="user.displayName + '\'s profile photo'"
+          />
+          <p>{{ user.email }}</p>
         </div>
         <div id="nav-user-profile-tool">
           <router-link to="/user">Profile</router-link>
-          <button class="btn-basic" title="Sign out" @click="this.$root.signOut">Sign Out</button>
+          <button class="btn-basic" title="Sign out" @click="$signOut">
+            Sign Out
+          </button>
         </div>
       </div>
-    </div> -->
+    </div>
 
-    <!-- <options-part id="nav-options"></options-part> -->
+    <Options id="nav-options"></Options>
 
-    <!-- <router-link to="/dev" v-if="this.$root.account.currentUser && this.$root.account.currentUser.email === 'daka0522@gmail.com'" 
-    class="nav-dropdowner" title="for developer, manager of this site">
+    <router-link
+      to="/dev"
+      v-if="user && user.email === 'daka0522@gmail.com'"
+      class="nav-dropdowner"
+      title="for developer, manager of this site"
+    >
       Developer
       <div class="nav-dropdown-list">
         <router-link to="/docs">Docs</router-link>
         <router-link to="/dev/edit-quill">Quill</router-link>
       </div>
-    </router-link> -->
+    </router-link>
   </nav>
 </template>
 
 <script>
-export default {
+import { defineComponent } from "vue"
+
+export default defineComponent({
   data() {
     return {
       showProfile: false,
     }
   },
-}
+  computed: {
+    user() {
+      return this.$store.state.currentUser
+    },
+  },
+})
 </script>
 
 <style lang="scss" scoped>
-$bg-main: black;
+$bg-main: rgba(255, 255, 255, 0.74);
 $color-main: black;
 $border-main: 0.14rem solid rgba(128, 128, 128, 0.1);
 

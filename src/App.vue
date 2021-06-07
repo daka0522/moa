@@ -1,5 +1,19 @@
 <template>
   <Nav />
+  <div>
+    <strong>List to complete</strong>
+    <div v-for="item in list" :key="item">
+      <span>{{ Object.keys(item)[0] }} : </span>
+      <span v-if="Object.values(item)[0] == 1" style="color: green">
+        <!-- {{ Object.values(item)[0] == 1 ? "Done" : "Not" }} -->
+        &#10004;
+      </span>
+      <span v-else style="color: red">
+        <!-- {{ Object.values(item)[0] == 1 ? "Done" : "Not" }} -->
+        &#10008;
+      </span>
+    </div>
+  </div>
   <main>
     <router-view />
   </main>
@@ -24,6 +38,23 @@ export default defineComponent({
     return {
       isDarkTheme: false,
       theme: "default",
+      list: [
+        // 1: Done, 0: Not
+        { app: 1 },
+        { home: 1 },
+        { nav: 1 },
+        { foot: 1 },
+        { PublicApp: 0 },
+        { todo: 0 },
+        { style: 1 },
+        { canvas: 0 },
+        { community: 1 },
+        { chatroom: 0 },
+        { auth: 0 },
+        { signin: 0 },
+        { signout: 0 },
+        { user: 0 },
+      ],
     }
   },
   watch: {

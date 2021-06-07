@@ -19,7 +19,7 @@ const routes = [
   },
   {
     name: "public-app",
-    path: "/public-app",
+    path: "/public",
     component: () => import("./views/publicApp/PublicDefault.vue"),
     children: [
       {
@@ -42,6 +42,11 @@ const routes = [
         path: "chatroom",
         component: () => import("./views/publicApp/RealtimeChatRoom.vue"),
       },
+      {
+        name: "community",
+        path: "community",
+        component: () => import("./views/publicApp/Community.vue"),
+      },
     ],
   },
   // {
@@ -56,32 +61,28 @@ const routes = [
   //         },
   //     ]
   // },
-  // {
-  //     name: 'community',
-  //     path: '/community',
-  //     component: () => import('./views/Community.vue')
-  // },
+
   // {
   //     name: 'docs',
   //     path: '/docs',
   //     component: () => import('./views/Docs.vue')
   // },
 
-  // {
-  //     name: 'signin',
-  //     path: '/signin',
-  //     component: () => import('./views/auth/SignIn.vue')
-  // },
-  // {
-  //     name: 'signup',
-  //     path: '/signup',
-  //     component: () => import('./views/auth/SignUp.vue')
-  // },
-  // {
-  //     name: 'user',
-  //     path: '/user',
-  //     component: () => import('./views/User.vue')
-  // },
+  {
+    name: "signin",
+    path: "/signin",
+    component: () => import("./views/auth/SignIn.vue"),
+  },
+  {
+    name: "signup",
+    path: "/signup",
+    component: () => import("./views/auth/SignUp.vue"),
+  },
+  {
+    name: "user",
+    path: "/user",
+    component: () => import("./views/auth/User.vue"),
+  },
 
   // {
   //     name: 'development',
