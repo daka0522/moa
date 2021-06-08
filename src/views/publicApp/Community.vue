@@ -33,74 +33,74 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
-export default defineComponent({
-  data() {
-    return {
-      docIds: [],
-      docs: [] as Record<string, unknown>[],
-    }
-  },
-  mounted() {
-    this.loadPublished()
-    console.log(this.$store)
-  },
-  methods: {
-    loadPublished() {
-      let indexRef = this.$db
-        .collectionGroup("blog")
-        .where("isPublished", "==", true)
-        .orderBy("date", "desc")
-      indexRef.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          // Guard if the doc already loaded
-          if (this.docs.find((e) => e.id == doc.id)) {
-            return
-          }
-          const cont = {
-            id: doc.id,
-            data: doc.data(),
-          }
-          this.docs.push(cont)
-        })
-      })
+  import { defineComponent } from "vue"
+  export default defineComponent({
+    data() {
+      return {
+        docIds: [],
+        docs: [] as Record<string, unknown>[],
+      }
     },
-  },
-})
+    mounted() {
+      this.loadPublished()
+      console.log(this.$store)
+    },
+    methods: {
+      loadPublished() {
+        let indexRef = this.$db
+          .collectionGroup("blog")
+          .where("isPublished", "==", true)
+          .orderBy("date", "desc")
+        indexRef.get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            // Guard if the doc already loaded
+            if (this.docs.find((e) => e.id == doc.id)) {
+              return
+            }
+            const cont = {
+              id: doc.id,
+              data: doc.data(),
+            }
+            this.docs.push(cont)
+          })
+        })
+      },
+    },
+  })
 </script>
 
 <style lang="scss" scoped>
-.content-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  grid-gap: 1rem;
-}
+  .content-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-gap: 1rem;
+  }
 
-.content {
-  border: 1px solid rgba(128, 128, 128, 0.295);
-  border-radius: 0.5em;
-  padding: 3.2vh 3.2vw;
+  .content {
+    border: 1px solid rgba(128, 128, 128, 0.295);
+    border-radius: 0.5em;
+    padding: 3.2vh 3.2vw;
 
-  &-top {
-    display: flex;
-    justify-content: space-between;
+    &-top {
+      display: flex;
+      justify-content: space-between;
 
-    .date {
-      color: gray;
+      .date {
+        color: gray;
+      }
+      .published {
+        color: green;
+      }
     }
-    .published {
-      color: green;
+    &-main {
+      min-height: 200px;
+    }
+    &-bottom {
+      #author {
+        cursor: pointer;
+        float: right;
+        color: gray;
+      }
     }
   }
-  &-main {
-    min-height: 200px;
-  }
-  &-bottom {
-    #author {
-      cursor: pointer;
-      float: right;
-      color: gray;
-    }
-  }
-}
 </style>

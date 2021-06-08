@@ -11,69 +11,81 @@
     </div> -->
 
     <div>
-      <select v-model="lang" class="select-small">
-        <option disabled value="">Language</option>
-        <option value="en">English</option>
-        <option value="kor">Korea</option>
+      <select
+        v-model="lang"
+        class="select-small"
+      >
+        <option
+          disabled
+          value=""
+        >
+          Language
+        </option>
+        <option value="en">
+          English
+        </option>
+        <option value="kor">
+          Korea
+        </option>
       </select>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core"
+  import { defineComponent } from "@vue/runtime-core"
 
-export default defineComponent({
-  data() {
-    return {
-      theme: false,
-      lang: "",
-      isDropDown: false,
-    }
-  },
-  watch: {
-    theme(nv) {
-      if (nv) {
-        document.documentElement.setAttribute("data-theme", "dark")
-      } else {
-        document.documentElement.setAttribute("data-theme", "light")
+  export default defineComponent({
+    data() {
+      return {
+        theme: false,
+        lang: "",
+        isDropDown: false,
       }
     },
-    lange(nv) {
-      switch (nv) {
-        case "en":
-          document.documentElement.setAttribute("lang", "en")
-          break
-        case "kor":
-          document.documentElement.setAttribute("lang", "kor")
-          break
-      }
+    watch: {
+      theme(nv) {
+        if (nv) {
+          document.documentElement.setAttribute("data-theme", "dark")
+        } else {
+          document.documentElement.setAttribute("data-theme", "light")
+        }
+      },
+      lange(nv) {
+        switch (nv) {
+          case "en":
+            document.documentElement.setAttribute("lang", "en")
+            break
+          case "kor":
+            document.documentElement.setAttribute("lang", "kor")
+            break
+        }
+      },
     },
-  },
-  methods: {
-    showMe() {
-      this.isDropDown = !this.isDropDown
+    methods: {
+      showMe() {
+        this.isDropDown = !this.isDropDown
+      },
     },
-  },
-})
+  })
 </script>
 
 <style lang="scss" scoped>
-.options {
-  display: flex;
-  align-items: center;
-}
-
-#theme-controler {
-  position: relative;
-
-  .drop-down-panel {
-    display: block;
-    position: absolute;
-    margin: 0;
-    // width: 10em;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.5);
+  .options {
+    display: flex;
+    align-items: center;
   }
-}
+
+  #theme-controler {
+    position: relative;
+
+    .drop-down-panel {
+      display: block;
+      position: absolute;
+      margin: 0;
+      // width: 10em;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
 </style>

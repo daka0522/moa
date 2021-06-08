@@ -11,6 +11,7 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "allowJs": true,
     "paths": {
       "/@/*": [
         // / to begin with
@@ -20,5 +21,5 @@
     "lib": ["esnext", "dom", "DOM.Iterable", "ScriptHost"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/views/dev/*.vue"]
 }

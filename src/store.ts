@@ -7,11 +7,10 @@ interface State {
 }
 
 const store: Store<State> = createStore({
-  state() {
-    return {
-      signStateMsg: "",
-      currentUser: null,
-    }
+  state: {
+    signStateMsg: "",
+    currentUser: null,
+    theme: "light",
   },
   mutations: {
     setSignState(state, msg) {
@@ -19,6 +18,9 @@ const store: Store<State> = createStore({
     },
     setCurrentUser(state, user) {
       state.currentUser = user
+    },
+    setTheme(state, theme) {
+      state.theme = theme
     },
   },
 })

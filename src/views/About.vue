@@ -22,13 +22,16 @@
 
     <section id="about-site">
       <h3>About the site</h3>
-      <img src="../assets/moa-128.png" alt="moa-logo" />
+      <img
+        src="../assets/moa-128.png"
+        alt="moa-logo"
+      >
       <p>
         Moa is korean word '모아'. It means collect or gather. I use this word
         for the site because I hope people enjoy the apps and share their story
         & useful things.
       </p>
-      <br />
+      <br>
       <p>
         The source code is shared on Github. You can visit and review the code.
       </p>

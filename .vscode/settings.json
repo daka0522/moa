@@ -3,5 +3,8 @@
     "source.fixAll": true
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "vetur.validation.template": false,
+  "vetur.validation.interpolation": false,
+  "vetur.validation.script": false
 }

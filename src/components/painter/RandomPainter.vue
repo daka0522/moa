@@ -2,12 +2,12 @@
   <div>
     <div class="tool-main">
       <button id="btn-draw" class="btn" @click="draw()">
-        <!-- <fa-i icon="palette" style="margin-right: 1rem" /> -->
+        <IconPicker icon="palette" style="margin-right: 1rem" />
         <span>Draw</span>
       </button>
 
       <button class="btn" @click="showTool = !showTool">
-        <!-- <fa-i icon="tools" style="margin-right: 1rem" /> -->
+        <IconPicker icon="tools" style="margin-right: 1rem" />
         <span>More Tools</span>
       </button>
 
@@ -29,9 +29,7 @@
       <a id="btn-download" ref="btnDownload" class="btn" @click="download()"
         >Download</a
       >
-      <button class="btn" @click="updatePhotoURL($root.account.currentUser)">
-        Update Photo
-      </button>
+      <button class="btn" @click="updatePhotoURL()">Update Photo</button>
     </div>
 
     <div v-show="showTool" class="canvas-tools-cont tool-full">
@@ -134,99 +132,102 @@
 </template>
 
 <script lang="ts">
-import { hsl2rgb, hsl2hex } from "/@/utils/colorConverter"
-import { defineComponent } from "vue"
+  import { hsl2rgb, hsl2hex } from "/@/utils/colorConverter"
+  import { CanvasHTMLAttributes, defineComponent } from "vue"
 
-export default defineComponent({
-  data() {
-    return {
-      showTool: false,
+  export default defineComponent({
+    data() {
+      return {
+        showTool: false,
 
-      toolFulled: true,
+        toolFulled: true,
 
-      canvasWidth: 450,
-      canvasHeight: 450,
+        canvasWidth: 450,
+        canvasHeight: 450,
 
-      canvasMaxWidth: 800,
+        canvasMaxWidth: 800,
 
-      showGuidLine: false,
-      guideLineNumber: 4,
+        showGuidLine: false,
+        guideLineNumber: 4,
 
-      curveValue: 0,
-      canvasText: "",
-      saveName: "random-image",
+        curveValue: 0,
+        canvasText: "",
+        saveName: "random-image",
 
-      canvasObj: {
-        borderRadius: "50%",
-        boxShadow: "0 0 .5em .1em rgba(128, 128, 128, 0.45)",
-      },
-    }
-  },
-  computed: {
-    fontSize() {
-      return this.canvasWidth / 6.5
-    },
-  },
-  watch: {
-    showGuidLine(nv) {
-      if (nv) {
-        this.drawGuideLine()
-      } else {
-        this.clearGuideLine()
+        canvasObj: {
+          borderRadius: "50%",
+          boxShadow: "0 0 .5em .1em rgba(128, 128, 128, 0.45)",
+        },
       }
     },
-    canvasText() {
+    computed: {
+      fontSize() {
+        return this.canvasWidth / 6.5
+      },
+      user() {
+        return this.$store.state.currentUser
+      },
+    },
+    watch: {
+      showGuidLine(nv) {
+        if (nv) {
+          this.drawGuideLine()
+        } else {
+          this.clearGuideLine()
+        }
+      },
+      canvasText() {
+        this.drawText()
+      },
+      curveValue() {
+        this.draw()
+      },
+    },
+    mounted() {
+      this.initCanvasText(), this.draw()
+      this.drawGuideLine()
       this.drawText()
     },
-    curveValue() {
-      this.draw()
-    },
-  },
-  mounted() {
-    this.initCanvasText(), this.draw()
-    this.drawGuideLine()
-    this.drawText()
-  },
-  methods: {
-    draw() {
-      this.clearCanvas()
+    methods: {
+      draw() {
+        this.clearCanvas()
 
-      let w = this.canvasWidth
-      let h = this.canvasHeight
-      let ctx = this.$refs.canvas1.getContext("2d")
+        let w = this.canvasWidth
+        let h = this.canvasHeight
+        let ctx = this.$refs.canvas1.getContext("2d")
 
-      let ri = this.randomInt
-      ctx.beginPath()
-      ctx.moveTo(w / 2, h / 2)
+        let ri = this.randomInt
+        ctx.beginPath()
+        ctx.moveTo(w / 2, h / 2)
 
-      for (let i = 0; i < 8; i++) {
-        ctx.bezierCurveTo(
-          ri(i * i, w),
-          ri(i * i, h),
-          ri(i * i, w),
-          ri(i * i, h),
-          ri(i * i, w),
-          ri(i * i, h)
-        )
-        let cv = `rgba(${hsl2rgb(ri(0, 360), ri(80, 100), ri(30, 70))}, ${(
-          1 -
-          i * 0.1
-        ).toFixed(2)})`
-        ctx.fillStyle = cv
-        ctx.fill()
-      }
+        for (let i = 0; i < 8; i++) {
+          ctx.bezierCurveTo(
+            ri(i * i, w),
+            ri(i * i, h),
+            ri(i * i, w),
+            ri(i * i, h),
+            ri(i * i, w),
+            ri(i * i, h)
+          )
+          let cv = `rgba(${hsl2rgb(ri(0, 360), ri(80, 100), ri(30, 70))}, ${(
+            1 -
+            i * 0.1
+          ).toFixed(2)})`
+          ctx.fillStyle = cv
+          ctx.fill()
+        }
 
-      // Circle - background color
-      let circle = new Path2D()
-      circle.moveTo(w / 2, h / 2)
-      circle.arc(w / 2, h / 2, w / 2, 0, 2 * Math.PI)
-      ctx.fill(circle)
+        // Circle - background color
+        let circle = new Path2D()
+        circle.moveTo(w / 2, h / 2)
+        circle.arc(w / 2, h / 2, w / 2, 0, 2 * Math.PI)
+        ctx.fill(circle)
 
-      // Text
-      let c2 = this.$refs.canvas2
-      ctx.drawImage(c2, 0, 0)
+        // Text
+        let c2 = this.$refs.canvas2
+        ctx.drawImage(c2, 0, 0)
 
-      /*       ctx.font = `${this.fontSize}px serif`
+        /*       ctx.font = `${this.fontSize}px serif`
       ctx.fillStyle = `rgba(255, 255, 255, 1)`
       ctx.strokeStyle = 'rgba(0, 0, 0, .5)'
       ctx.textAlign = "center"
@@ -234,179 +235,180 @@ export default defineComponent({
       ctx.lineWidth = 1
       ctx.fillText(this.canvasText, w/2, h/2)
       ctx.strokeText(this.canvasText, w/2, h/2) */
-    },
+      },
 
-    // canvas-bg, Guidlines
-    drawGuideLine() {
-      let w = this.canvasWidth
-      let h = this.canvasHeight
+      // canvas-bg, Guidlines
+      drawGuideLine() {
+        let w = this.canvasWidth
+        let h = this.canvasHeight
 
-      // Init
-      let ctx = this.$refs.canvasBg.getContext("2d")
-      ctx.clearRect(0, 0, w, h)
+        // Init
+        let ctx = this.$refs.canvasBg.getContext("2d")
+        ctx.clearRect(0, 0, w, h)
 
-      // # Draw guidlines (grid)
-      let divine = this.guideLineNumber
+        // # Draw guidlines (grid)
+        let divine = this.guideLineNumber
 
-      for (let i = 1; i < divine; i++) {
-        let stepWidth = (w / divine) * i
-        let stepHeight = (h / divine) * i
+        for (let i = 1; i < divine; i++) {
+          let stepWidth = (w / divine) * i
+          let stepHeight = (h / divine) * i
+
+          ctx.beginPath()
+
+          // Vertical lines
+          ctx.moveTo(stepWidth, 0)
+          ctx.lineTo(stepWidth, h)
+          ctx.strokeText(stepWidth, stepWidth, 10)
+
+          // Horizontal lines
+          ctx.moveTo(0, stepHeight)
+          ctx.lineTo(w, stepHeight)
+          ctx.strokeText(stepHeight, 5, stepHeight)
+
+          ctx.lineWidth = 1
+          ctx.strokeStyle = "rgba(0, 0, 0, .35)"
+          ctx.stroke()
+        }
+      },
+
+      drawText() {
+        let w = this.canvasWidth
+        let h = this.canvasHeight
+
+        // Init
+        let ctx = this.$refs.canvas2.getContext("2d")
+        ctx.clearRect(0, 0, w, h)
 
         ctx.beginPath()
+        ctx.moveTo(w / 2, h / 2)
 
-        // Vertical lines
-        ctx.moveTo(stepWidth, 0)
-        ctx.lineTo(stepWidth, h)
-        ctx.strokeText(stepWidth, stepWidth, 10)
-
-        // Horizontal lines
-        ctx.moveTo(0, stepHeight)
-        ctx.lineTo(w, stepHeight)
-        ctx.strokeText(stepHeight, 5, stepHeight)
-
+        // Text
+        ctx.font = `${this.fontSize}px serif`
+        ctx.fillStyle = `rgba(255, 255, 255, 1)`
+        ctx.strokeStyle = "rgba(0, 0, 0, .5)"
+        ctx.textAlign = "center"
+        ctx.textBaseline = "middle"
         ctx.lineWidth = 1
-        ctx.strokeStyle = "rgba(0, 0, 0, .35)"
-        ctx.stroke()
-      }
-    },
+        ctx.fillText(this.canvasText, w / 2, h / 2)
+        ctx.strokeText(this.canvasText, w / 2, h / 2)
 
-    drawText() {
-      let w = this.canvasWidth
-      let h = this.canvasHeight
+        this.draw()
+      },
 
-      // Init
-      let ctx = this.$refs.canvas2.getContext("2d")
-      ctx.clearRect(0, 0, w, h)
+      clearGuideLine() {
+        let ctx = this.$refs.canvasBg.getContext("2d")
+        ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+      },
+      clearCanvas() {
+        let ctx = this.$refs.canvas1.getContext("2d")
+        ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+      },
 
-      ctx.beginPath()
-      ctx.moveTo(w / 2, h / 2)
+      randomInt(min: number, max: number): number {
+        min = Math.ceil(min)
+        max = Math.floor(max)
+        let result = Math.floor(Math.random() * (max - min + 1)) + min
+        return result
+      },
+      randomFloat(min: number, max: number, fix = 2): number {
+        return Math.random() * (max - min) + min
+      },
 
-      // Text
-      ctx.font = `${this.fontSize}px serif`
-      ctx.fillStyle = `rgba(255, 255, 255, 1)`
-      ctx.strokeStyle = "rgba(0, 0, 0, .5)"
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
-      ctx.lineWidth = 1
-      ctx.fillText(this.canvasText, w / 2, h / 2)
-      ctx.strokeText(this.canvasText, w / 2, h / 2)
+      // Download & upload
+      download() {
+        let btn = this.$refs.btnDownload as HTMLButtonElement
+        let canvas = this.$refs.canvas1 as HTMLCanvasElement
 
-      this.draw()
-    },
+        btn.href = canvas.toDataURL("image/png")
+        btn.download = this.saveName + ".png"
+      },
+      updatePhotoURL() {
+        const currentUser = this.user
+        // Crate a root reference
+        let storageRef = this.$firebase.storage().ref()
 
-    clearGuideLine() {
-      let ctx = this.$refs.canvasBg.getContext("2d")
-      ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
-    },
-    clearCanvas() {
-      let ctx = this.$refs.canvas1.getContext("2d")
-      ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
-    },
-
-    randomInt(min, max) {
-      min = Math.ceil(min)
-      max = Math.floor(max)
-      let result = Math.floor(Math.random() * (max - min + 1)) + min
-      return result
-    },
-    randomFloat(min, max, fix = 2) {
-      return (Math.random() * (max - min) + min).toFixed(fix)
-    },
-
-    // Download & upload
-    download() {
-      let btn = this.$refs.btnDownload
-      let canvas = this.$refs.canvas1
-
-      btn.href = canvas.toDataURL("image/png")
-      btn.download = this.saveName + ".png"
-    },
-    updatePhotoURL(currentUser) {
-      // Crate a root reference
-      let storageRef = this.$root.firebase.storage().ref()
-
-      this.$refs.canvas1.toBlob(function (blob) {
-        // user/{userid}/profile.png
-        let childRef = storageRef.child(
-          `/user/${currentUser.uid}/profile-photo.png`
-        )
-        childRef.put(blob).then((snapshot) => {
-          childRef.getDownloadURL().then((url) => {
-            currentUser.updateProfile({
-              photoURL: url,
+        this.$refs.canvas1.toBlob((blob: Blob) => {
+          // user/{userid}/profile.png
+          let childRef = storageRef.child(
+            `/user/${currentUser.uid}/profile-photo.png`
+          )
+          childRef.put(blob).then((snapshot) => {
+            childRef.getDownloadURL().then((url) => {
+              currentUser.updateProfile({
+                photoURL: url,
+              })
+              // console.log('User photo url is successfully updated!', url)
             })
-            // console.log('User photo url is successfully updated!', url)
           })
         })
-      })
+      },
+      initCanvasText() {
+        if (this.user) {
+          this.canvasText = this.user.displayName
+        } else {
+          this.canvasText = "Hello World!"
+        }
+      },
     },
-    initCanvasText() {
-      if (this.$root.account.currentUser) {
-        this.canvasText = this.$root.account.currentUser.displayName
-      } else {
-        this.canvasText = "Hello World!"
-      }
-    },
-  },
-})
+  })
 </script>
 
 <style lang="scss" scoped>
-.canvas-tools-cont {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
-  text-align: center;
+  .canvas-tools-cont {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+    text-align: center;
 
-  .canvas-tools-item {
-    border: 1px solid rgba(128, 128, 128, 0.219);
-    padding: 0.4em;
+    .canvas-tools-item {
+      border: 1px solid rgba(128, 128, 128, 0.219);
+      padding: 0.4em;
 
-    * {
-      margin: 0 0.4em;
+      * {
+        margin: 0 0.4em;
+      }
+      input {
+        max-width: 10em;
+      }
     }
-    input {
-      max-width: 10em;
+    label {
+      color: gray;
     }
   }
-  label {
-    color: gray;
+
+  .tool-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+    #btn-draw {
+      background-color: rgba(0, 128, 0, 0.75);
+      color: white;
+    }
+
+    #btn-download {
+      cursor: pointer;
+    }
+    #canvas-text {
+      width: 10em;
+    }
   }
-}
 
-.tool-main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-
-  #btn-draw {
-    background-color: rgba(0, 128, 0, 0.75);
-    color: white;
+  #canvas-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3.2em 0;
+  }
+  #canvas-1 {
+    position: static;
+  }
+  #canvas-bg {
+    position: absolute;
   }
 
-  #btn-download {
-    cursor: pointer;
+  #canvas-2 {
+    display: none;
+    position: absolute;
   }
-  #canvas-text {
-    width: 10em;
-  }
-}
-
-#canvas-field {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 3.2em 0;
-}
-#canvas-1 {
-  position: static;
-}
-#canvas-bg {
-  position: absolute;
-}
-
-#canvas-2 {
-  display: none;
-  position: absolute;
-}
 </style>

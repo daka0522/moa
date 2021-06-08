@@ -36,7 +36,8 @@
 // @ Button class
 .btn {
   // Default and common properties
-  background-color: rgb(250, 250, 250);
+
+  // background-color: rgb(250, 250, 250);
   box-shadow: $shadow-primary;
   padding: $box-primary;
   border-style: none;
@@ -83,14 +84,14 @@
 }
 
 .input-part {
-  background-color: rgb(250, 250, 250);
+  // background-color: rgb(250, 250, 250);
   border-style: none;
   box-shadow: $shadow-primary inset;
   padding: $box-primary;
   margin: 0.8em;
   &-basic {
     @extend .input-part;
-    background-color: rgb(250, 250, 250);
+    // background-color: rgb(250, 250, 250);
     box-shadow: 0 0 1em 0.1em rgba(128, 128, 128, 0.25) inset;
     // border: 1px solid rgb(128, 128, 128);
     padding: 0.2em 0.8em;
@@ -118,7 +119,7 @@
 .panel {
   /*   display: flex;
   flex-wrap: wrap; */
-  background-color: rgba(255, 255, 255, 1);
+  // background-color: rgba(255, 255, 255, 1);
   box-shadow: $shadow-primary;
   padding: 3.2vh 3.2vw 3.2vh 3.2vw;
   // margin: 3.2vh 0 3.2vh  0;

@@ -30,7 +30,7 @@
             @keyup.enter="saveNewDoc()"
           />
           <button class="btn" type="submit" @click.prevent="saveNewDoc()">
-            <!-- <fa-i icon="save" /> -->
+            <IconPicker icon="save" />
             <span>Save</span>
           </button>
         </form>
@@ -40,7 +40,7 @@
       <div v-show="docs.length" id="todo-options" class="panel-sub">
         <span>Options</span>
         <button class="btn-delete" @click="deleteAll()">
-          <!-- <fa-i icon="trash" /> -->
+          <IconPicker icon="trash" />
           Delete All!
         </button>
       </div>
@@ -65,10 +65,11 @@
           </div>
 
           <!-- 3. State  -->
-          <!-- <span
-              v-show="doc.stateMsg"
-              class="todo-card-msg noticeMsg statePanel"
-            >{{ doc.stateMsg }}</span> -->
+          <span
+            v-show="doc.stateMsg"
+            class="todo-card-msg noticeMsg statePanel"
+            >{{ doc.stateMsg }}</span
+          >
 
           <!-- 4. Buttons  -->
           <div class="todo-card-btns">
@@ -78,7 +79,7 @@
               :class="{ toggle: doc.fields.isDone }"
               @click="doneButton(doc)"
             >
-              <fa-i icon="check" /><span>Done</span>
+              <IconPicker icon="check" /><span>Done</span>
             </button>
 
             <button
@@ -86,7 +87,7 @@
               class="btn edit-btns"
               @click="doc.fields.editable = !doc.fields.editable"
             >
-              <!-- <fa-i icon="pencil-alt" /> -->
+              <IconPicker icon="pencil-alt" />
               <span>Edit</span>
             </button>
 
@@ -95,13 +96,13 @@
                 class="btn"
                 @click="doc.fields.editable = !doc.fields.editable"
               >
-                <fa-i icon="undo" />
+                <IconPicker icon="undo" />
               </button>
               <button class="btn-delete" @click="deleteDoc(doc)">
-                <fa-i icon="trash" /><span>Delete</span>
+                <IconPicker icon="trash" /><span>Delete</span>
               </button>
               <button class="btn" @click.prevent="editSaveButton(doc)">
-                <fa-i icon="save" /><span>Save</span>
+                <IconPicker icon="save" /><span>Save</span>
               </button>
             </div>
           </div>
@@ -112,10 +113,39 @@
 </template>
 
 <script lang="ts">
-import { colRef, getUserID } from "../../utils/firestoreUtils"
-import { defineComponent } from "vue"
+import { getUserID } from "../../utils/firestoreUtils"
+import { defineComponent, getCurrentInstance, ref } from "vue"
+import { useStore } from "vuex"
+
+type Doc = {
+  id: string
+  fields: {
+    content: string
+    // date: firebase.default.firestore.Timestamp
+    date: any
+    isDone: boolean
+    editable?: boolean
+  }
+  stateMsg?: string
+}
 
 export default defineComponent({
+  setup() {
+    const store = useStore()
+    const appName = "todo"
+    const mainStateMsg = ref("")
+    const docs = ref([])
+    const newDoc = ref({
+      content: "",
+      isDone: false,
+    })
+
+    const insternalInstance = getCurrentInstance()
+    console.log("insternalInstance: ", insternalInstance)
+    console.log("this: ", this)
+
+    // return { mainStateMsg, docs, newDoc, appName }
+  },
   data() {
     return {
       // Database Refrence of this app
@@ -124,7 +154,7 @@ export default defineComponent({
 
       mainStateMsg: "",
 
-      docs: [],
+      docs: [] as Doc[],
 
       newDoc: {
         content: "",
@@ -134,10 +164,18 @@ export default defineComponent({
   },
   computed: {
     // # Imported utils
-    colRef,
+    colRef() {
+      if (this.$store.state.currentUser) {
+        return this.$db
+          .collection("user")
+          .doc(this.getUserID)
+          .collection(this.appName)
+      } else {
+        return null
+      }
+    },
     getUserID,
   },
-
   watch: {
     mainStateMsg() {
       setTimeout(() => {
@@ -162,7 +200,7 @@ export default defineComponent({
         // Date is saved as a firestore timestamp object
         const date = this.$firebase.firestore.Timestamp.fromDate(new Date())
         // Document name will saved as a milliseconds
-        let doc = {
+        let doc: Doc = {
           id: date.toMillis().toString(),
           fields: {
             content: this.newDoc.content,
@@ -172,7 +210,7 @@ export default defineComponent({
         }
 
         // Check if the user is signed in and save in web DB.
-        if (this.$store.state.currentUser) {
+        if (this.$store.state.currentUser && this.colRef) {
           this.colRef
             .doc(doc.id)
             .set(doc.fields)
@@ -199,54 +237,56 @@ export default defineComponent({
     // Initial function when the instance is mounted call lists from firestore.
     // Require: Authenticated
     listAllDoc() {
-      this.colRef
-        .get()
-        .then((snapshot) => {
-          let subject = ""
-          snapshot.size > 1
-            ? (subject = "Document's are")
-            : (subject = "Document is")
-          snapshot.forEach((doc) => {
-            this.pushDoc(doc)
-            this.mainStateMsg = `${subject} successfully downloaded.`
+      if (this.colRef)
+        this.colRef
+          .get()
+          .then((snapshot) => {
+            let subject = ""
+            snapshot.size > 1
+              ? (subject = "Document's are")
+              : (subject = "Document is")
+            snapshot.forEach((doc) => {
+              this.pushDoc(doc)
+              this.mainStateMsg = `${subject} successfully downloaded.`
+            })
           })
-        })
-        .catch((err) => {
-          // this.mainStateMsg = `Error getting documents. ${err.message}`
-          this.mainStateMsg = `Error getting documents. ${err}`
-        })
+          .catch((err: Error) => {
+            // this.mainStateMsg = `Error getting documents. ${err.message}`
+            this.mainStateMsg = `Error getting documents. ${err}`
+          })
     },
     // Request list an individual existing doc.
     // Require: Authenticated
-    listDoc(docID) {
-      this.colRef
-        .doc(docID)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            this.stateMsg = "Listed document successfully!"
-            this.pushDoc(doc)
-          } else {
-            this.stateMsg = "No such document!"
-          }
-        })
-        .catch((err) => {
-          this.stateMsg = `Error getting document: ${err.message}`
-        })
+    listDoc(docID: Doc["id"]) {
+      if (this.colRef)
+        this.colRef
+          .doc(docID)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              this.mainStateMsg = "Listed document successfully!"
+              this.pushDoc(doc)
+            } else {
+              this.mainStateMsg = "No such document!"
+            }
+          })
+          .catch((err) => {
+            this.mainStateMsg = `Error getting document: ${err.message}`
+          })
     },
 
     // 3. Update
-    updateDoc(doc) {
+    updateDoc(doc: Doc) {
       // Update edited date.
       // doc.fields.date = this.$root.firebase.firestore.Timestamp.fromDate(new Date)
       let data = {
         content: doc.fields.content,
-        date: this.$root.firebase.firestore.Timestamp.fromDate(new Date()),
+        date: this.$firebase.firestore.Timestamp.fromDate(new Date()),
         isDone: doc.fields.isDone,
       }
       // Post update doc to firestore
       // If the user is logined.
-      if (this.$root.account.currentUser) {
+      if (this.$store.state.currentUser && this.colRef) {
         this.colRef
           .doc(doc.id)
           .update(data)
@@ -267,10 +307,10 @@ export default defineComponent({
 
     // 4. Delete
     // Delete the selected doc.
-    deleteDoc(doc) {
-      const docIndex = this.docs.findIndex((item) => item.id === doc.id)
+    deleteDoc(doc: Doc) {
+      const docIndex = this.docs.findIndex((item: Doc) => item.id === doc.id)
       // If the user is logined.
-      if (this.$root.account.currentUser) {
+      if (this.$store.state.currentUser && this.colRef) {
         this.colRef
           .doc(doc.id)
           .delete()
@@ -288,14 +328,15 @@ export default defineComponent({
       }
     },
     deleteAll() {
-      if (this.$root.account.currentUser) {
-        this.docs.forEach((doc) => {
-          this.colRef
-            .doc(doc.id)
-            .delete()
-            .then(() => {
-              this.docs = []
-            })
+      if (this.$store.state.currentUser) {
+        this.docs.forEach((doc: Doc) => {
+          if (this.colRef)
+            this.colRef
+              .doc(doc.id)
+              .delete()
+              .then(() => {
+                this.docs = []
+              })
         })
       } else {
         this.docs = []
@@ -303,9 +344,17 @@ export default defineComponent({
     },
 
     // Helper function to store docs in an object.
-    pushDoc(doc) {
-      let cont = new Object()
-      cont["id"] = doc.id
+    pushDoc(
+      doc:
+        | Doc
+        // | firebase.default.firestore.DocumentSnapshot<firebase.default.firestore.DocumentData>
+        | any
+    ) {
+      let cont: Doc = {
+        id: doc.id,
+        fields: {},
+        stateMsg: "",
+      }
       // Check if the doc is from web database or local memory.
       if (doc.data) {
         cont["fields"] = doc.data()
@@ -313,22 +362,21 @@ export default defineComponent({
         cont["fields"] = doc.fields
       }
       cont["fields"]["editable"] = false
-      cont["stateMsg"] = ""
       this.docs.push(cont)
     },
-    doneButton(doc) {
+    doneButton(doc: Doc) {
       doc.fields.isDone = !doc.fields.isDone
       this.updateDoc(doc)
       this.docStateMsg(doc, "I am done!!")
     },
-    editSaveButton(doc) {
+    editSaveButton(doc: Doc) {
       this.updateDoc(doc)
       doc.fields.editable = false
     },
-    docStateMsg(doc, msg) {
+    docStateMsg(doc: Doc, msg: string) {
       doc.stateMsg = msg
       setTimeout(() => {
-        doc.stateMsg = null
+        doc.stateMsg = ""
       }, 5000)
     },
   },
@@ -369,7 +417,7 @@ export default defineComponent({
 
     // 1. Date
     &-date {
-      color: rgba(0, 0, 0, 0.5);
+      // color: rgba(0, 0, 0, 0.5);
       font-size: 0.9em;
       font-weight: lighter;
       text-align: right;
@@ -423,11 +471,6 @@ export default defineComponent({
   background: rgba(100, 100, 100, 0.1);
   color: rgba(0, 0, 0, 0.25);
   box-shadow: 0 0 0.5em 0.1em rgba(128, 128, 128, 0.466) inset;
-}
-
-.btn span::before {
-  content: "  ";
-  white-space: pre;
 }
 
 /* Transitions */

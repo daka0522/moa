@@ -13,11 +13,12 @@ app.use(store)
 import HeaderUnit from "./components/HeaderUnit.vue"
 import StateMsger from "./components/StateMsger.vue"
 import Options from "./components/Options.vue"
+import IconPicker from "./components/IconPicker.vue"
 
 app.component("HeaderUnit", HeaderUnit)
 app.component("StateMsger", StateMsger)
 app.component("Options", Options)
-
+app.component("IconPicker", IconPicker)
 app.component("FaI", defineComponent({}))
 
 app.mount("#app")

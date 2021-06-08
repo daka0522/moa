@@ -1,6 +1,11 @@
 <template>
-  <section id="signIn" class="panel">
-    <h3 style="text-align: center">Sign In with Email</h3>
+  <section
+    id="signIn"
+    class="panel"
+  >
+    <h3 style="text-align: center">
+      Sign In with Email
+    </h3>
 
     <p class="msg">
       {{ $store.state.signStateMsg }}
@@ -16,7 +21,7 @@
         placeholder="Type email please"
         required
         autocomplete="email"
-      />
+      >
 
       <label for="signUpPassword">Password</label>
       <input
@@ -26,7 +31,7 @@
         class="input-part"
         placeholder="Type password please"
         @keyup.enter="signWithEmail(authEmail, authPassword)"
-      />
+      >
 
       <input
         type="submit"
@@ -34,12 +39,14 @@
         value="Sign in"
         class="btn"
         @click.prevent="signWithEmail(authEmail, authPassword)"
-      />
+      >
     </form>
 
     <div id="bottom">
       <span class="info">Don't have an account?</span>
-      <router-link :to="{ name: 'signup' }"> Sign Up </router-link>
+      <router-link :to="{ name: 'signup' }">
+        Sign Up
+      </router-link>
     </div>
   </section>
 </template>
@@ -66,7 +73,7 @@ export default defineComponent({
               "setSignState",
               `${result.user.displayName} is successfuly signed in! It will move back soon.`
             )
-            setTimeout(this.$router.back(), 5000)
+            // setTimeout(this.$router.back(), 5000)
           } else {
             this.$store.commit(
               "setSignState",

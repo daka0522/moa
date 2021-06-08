@@ -1,7 +1,20 @@
 <template>
-  <nav id="nav-public" title="main navigation">
-    <router-link to="/" title="go to main default page"> Home @ </router-link>
-    <router-link to="/about" title="about the site"> About @ </router-link>
+  <nav
+    id="nav-public"
+    title="main navigation"
+  >
+    <router-link
+      to="/"
+      title="go to main default page"
+    >
+      Home @
+    </router-link>
+    <router-link
+      to="/about"
+      title="about the site"
+    >
+      About @
+    </router-link>
 
     <router-link
       to="/public"
@@ -10,65 +23,95 @@
     >
       Public
       <div class="nav-dropdown-list">
-        <router-link :to="{ name: 'todo' }"> Todo </router-link>
-        <router-link :to="{ name: 'style' }"> Style @</router-link>
-        <router-link :to="{ name: 'canvas' }"> Canvas </router-link>
-        <router-link :to="{ name: 'community' }"> Community @</router-link>
-        <router-link :to="{ name: 'chatroom' }"> Chat Room </router-link>
+        <router-link :to="{ name: 'todo' }">
+          Todo
+        </router-link>
+        <router-link :to="{ name: 'style' }">
+          Style @
+        </router-link>
+        <router-link :to="{ name: 'canvas' }">
+          Canvas
+        </router-link>
+        <router-link :to="{ name: 'community' }">
+          Community @
+        </router-link>
+        <router-link :to="{ name: 'chatroom' }">
+          Chat Room
+        </router-link>
       </div>
     </router-link>
 
-    <!-- <router-link to="/private-apps" class="nav-dropdowner" title="private applications">
+    <router-link
+      :to="{ name: 'private-app' }"
+      class="nav-dropdowner"
+      title="private applications"
+    >
       Private
       <div class="nav-dropdown-list">
-        <router-link :to="{name: 'blog'}">
+        <router-link :to="{ name: 'blog' }">
           Blog
         </router-link>
       </div>
-    </router-link> -->
+    </router-link>
 
-    <router-link v-show="!user" to="/signin" title="sign in and sign up page">
+    <router-link
+      v-show="!user"
+      :to="{ name: 'signin' }"
+      title="sign in and sign up page"
+    >
       Sign In
     </router-link>
 
-    <div v-if="user" id="nav-user">
+    <div
+      v-if="user"
+      id="nav-user"
+    >
       <img
         id="nav-user-icon"
         :src="user.photoURL"
         :alt="user.displayName + '\'s profile photo'"
         @click="showProfile = !showProfile"
-      />
+      >
 
-      <div id="nav-user-profile" v-if="showProfile">
+      <div
+        v-if="showProfile"
+        id="nav-user-profile"
+      >
         <div id="nav-user-profile-info">
           <h3>{{ user.displayName }}</h3>
           <img
             :src="user.photoURL"
             :alt="user.displayName + '\'s profile photo'"
-          />
+          >
           <p>{{ user.email }}</p>
         </div>
         <div id="nav-user-profile-tool">
-          <router-link to="/user">Profile</router-link>
-          <button class="btn-basic" title="Sign out" @click="$signOut">
+          <router-link :to="{ name: 'user' }">
+            Profile
+          </router-link>
+          <button
+            class="btn-basic"
+            title="Sign out"
+            @click="$signOut"
+          >
             Sign Out
           </button>
         </div>
       </div>
     </div>
 
-    <Options id="nav-options"></Options>
+    <Options id="nav-options" />
 
     <router-link
-      to="/dev"
       v-if="user && user.email === 'daka0522@gmail.com'"
+      to="/dev"
       class="nav-dropdowner"
       title="for developer, manager of this site"
     >
       Developer
       <div class="nav-dropdown-list">
-        <router-link to="/docs">Docs</router-link>
-        <router-link to="/dev/edit-quill">Quill</router-link>
+        <!-- <router-link to="/dev/docs">Docs</router-link> -->
+        <!-- <router-link to="/dev/edit-quill">Quill</router-link> -->
       </div>
     </router-link>
   </nav>
@@ -102,6 +145,7 @@ nav {
 
   /* Links */
   a {
+    color: inherit;
     padding: 0.62rem;
     min-width: 6rem;
     text-align: center;
@@ -162,7 +206,7 @@ nav {
   }
 
   &-profile {
-    background-color: rgba(255, 255, 255, 0.95);
+    // background-color: rgba(255, 255, 255, 0.95);
     position: absolute;
     width: 12em;
     min-width: 10em;

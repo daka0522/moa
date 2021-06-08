@@ -20,7 +20,7 @@ const routes = [
   {
     name: "public-app",
     path: "/public",
-    component: () => import("./views/publicApp/PublicDefault.vue"),
+    component: () => import("./views/publicApp/DefaultPublic.vue"),
     children: [
       {
         name: "todo",
@@ -49,25 +49,18 @@ const routes = [
       },
     ],
   },
-  // {
-  //     name: 'private-apps',
-  //     path: '/private-apps',
-  //     component: () => import('./views/privateApp/privateApp.vue'),
-  //     children: [
-  //         {
-  //             name: 'blog',
-  //             path: 'blog',
-  //             component: () => import('./views/privateApp/Blog.vue')
-  //         },
-  //     ]
-  // },
-
-  // {
-  //     name: 'docs',
-  //     path: '/docs',
-  //     component: () => import('./views/Docs.vue')
-  // },
-
+  {
+    name: "private-app",
+    path: "/private",
+    component: () => import("./views/privateApp/DefaultPrivate.vue"),
+    children: [
+      {
+        name: "blog",
+        path: "blog",
+        component: () => import("./views/privateApp/Blog.vue"),
+      },
+    ],
+  },
   {
     name: "signin",
     path: "/signin",
@@ -84,45 +77,49 @@ const routes = [
     component: () => import("./views/auth/User.vue"),
   },
 
-  // {
-  //     name: 'development',
-  //     path: '/dev',
-  //     component: () => import('./views/dev/Dev.vue'),
-  //     beforeEnter: (to, from, next) => {
-  //         store
-  //         to
-  //         from
-  //         next()
-  //     },
-  //     children: [
-  //         {
-  //             name: 'quill',
-  //             path: 'quill',
-  //             component: () => import('./views/dev/EditorQuill.vue')
-  //         },
-  //         {
-  //             name: 'tiptap',
-  //             path: 'tiptap',
-  //             component: () => import('./views/dev/EditorTiptap.vue')
-  //         },
-  //         {
-  //             name: 'editorJs',
-  //             path: 'editorJs',
-  //             component: () => import('./views/dev/EditorJS.vue')
-  //         },
-  //         {
-  //             name: 'testpage',
-  //             path: 'testpage',
-  //             component: () => import('./views/dev/TestPage.vue')
-  //         },
-  //         {
-  //             name: 'writer',
-  //             path: 'writer',
-  //             component: () => import('./views/dev/DevWriter.vue')
-  //         },
-
-  //     ]
-  // },
+  {
+    name: "development",
+    path: "/dev",
+    component: () => import("./views/dev/DefaultDev.vue"),
+    // beforeEnter: (to, from, next) => {
+    //   store
+    //   to
+    //   from
+    //   next()
+    // },
+    children: [
+      // {
+      //     name: 'quill',
+      //     path: 'quill',
+      //     component: () => import('./views/dev/EditorQuill.vue')
+      // },
+      // {
+      //     name: 'tiptap',
+      //     path: 'tiptap',
+      //     component: () => import('./views/dev/EditorTiptap.vue')
+      // },
+      // {
+      //     name: 'editorJs',
+      //     path: 'editorJs',
+      //     component: () => import('./views/dev/EditorJS.vue')
+      // },
+      // {
+      //     name: 'testpage',
+      //     path: 'testpage',
+      //     component: () => import('./views/dev/TestPage.vue')
+      // },
+      // {
+      //     name: 'writer',
+      //     path: 'writer',
+      //     component: () => import('./views/dev/DevWriter.vue')
+      // },
+      // {
+      //     name: 'docs',
+      //     path: 'docs',
+      //     component: () => import('./views/dev/Docs.vue')
+      // },
+    ],
+  },
 ]
 
 const router = createRouter({

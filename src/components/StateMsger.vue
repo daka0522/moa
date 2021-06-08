@@ -1,7 +1,6 @@
 <template>
   <div v-if="state" :class="'msg-' + state" class="msg">
-    <!-- <fa-i v-if="iconSelector" :icon="iconSelector" class="icon" /> -->
-    <p>icon: {{ iconSelector }}</p>
+    <IconPicker :icon="iconSelector" class="icon" />
     <slot />
   </div>
 </template>
@@ -30,7 +29,6 @@ export default defineComponent({
           icon = "exclamation-triangle"
           break
       }
-
       return icon
     },
   },

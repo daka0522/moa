@@ -1,32 +1,48 @@
 <template>
-  <section v-if="currentUser" id="user" class="panel">
+  {{ user }}
+  <section
+    v-if="user"
+    id="user"
+    class="panel"
+  >
     <h1>Profile</h1>
 
     <div id="user-profile">
-      <div id="user-email" class="profile-item">
+      <div
+        id="user-email"
+        class="profile-item"
+      >
         <h3>ID</h3>
-        <p>{{ currentUser.email }}</p>
+        <p>{{ user.email }}</p>
       </div>
 
-      <div id="user-name" class="profile-item">
+      <div
+        id="user-name"
+        class="profile-item"
+      >
         <h3>Name</h3>
-        <p v-if="!isEditable">{{ currentUser.displayName }}</p>
+        <p v-if="!isEditable">
+          {{ user.displayName }}
+        </p>
         <input
           v-else
           v-model="userEdit.name"
           class="input-part-basic"
           placeholder="Edit your name here"
-        />
+        >
       </div>
 
-      <div id="user-photo" class="profile-item">
+      <div
+        id="user-photo"
+        class="profile-item"
+      >
         <h3>Photo</h3>
         <img
-          :src="currentUser.photoURL"
+          :src="user.photoURL"
           width="150px"
           height="150px"
-          :alt="currentUser.displayName + '\'s profile photo'"
-        />
+          :alt="user.displayName + '\'s profile photo'"
+        >
         <div v-if="isEditable">
           <input
             v-if="isEditable"
@@ -34,57 +50,87 @@
             type="file"
             value="upload"
             class="input-part"
-          />
-          <button class="btn" @click="isRP = !isRP">Random Painter</button>
+          >
+          <button
+            class="btn"
+            @click="onRandomPainter = !onRandomPainter"
+          >
+            Random Painter
+          </button>
           <input
+            ref="uploadPhoto"
             type="submit"
             class="btn"
             value="Update Photo"
             @click="uploadPhoto()"
-            ref="uploadPhoto"
+          >
+          <random-painter
+            v-if="onRandomPainter"
+            ref="randomPainter"
+            class="panel"
           />
-          <random-painter v-if="isRP" ref="randomPainter" class="panel" />
         </div>
       </div>
 
-      <div id="user-history" class="profile-item">
+      <div
+        id="user-history"
+        class="profile-item"
+      >
         <h3>History</h3>
         <div>
-          <p>Creation Time: {{ currentUser.metadata.creationTime }}</p>
-          <p>Last Sign In Time: {{ currentUser.metadata.lastSignInTime }}</p>
+          <p>Creation Time: {{ user.metadata.creationTime }}</p>
+          <p>Last Sign In Time: {{ user.metadata.lastSignInTime }}</p>
         </div>
       </div>
 
-      <div id="user-state" class="profile-item">
+      <div
+        id="user-state"
+        class="profile-item"
+      >
         <h3>Verified</h3>
-        <div v-if="currentUser.emailVerified">
-          <fa-i
+        <div v-if="user.emailVerified">
+          <IconPicker
             icon="certificate"
             style="color: green"
             title="Email verifed"
-          ></fa-i>
+          />
         </div>
         <div v-else>
-          <fa-i
+          <IconPicker
             icon="certificate"
             style="color: gray; margin: 0 0.62rem"
             title="Require email verifed"
-          ></fa-i>
+          />
           <span>Email verification require. Send email.</span>
         </div>
       </div>
 
-      <div id="user-etc" class="profile-item">
+      <div
+        id="user-etc"
+        class="profile-item"
+      >
         <!-- <p>Using Apps</p> -->
       </div>
     </div>
 
     <div id="user-edit">
-      <button id="user-edit-btn" class="btn" @click="isEditable = !isEditable">
+      <button
+        id="user-edit-btn"
+        class="btn"
+        @click="isEditable = !isEditable"
+      >
         {{ isEditable ? "Back" : "Edit" }}
       </button>
-      <div v-if="isEditable" id="user-edit-tools">
-        <button class="btn-save" @click="saveUserEdit()">Save</button>
+      <div
+        v-if="isEditable"
+        id="user-edit-tools"
+      >
+        <button
+          class="btn-save"
+          @click="saveUserEdit()"
+        >
+          Save
+        </button>
         <!-- <button class="btn">
           Delete
         </button> -->
@@ -96,34 +142,51 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { computed, defineComponent, getCurrentInstance, ref } from "vue"
 
 export default defineComponent({
   name: "User",
   components: {
     "random-painter": () => import("/@/components/painter/RandomPainter.vue"),
   },
+  async setup() {
+    ref
+    // computed( () => this.$store.state.currentUser)
+    const ins = await getCurrentInstance()
+    const globalProperties = ins.appContext.config.globalProperties
+    const isEditable = ref(false)
+    const userEdit = ref({ name: "", photoURL: "" })
+    const onRandomPainter = ref(false)
+
+    const user = computed(() => globalProperties.$store.state.currentUser)
+    console.log("globalProp?", globalProperties)
+    console.log("user?", user)
+
+    return { user, isEditable, userEdit, onRandomPainter }
+  },
   data() {
     return {
-      isEditable: false,
-      userEdit: {
-        name: "",
-        photoURL: null,
-      },
-
-      // Show random painter
-      isRP: false,
+      // isEditable: false,
+      // userEdit: {
+      //   name: "",
+      //   photoURL: null,
+      // },
+      // // Show random painter
+      // isRP: false,
     }
   },
   computed: {
-    currentUser() {
-      return this.$store.state.currentUser
-    },
+    // user() {
+    //   return this.$store.state.currentUser
+    // },
+  },
+  mounted() {
+    // this.userEdit.name = this.$root.account.currentUser.displayName
   },
   methods: {
     saveUserEdit() {
       if (this.userEdit.name) {
-        this.currentUser.updateProfile({
+        this.user.updateProfile({
           displayName: this.userEdit.name,
         })
       }
@@ -147,7 +210,8 @@ export default defineComponent({
         this.$firebase.storage().ref("user")
       })
     },
-    createUserData(user) {
+    createUserData() {
+      const user = this.user
       let data = {
         userdata: {
           name: user.displayName,
@@ -168,9 +232,6 @@ export default defineComponent({
           // console.log('create User data! success.')
         })
     },
-  },
-  mounted() {
-    // this.userEdit.name = this.$root.account.currentUser.displayName
   },
 })
 </script>

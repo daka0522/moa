@@ -1,30 +1,42 @@
 <template>
   <div>
-    <state-msger state="warning"
-      >Under Development. Require Authenticated ID. Please sign in.</state-msger
+    <state-msger
+      state="warning"
     >
+      Under Development. Require Authenticated ID. Please sign in.
+    </state-msger>
     <div id="chatroom">
       <!-- 1. Dialogue panel -->
       <section id="dialogue">
         <h1>Dialogue</h1>
         <ul class="display">
-          <li v-for="msg in messages" :key="msg.id" class="message">
+          <li
+            v-for="msg in messages"
+            :key="msg.id"
+            class="message"
+          >
             <div
-              v-if="
-                $root.account.currentUser &&
-                msg.user === $root.account.currentUser.displayName
-              "
+              v-if="user && msg.user === user.displayName"
               class="message-self"
             >
               <div class="message-sub">
                 <span>{{ new Date(msg.date).toLocaleTimeString() }}</span>
               </div>
-              <p class="message-content">{{ msg.content }}</p>
+              <p class="message-content">
+                {{ msg.content }}
+              </p>
             </div>
 
-            <div v-else class="message-main">
-              <p class="message-user">{{ msg.user }}</p>
-              <p class="message-content">{{ msg.content }}</p>
+            <div
+              v-else
+              class="message-main"
+            >
+              <p class="message-main-user">
+                {{ msg.user }}
+              </p>
+              <p class="message-content">
+                {{ msg.content }}
+              </p>
               <div class="message-sub">
                 <span>{{ new Date(msg.date).toLocaleTimeString() }}</span>
               </div>
@@ -48,187 +60,195 @@
       <section id="input">
         <h1>Input</h1>
         <input
+          v-model="message"
           type="text"
           class="input-part"
-          v-model="message"
-          v-on:keyup.enter="sendMessage()"
-        />
-        <button class="btn" @click.prevent="sendMessage()">Send</button>
+          @keyup.enter="sendMessage()"
+        >
+        <button
+          class="btn"
+          @click.prevent="sendMessage()"
+        >
+          Send
+        </button>
       </section>
 
       <!-- 4. Join  -->
       <section id="join">
         <h1>Join</h1>
-        <button class="btn" disabled>Join</button>
-        <button class="btn" disabled>Out</button>
+        <button
+          class="btn"
+          disabled
+        >
+          Join
+        </button>
+        <button
+          class="btn"
+          disabled
+        >
+          Out
+        </button>
       </section>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+  import { defineComponent } from "vue"
 
-export default defineComponent({
-  data() {
-    return {
-      messages: null,
-      onlineUser: [],
-      message: "",
-    }
-  },
-  methods: {
-    setOnline() {
-      if (this.$root.account.currentUser) {
-        let data = {}
-        data[this.$root.account.currentUser.uid] = {
-          date: Date.now(),
-          name: this.$root.account.currentUser.displayName,
-        }
-        this.db.ref("user/online").update(data)
+  export default defineComponent({
+    data() {
+      return {
+        messages: null,
+        onlineUser: [],
+        message: "",
       }
     },
-    readOnline() {
-      if (this.$root.account.currentUser) {
-        this.db.ref("user/online").on("value", (snapshot) => {
-          // console.log(snapshot.val());
-          // this.onlineUser = []
-          this.onlineUser = snapshot.val()
+    computed: {
+      db() {
+        return this.$firebase.database()
+      },
+      user() {
+        return this.$store.state.currentUser
+      },
+    },
+    mounted() {
+      // this.setOnline()
+      // this.readOnline()
+      this.readMessage()
+    },
+    methods: {
+      setOnline() {
+        if (this.user) {
+          const data: Record<string, Record<string, unknown>> = {}
+          data[this.user.uid] = {
+            date: Date.now(),
+            name: this.user.displayName,
+          }
+          this.db.ref("user/online").update(data)
+        }
+      },
+      readOnline() {
+        if (this.user) {
+          this.db.ref("user/online").on("value", (snapshot) => {
+            // console.log(snapshot.val());
+            // this.onlineUser = []
+            this.onlineUser = snapshot.val()
+          })
+        }
+      },
+      sendMessage() {
+        if (this.user) {
+          let ref = this.db.ref("messages/")
+          let data = {
+            user: this.user.displayName,
+            content: this.message,
+            date: Date.now(),
+          }
+          ref.push().set(data)
+
+          this.message = ""
+        }
+      },
+      readMessage() {
+        let ref = this.db.ref("messages")
+        ref.on("value", (data) => {
+          this.messages = data.val()
         })
-      }
-    },
-    sendMessage() {
-      if (this.$root.account.currentUser) {
-        let ref = this.db.ref("messages/")
-        let data = {
-          user: this.$root.account.currentUser.displayName,
-          content: this.message,
-          date: Date.now(),
-        }
-        ref.push().set(data)
+      },
 
-        this.message = ""
-      }
+      join() {
+        this.setOnline()
+      },
     },
-    readMessage() {
-      let ref = this.db.ref("messages")
-      ref.on("value", (data) => {
-        this.messages = data.val()
-      })
-    },
-
-    join() {
-      this.setOnline()
-    },
-  },
-  computed: {
-    db() {
-      return this.$firebase.database()
-    },
-  },
-  mounted() {
-    // this.setOnline()
-    // this.readOnline()
-    this.readMessage()
-  },
-})
+  })
 </script>
 
 <style lang="scss" scoped>
-#chatroom {
-  display: grid;
-  grid-template-columns: 5fr 1fr;
-  grid-template-rows: 4fr 1fr;
-  grid-gap: 1.6rem;
+  #chatroom {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    grid-template-rows: 4fr 1fr;
+    grid-gap: 1.6rem;
 
-  font-size: small;
+    font-size: small;
 
-  #dialogue {
-    display: flex;
-    flex-direction: column;
-
-    .display {
-      // display: flex;
-      // flex-direction: column;
-
-      // background-color: aqua;
-    }
-
-    .message {
+    //1. Dialogue
+    #dialogue {
       display: flex;
-      // justify-content: space-between
-      margin: 1vh 0;
+      flex-direction: column;
 
-      &-main {
+      .message {
         display: flex;
+        margin: 1vh 0;
         flex-wrap: wrap;
-        align-items: center;
-      }
 
-      &-sub {
-        font-size: 0.9em;
-        color: darkgray;
-        margin: 0 0.5em;
-      }
+        &-main {
+          @extend .message;
+          align-items: center;
 
-      &-self {
-        // background-color: red;
-        margin-left: auto;
-        display: flex;
+          &-user {
+            // color: midnightblue;
+            font-weight: 700;
+            padding: 0 1vh;
 
-        .message-content {
-          background-color: paleturquoise;
+            // border: 1px solid orange;
+            border-radius: 0.5em;
+          }
+        }
+
+        &-self {
+          @extend .message;
+          // background-color: red;
+          margin-left: auto;
+        }
+
+        &-sub {
+          font-size: 0.9em;
+          color: darkgray;
+          margin: 0 0.5em;
+        }
+
+        &-content {
+          // background-color: beige;
+          border: 1px solid lightgoldenrodyellow;
+          border-radius: 0.5em;
+          padding: 0.38rem 0.62rem;
         }
       }
+    }
 
-      &-user {
-        color: midnightblue;
-        font-weight: 700;
-        padding: 0 1vh;
+    // 2. User
+    #user {
+      display: flex;
+      flex-direction: column;
+    }
 
-        // border: 1px solid orange;
-        border-radius: 0.5em;
+    // 3. Input
+    #input {
+      display: flex;
+      // flex-direction: column;
+      input {
+        width: 100%;
       }
-
-      &-content {
-        background-color: beige;
-        border: 1px solid lightgoldenrodyellow;
-        border-radius: 0.5em;
-        padding: 0.38rem 0.62rem;
-        // width: 100%;
-      }
+    }
+    // 4. Join
+    #join {
+      display: flex;
     }
   }
 
-  #user {
-    display: flex;
-    flex-direction: column;
-  }
+  .display {
+    // background-color: rgba(245, 245, 245, 1);
+    border-radius: 0.5em;
+    border: 0.2rem solid rgba(235, 235, 235, 1);
+    padding: 1.6vh 1.6vw;
+    height: 100%;
 
-  #input {
-    display: flex;
-    // flex-direction: column;
-    input {
-      width: 100%;
+    list-style: none;
+
+    ul {
+      padding: 0;
     }
   }
-
-  #join {
-    display: flex;
-  }
-}
-
-.display {
-  background-color: rgba(245, 245, 245, 1);
-  border-radius: 0.5em;
-  border: 0.2rem solid rgba(235, 235, 235, 1);
-  padding: 1.6vh 1.6vw;
-  height: 100%;
-
-  list-style: none;
-
-  ul {
-    padding: 0;
-  }
-}
 </style>

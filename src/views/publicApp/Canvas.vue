@@ -14,11 +14,11 @@
   </div>
 </template>
 <script lange="ts">
-import { defineComponent } from "vue"
+  import { defineComponent } from "vue"
 
-export default defineComponent({
-  components: {
-    "random-painter": () => import("/@/components/painter/RandomPainter.vue"),
-  },
-})
+  export default defineComponent({
+    components: {
+      "random-painter": () => import("/@/components/painter/RandomPainter.vue"),
+    },
+  })
 </script>

@@ -8,21 +8,20 @@ module.exports = {
   parserOptions: {
     parser: "babel-eslint",
     sourceType: "module",
+    ecmaVersion: 2021,
   },
   extends: [
     "eslint:recommended",
     "plugin:vue/vue3-recommended",
     "@vue/typescript/recommended",
     // Prettier
-    "@vue/prettier",
-    "@vue/prettier/@typescript-eslint",
+    // "@vue/prettier",
+    // "@vue/prettier/@typescript-eslint",
   ],
-  parserOptions: {
-    ecmaVersion: 2021,
-  },
   plugins: [],
   rules: {
+    // "prettier/prettier": "error",
     // override/add rules settings here, such as:
-    // 'vue/no-unused-vars': 'error'
+    // "vue/no-unused-vars": "error",
   },
 }

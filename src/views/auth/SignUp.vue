@@ -154,7 +154,7 @@ export default defineComponent({
         msg: "",
         state: "",
       },
-      errors: [],
+      errors: [] as string[],
       signUp: {
         email: ["", false],
         password: {
@@ -175,7 +175,11 @@ export default defineComponent({
       // imageData: '',
     }
   },
-  computed: {},
+  computed: {
+    user() {
+      return this.$store.state.currentUser
+    },
+  },
   watch: {
     setUser: {
       handler(nv) {
@@ -232,7 +236,7 @@ export default defineComponent({
       email = this.signUp.email[0],
       password = this.signUp.password.value1
     ) {
-      let auth = this.$root.firebase.auth()
+      let auth = this.$firebase.auth()
       return auth
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
@@ -247,9 +251,8 @@ export default defineComponent({
         })
     },
     emailVerification() {
-      if (this.$root.account.currentUser) {
-        let user = this.$root.account.currentUser
-        user
+      if (this.user) {
+        this.user
           .sendEmailVerification()
           .then(() => {
             this.stateMsger(
@@ -279,7 +282,7 @@ export default defineComponent({
           created: user.metadata.creationTime,
         },
       }
-      this.$root.db
+      this.$db
         .collection("user")
         .doc(user.uid)
         .set(data)
@@ -288,14 +291,10 @@ export default defineComponent({
         })
     },
 
-    validateEmail(mail) {
+    validateEmail(mail: string): boolean {
       const pattern =
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-      if (pattern.test(mail)) {
-        return true
-      }
-      return false
+      return pattern.test(mail)
     },
 
     checkForm() {
@@ -336,18 +335,18 @@ export default defineComponent({
 
     saveUserData() {
       // Check it's logined
-      if (this.$root.account.currentUser) {
+      if (this.user) {
         // If photo is uploaded then save it to DB and get photoURL
 
         // Name update
-        this.$root.account.currentUser.updateProfile({
+        this.user.updateProfile({
           displayName: this.setUser.name[0],
         })
 
         if (this.setUser.photo.data) {
           this.uploadPhoto().then((snapshot) => {
             snapshot.ref.getDownloadURL().then((res) => {
-              this.$root.account.currentUser.updateProfile({
+              this.user.updateProfile({
                 photoURL: res,
               })
               this.stateMsger(
@@ -379,10 +378,10 @@ export default defineComponent({
 
     // Photo upload
     uploadPhoto() {
-      let userID = this.$root.account.currentUser.uid
+      let userID = this.user.uid
       let fileRef = `user/${userID}/profile-photo2`
 
-      let storageRef = this.$root.firebase.storage().ref()
+      let storageRef = this.$firebase.storage().ref()
       let childRef = storageRef.child(fileRef)
 
       return childRef.putString(this.setUser.photo.data, "data_url")
@@ -398,11 +397,11 @@ export default defineComponent({
         }) */
     },
 
-    previewImage: function (event) {
+    previewImage(event: Event) {
       // Reference to the DOM input element
       const input = event.target
       // Ensure that you have a file before attempting to read it
-      if (input.files && input.files[0]) {
+      if (input && input.files && input.files[0]) {
         // create a new FileReader to read this image and convert to base64 format
         const reader = new FileReader()
         // Define a callback function to run, when FileReader finishes its job
@@ -420,7 +419,7 @@ export default defineComponent({
     },
 
     // Helper function to assign main state messages
-    stateMsger(message, state) {
+    stateMsger(message: string, state: string) {
       this.mainState.msg = message
       this.mainState.state = state
     },

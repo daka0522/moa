@@ -1,25 +1,18 @@
-#app {
+$black: rgba(0, 0, 0, 0.85);
+$white: rgba(255, 255, 255, 0.85);
+
+[data-theme="dark"] {
+  $bg-main: $black;
+  $color-main: $white;
+
   color: $color-main;
-
-  &[theme="default"] {
-    // background-color: red;
-  }
-  &[theme="dark"] {
-    $color-main: white;
-    $bg-main: rgba(0, 0, 0, 0.85);
-
-    color: $color-main;
-    background-color: $bg-main;
-  }
+  background-color: $bg-main;
 }
 
-a {
-  color: inherit;
+[data-thene="light"] {
+  $bg-main: $white;
+  $color-main: $black;
 
-  &:link {
-    text-decoration: none;
-  }
-  &:visited {
-    // color: inherit;
-  }
+  color: $color-main;
+  background-color: $bg-main;
 }
