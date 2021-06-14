@@ -1,6 +1,5 @@
 <template>
   <div>
-    <IconPicker icon="sex" />
     <header-unit header-title="Welcome to Moa">
       <p>This is a functional and useful app collection</p>
       <img id="home-logo" src="../assets/moa.svg" alt="moa-logo" />

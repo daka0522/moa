@@ -54,11 +54,11 @@ const routes = [
     path: "/private",
     component: () => import("./views/privateApp/DefaultPrivate.vue"),
     children: [
-      {
-        name: "blog",
-        path: "blog",
-        component: () => import("./views/privateApp/Blog.vue"),
-      },
+      // {
+      //   name: "blog",
+      //   path: "blog",
+      //   component: () => import("./views/privateApp/Blog.vue"),
+      // },
     ],
   },
   {

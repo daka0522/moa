@@ -41,7 +41,7 @@
         <span>Options</span>
         <button class="btn-delete" @click="deleteAll()">
           <IconPicker icon="trash" />
-          Delete All!
+          Clear All!
         </button>
       </div>
 
@@ -107,14 +107,15 @@
             </div>
           </div>
         </li>
+        
       </transition-group>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { getUserID } from "../../utils/firestoreUtils"
-import { defineComponent, getCurrentInstance, ref } from "vue"
+import { getUserID, colRef } from "../../utils/firestoreUtils"
+import { defineComponent, getCurrentInstance, onMounted, ref, watch } from "vue"
 import { useStore } from "vuex"
 
 type Doc = {
@@ -141,10 +142,26 @@ export default defineComponent({
     })
 
     const insternalInstance = getCurrentInstance()
-    console.log("insternalInstance: ", insternalInstance)
-    console.log("this: ", this)
 
+    onMounted( () => {
+      console.log("user Id from todo: ", getUserID())
+      
+    })
     // return { mainStateMsg, docs, newDoc, appName }
+
+    watch(mainStateMsg, () => {
+      setTimeout(() => {
+        mainStateMsg.value = ""
+      }, 5000)
+    })
+
+    /* CRUD (Create, Read, Update, Delete) */
+    /* 1.Create */
+    const saveNewDoc = () => {
+      if (newDoc.value.content) {
+
+      }
+    }
   },
   data() {
     return {
@@ -164,27 +181,17 @@ export default defineComponent({
   },
   computed: {
     // # Imported utils
-    colRef() {
-      if (this.$store.state.currentUser) {
-        return this.$db
-          .collection("user")
-          .doc(this.getUserID)
-          .collection(this.appName)
-      } else {
-        return null
-      }
-    },
+    colRef,
     getUserID,
   },
   watch: {
-    mainStateMsg() {
-      setTimeout(() => {
-        this.mainStateMsg = ""
-      }, 5000)
-    },
+    // mainStateMsg() {
+    //   setTimeout(() => {
+    //     this.mainStateMsg = ""
+    //   }, 5000)
+    // },
   },
   mounted() {
-    console.log("user Id from todo: ", getUserID())
 
     // if (this.$root.account.currentUser) {
     //   this.listAllDoc()
@@ -352,7 +359,9 @@ export default defineComponent({
     ) {
       let cont: Doc = {
         id: doc.id,
-        fields: {},
+        fields: {
+          
+        } as Doc["fields"] ,
         stateMsg: "",
       }
       // Check if the doc is from web database or local memory.
@@ -392,6 +401,8 @@ export default defineComponent({
   input {
     width: 100%;
     font-size: 1rem;
+    background: inherit;
+    color: inherit;
   }
 }
 
@@ -427,9 +438,7 @@ export default defineComponent({
     &-content {
       display: flex;
       flex-wrap: wrap;
-      width: 100%;
-      // margin: 6.85vh 0;
-      // height: 100%;
+      margin: 6.85vh 0;
 
       textarea {
         width: 100%;
@@ -442,16 +451,18 @@ export default defineComponent({
       }
       /* Action & events  */
       .isDone {
-        color: rgba(0, 0, 0, 0.75);
+        // color: rgba(0, 0, 0, 0.75);
+        color: inherit;
         text-decoration: line-through;
         font-weight: lighter;
+        font-style: italic;
 
         &::before {
-          content: "\2713";
+          content: " \2713 ";
           display: inline-block;
           color: rgb(20, 140, 0);
           font-size: 1.6em;
-          margin-right: 0.2em;
+          margin-right: 0.5em;
         }
       }
     }

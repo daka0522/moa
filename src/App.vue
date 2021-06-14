@@ -2,13 +2,22 @@
   <Nav />
   <div>
     <strong>List to complete</strong>
-    <div v-for="item in list" :key="item">
+    <div
+      v-for="item in list"
+      :key="item"
+    >
       <span>{{ Object.keys(item)[0] }} : </span>
-      <span v-if="Object.values(item)[0] == 1" style="color: green">
+      <span
+        v-if="Object.values(item)[0] == 1"
+        style="color: green"
+      >
         <!-- {{ Object.values(item)[0] == 1 ? "Done" : "Not" }} -->
         &#10004;
       </span>
-      <span v-else style="color: red">
+      <span
+        v-else
+        style="color: red"
+      >
         <!-- {{ Object.values(item)[0] == 1 ? "Done" : "Not" }} -->
         &#10008;
       </span>
@@ -120,5 +129,9 @@ main {
   margin: 0 auto;
   padding: 4.24vh 1.62vw;
   padding-bottom: 11.09vh;
+}
+
+a {
+  color: inherit;
 }
 </style>

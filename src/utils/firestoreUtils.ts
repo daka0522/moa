@@ -1,4 +1,5 @@
 import store from "/@/store"
+import firebase from "firebase/app"
 
 // function colRef() {
 //   if (this.$root.account.currentUser) {
@@ -19,22 +20,22 @@ import store from "/@/store"
 //   }
 // }
 
-const colRef = () => {
+const colRef = (appName: string) => {
   if (store.state.currentUser) {
-    return this.$root.db
+    return firebase.firestore()
       .collection("user")
-      .doc(this.getUserID)
-      .collection(this.appName)
+      .doc(getUserID())
+      .collection(appName)
   } else {
     return null
   }
 }
 
-function getUserID() {
+const getUserID = (): string | undefined => {
   if (store.state.currentUser) {
     return store.state.currentUser.uid
   } else {
-    return null
+    return undefined
   }
 }
 

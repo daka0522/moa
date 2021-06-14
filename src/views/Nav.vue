@@ -48,9 +48,9 @@
     >
       Private
       <div class="nav-dropdown-list">
-        <router-link :to="{ name: 'blog' }">
+        <!-- <router-link :to="{ name: 'blog' }">
           Blog
-        </router-link>
+        </router-link> -->
       </div>
     </router-link>
 

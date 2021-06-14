@@ -14,8 +14,7 @@ export default defineComponent({
   },
   setup(props) {
     // check, pencilalt, undo, save, trash, exclmation, exclamation-triangle, tools, palltete, certificate, lock, lock-oepn
-    console.log("props", props.icon)
-    const emoji = ref()
+    const emoji = ref("")
     switch (props.icon) {
       case "certificate":
         emoji.value = "📜"

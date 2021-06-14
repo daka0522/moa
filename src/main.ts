@@ -66,6 +66,6 @@ declare module "@vue/runtime-core" {
     $db: firebase.firestore.Firestore
     $store: typeof store
     // $router: Router
-    // $signOut: typeof signOut
+    $signOut: () => {}
   }
 }
