@@ -25,6 +25,9 @@ export default defineComponent({
       case "check":
         emoji.value = "✔️"
         break
+      case "exclamation":
+        emoji.value = "❗"
+        break
       case "exclamation-triangle":
         emoji.value = "⚠️"
         break
@@ -40,8 +43,8 @@ export default defineComponent({
       case "trash":
         emoji.value = "🗑️"
         break
-      case "pallete":
-        emoji.value = ""
+      case "palete":
+        emoji.value = "🎨"
         break
       case "lock":
         emoji.value = "🔒"
@@ -57,7 +60,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 #icon-picker-emoji {
-  font-size: 1.7rem;
+  font-size: 1.25rem;
   // font-style: italic;
 }
 </style>

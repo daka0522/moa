@@ -90,7 +90,7 @@ export default defineComponent({
         { nav: 1 },
         { foot: 1 },
         { PublicApp: 1 },
-        { todo: 0 },
+        { todo: 1 },
         { style: 1 },
         { canvas: 0 },
         { community: 1 },

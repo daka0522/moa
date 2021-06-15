@@ -7,7 +7,7 @@
       </p>
     </header-unit>
 
-    <state-msger v-if="!$store.state.currentUser" state="warning">
+    <state-msger v-if="user" state="warning">
       <h2>Demo version.</h2>
       <span> Data will not saved if you are not logined.</span>
       <p>If you want to use this app and save your list. Please sign in.</p>
@@ -16,7 +16,7 @@
 
     <div id="todo">
       <transition name="fade">
-        <span id="mainStatePanel" class="msg">{{ mainStateMsg }}</span>
+        <span id="mainStateMsg" class="msg">{{ mainStateMsg }}</span>
       </transition>
 
       <!-- Todo input  -->
@@ -27,9 +27,9 @@
             class="content-area input-part"
             type="text"
             placeholder="Please write down things to do here!"
-            @keyup.enter="saveNewDoc()"
+            @keyup.enter="saveNewDoc"
           />
-          <button class="btn" type="submit" @click.prevent="saveNewDoc()">
+          <button class="btn" type="submit" @click.prevent="saveNewDoc">
             <IconPicker icon="save" />
             <span>Save</span>
           </button>
@@ -66,9 +66,9 @@
 
           <!-- 3. State  -->
           <span
-            v-show="doc.stateMsg"
+            v-show="doc.state"
             class="todo-card-msg noticeMsg statePanel"
-            >{{ doc.stateMsg }}</span
+            >{{ doc.state }}</span
           >
 
           <!-- 4. Buttons  -->
@@ -97,12 +97,15 @@
                 @click="doc.fields.editable = !doc.fields.editable"
               >
                 <IconPicker icon="undo" />
+                <span>Undo</span>
               </button>
               <button class="btn-delete" @click="deleteDoc(doc)">
-                <IconPicker icon="trash" /><span>Delete</span>
+                <IconPicker icon="trash" />
+                <span>Delete</span>
               </button>
               <button class="btn" @click.prevent="editSaveButton(doc)">
-                <IconPicker icon="save" /><span>Save</span>
+                <IconPicker icon="save" />
+                <span>Save</span>
               </button>
             </div>
           </div>
@@ -114,9 +117,10 @@
 </template>
 
 <script lang="ts">
-import { getUserID, colRef } from "../../utils/firestoreUtils"
-import { defineComponent, getCurrentInstance, onMounted, ref, watch } from "vue"
+import { colRef } from "../../utils/firestoreUtils"
+import { computed, defineComponent, onMounted, ref, watch } from "vue"
 import { useStore } from "vuex"
+import firebase from "firebase/app"
 
 type Doc = {
   id: string
@@ -127,7 +131,7 @@ type Doc = {
     isDone: boolean
     editable?: boolean
   }
-  stateMsg?: string
+  state?: string
 }
 
 export default defineComponent({
@@ -135,264 +139,200 @@ export default defineComponent({
     const store = useStore()
     const appName = "todo"
     const mainStateMsg = ref("")
-    const docs = ref([])
+    const docs = ref([] as Doc[])
     const newDoc = ref({
       content: "",
       isDone: false,
     })
 
-    const insternalInstance = getCurrentInstance()
+    const user = computed( () => store.state.currentUser)
 
     onMounted( () => {
-      console.log("user Id from todo: ", getUserID())
-      
+      if (user.value) {
+        listAllDoc()
+      }      
     })
     // return { mainStateMsg, docs, newDoc, appName }
 
     watch(mainStateMsg, () => {
       setTimeout(() => {
         mainStateMsg.value = ""
-      }, 5000)
+      }, 10000)
     })
+
+    const pushDoc = (doc:Doc | any) => {
+      doc.stateMsg =  ""
+
+      if (doc.data) {
+        doc.fields = doc.data()
+      } 
+      doc.fields.editable = false 
+      docs.value.push(doc)
+    }
+
+    const setDocState = (doc: Doc, state: string) => {
+      doc.state = state 
+      setTimeout( () => doc.state = "", 5000)
+    }
 
     /* CRUD (Create, Read, Update, Delete) */
     /* 1.Create */
     const saveNewDoc = () => {
-      if (newDoc.value.content) {
-
+      if (newDoc.value.content.length <= 0) {
+        // mainStateMsg.value = "The content is empty. This document is not saved."
+        return 
       }
-    }
-  },
-  data() {
-    return {
-      // Database Refrence of this app
-      appName: "todo",
-      // docID: 'todo',
-
-      mainStateMsg: "",
-
-      docs: [] as Doc[],
-
-      newDoc: {
-        content: "",
-        isDone: false,
-      },
-    }
-  },
-  computed: {
-    // # Imported utils
-    colRef,
-    getUserID,
-  },
-  watch: {
-    // mainStateMsg() {
-    //   setTimeout(() => {
-    //     this.mainStateMsg = ""
-    //   }, 5000)
-    // },
-  },
-  mounted() {
-
-    // if (this.$root.account.currentUser) {
-    //   this.listAllDoc()
-    // }
-  },
-  methods: {
-    // CRUD (Create, Read, Update, Delete)
-    // 1. Create
-    saveNewDoc() {
-      // Create new document.
-      if (this.newDoc.content) {
-        // Construct datas to save.
-        // Date is saved as a firestore timestamp object
-        const date = this.$firebase.firestore.Timestamp.fromDate(new Date())
-        // Document name will saved as a milliseconds
-        let doc: Doc = {
+      else {
+        const date = firebase.firestore.Timestamp.fromDate(new Date())
+        const doc: Doc = {
           id: date.toMillis().toString(),
           fields: {
-            content: this.newDoc.content,
+            content: newDoc.value.content,
             date: date,
-            isDone: this.newDoc.isDone,
+            isDone: newDoc.value.isDone,
           },
         }
 
-        // Check if the user is signed in and save in web DB.
-        if (this.$store.state.currentUser && this.colRef) {
-          this.colRef
-            .doc(doc.id)
-            .set(doc.fields)
-            .then(() => {
-              this.mainStateMsg = "Document successfully written!"
-              this.pushDoc(doc)
-            })
-            .catch((error: Error) => {
-              this.mainStateMsg = `Error writing document: ${error}`
-            })
+        // If there's user logined, then the data will save in the web db.
+        if (user.value && colRef(appName)) {
+          colRef(appName)!
+          .doc(doc.id)
+          .set(doc.fields)
+          .then( () => {
+            mainStateMsg.value = "Document successfully written!"
+            pushDoc(doc)
+          })
+          .catch( error => {
+            mainStateMsg.value = `Error while writing document: ${error}`
+          })
+        } else {
+          // Else data will not saved. Just on memory.
+          mainStateMsg.value = "The data will not saved. Just list doc."
+          pushDoc(doc)
         }
-        // Else data will not saved. Just list doc.
-        else {
-          this.mainStateMsg = "The data will not saved. Just list doc."
-          this.pushDoc(doc)
-        }
-      } else {
-        this.mainStateMsg = "The content is empty. This document is not saved."
       }
-      this.newDoc.content = ""
-    },
+      newDoc.value.content = ""
+    }
 
-    // 2. Read
-    // Initial function when the instance is mounted call lists from firestore.
-    // Require: Authenticated
-    listAllDoc() {
-      if (this.colRef)
-        this.colRef
-          .get()
-          .then((snapshot) => {
-            let subject = ""
-            snapshot.size > 1
-              ? (subject = "Document's are")
-              : (subject = "Document is")
-            snapshot.forEach((doc) => {
-              this.pushDoc(doc)
-              this.mainStateMsg = `${subject} successfully downloaded.`
-            })
-          })
-          .catch((err: Error) => {
-            // this.mainStateMsg = `Error getting documents. ${err.message}`
-            this.mainStateMsg = `Error getting documents. ${err}`
-          })
-    },
-    // Request list an individual existing doc.
-    // Require: Authenticated
-    listDoc(docID: Doc["id"]) {
-      if (this.colRef)
-        this.colRef
-          .doc(docID)
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              this.mainStateMsg = "Listed document successfully!"
-              this.pushDoc(doc)
-            } else {
-              this.mainStateMsg = "No such document!"
-            }
-          })
-          .catch((err) => {
-            this.mainStateMsg = `Error getting document: ${err.message}`
-          })
-    },
+    // 2. Read 
+    const listAllDoc = () => {
+      colRef(appName)!.get()
+      .then((snapshot) => {
+        let subject = ""
+        snapshot.size > 1
+          ? (subject = "Document's are")
+          : (subject = "Document is")
+        snapshot.forEach((doc) => {
+          pushDoc(doc)
+          mainStateMsg.value = `${subject} successfully downloaded.`
+        })
+      })
+      .catch((err: Error) => {
+        mainStateMsg.value = `Error getting documents. ${err}`
+      })
+    }
 
-    // 3. Update
-    updateDoc(doc: Doc) {
+    // 3. Update 
+    const updateDoc = (doc: Doc) => {
       // Update edited date.
       // doc.fields.date = this.$root.firebase.firestore.Timestamp.fromDate(new Date)
       let data = {
         content: doc.fields.content,
-        date: this.$firebase.firestore.Timestamp.fromDate(new Date()),
+        date: firebase.firestore.Timestamp.fromDate(new Date()),
         isDone: doc.fields.isDone,
       }
       // Post update doc to firestore
       // If the user is logined.
-      if (this.$store.state.currentUser && this.colRef) {
-        this.colRef
+      if (user.value && colRef(appName)) {
+        colRef(appName)!
           .doc(doc.id)
           .update(data)
           .then(() => {
-            this.docStateMsg(doc, "This is successfully updated.")
+            setDocState(doc, "This is successfully updated.")
           })
           .catch((error) => {
-            this.docStateMsg(
+            setDocState(
               doc,
               `Error while updating the doc. ${error.message}`
             )
           })
       } else {
         Object.assign(doc.fields, data)
-        this.docStateMsg(doc, "This is successfully updated.")
+        setDocState(doc, "This is successfully updated.")
       }
-    },
+    }
 
-    // 4. Delete
-    // Delete the selected doc.
-    deleteDoc(doc: Doc) {
-      const docIndex = this.docs.findIndex((item: Doc) => item.id === doc.id)
-      // If the user is logined.
-      if (this.$store.state.currentUser && this.colRef) {
-        this.colRef
-          .doc(doc.id)
-          .delete()
-          .then(() => {
-            this.docStateMsg(doc, "This document is successfully deleted!")
-            this.docs.splice(docIndex, 1)
-          })
-          .catch((error) => {
-            this.docStateMsg(doc, `Error removing document: ${error.message}`)
-          })
-      } else {
-        // Else user is none.
-        this.docs.splice(docIndex, 1)
-        this.docStateMsg(doc, "This document is successfully deleted!")
-      }
-    },
-    deleteAll() {
-      if (this.$store.state.currentUser) {
-        this.docs.forEach((doc: Doc) => {
-          if (this.colRef)
-            this.colRef
-              .doc(doc.id)
-              .delete()
-              .then(() => {
-                this.docs = []
-              })
+    /**
+     * 4. Delete
+     */
+    const deleteDoc = (doc: Doc) => {      
+      const index = docs.value.findIndex((item: Doc) => item.id === doc.id)
+
+      // If user logined
+      if (user.value) {
+        colRef(appName)!.doc(doc.id).delete()
+        .then( () => {
+          docs.value.splice(index, 1)
+          setDocState(doc, "This document is successfully deleted!")
         })
-      } else {
-        this.docs = []
+        .catch(error => {
+          setDocState(doc, `Error removing document: ${error.message}`)
+        })
+      } else { 
+        docs.value.splice(index, 1)
+        setDocState(doc, "This document is successfully deleted!")
       }
-    },
+    }
 
-    // Helper function to store docs in an object.
-    pushDoc(
-      doc:
-        | Doc
-        // | firebase.default.firestore.DocumentSnapshot<firebase.default.firestore.DocumentData>
-        | any
-    ) {
-      let cont: Doc = {
-        id: doc.id,
-        fields: {
-          
-        } as Doc["fields"] ,
-        stateMsg: "",
+    const deleteAll = () => {
+      if (user.value) {
+        
+        docs.value.forEach( (doc: Doc) => {
+          deleteDoc(doc)
+        })
+      } else { 
+        docs.value = []
       }
-      // Check if the doc is from web database or local memory.
-      if (doc.data) {
-        cont["fields"] = doc.data()
-      } else {
-        cont["fields"] = doc.fields
-      }
-      cont["fields"]["editable"] = false
-      this.docs.push(cont)
-    },
-    doneButton(doc: Doc) {
-      doc.fields.isDone = !doc.fields.isDone
-      this.updateDoc(doc)
-      this.docStateMsg(doc, "I am done!!")
-    },
-    editSaveButton(doc: Doc) {
-      this.updateDoc(doc)
-      doc.fields.editable = false
-    },
-    docStateMsg(doc: Doc, msg: string) {
-      doc.stateMsg = msg
-      setTimeout(() => {
-        doc.stateMsg = ""
-      }, 5000)
-    },
+    }
+
+    const doneButton = (doc: Doc) => {
+      let state = ""
+      doc.fields.isDone ? state = "I am done!!" : state = "I am not done :("
+      setDocState(doc, state)
+
+      doc.fields.isDone = !doc.fields.isDone 
+      updateDoc(doc)
+    }
+
+    const editSaveButton = (doc: Doc) => {
+      updateDoc(doc) 
+      doc.fields.editable = false 
+    }
+
+
+    return {
+      mainStateMsg,
+      docs, 
+      newDoc,
+      saveNewDoc,
+      listAllDoc,
+      updateDoc,
+      deleteAll,
+      deleteDoc,
+      doneButton,
+      editSaveButton,
+      user
+
+    }
   },
 })
 </script>
 
 <style lang="scss" scoped>
+
+#mainStateMsg {
+  color: inherit;
+}
 /* A. Todo input */
 .todo-input {
   margin: 4.8em 0 4.8em 0;

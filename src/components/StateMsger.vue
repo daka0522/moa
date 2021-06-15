@@ -1,6 +1,6 @@
 <template>
   <div v-if="state" :class="'msg-' + state" class="msg">
-    <IconPicker :icon="iconSelector" class="icon" />
+    <IconPicker :icon="iconSelector" />
     <slot />
   </div>
 </template>
